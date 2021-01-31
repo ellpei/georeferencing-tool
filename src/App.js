@@ -18,8 +18,9 @@ class App extends React.Component {
     render() {
         return (
             <div className="App">
-              <h1>Georeference Tool</h1>
-
+                <div className="header">
+                    <h1>Georeferencing Tool</h1>
+                </div>
               {this.state.resortIndex === -1 ? 
                 <MapForm resorts={images} onSearch={this.setResort}></MapForm> : 
                 <Matcher resort={images[this.state.resortIndex]}></Matcher>}
