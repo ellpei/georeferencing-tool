@@ -1,6 +1,6 @@
 import './matcher.css';
 import React from 'react';
-import {Container, Row, Col, Form} from 'react-bootstrap';
+import {Form, Button} from 'react-bootstrap';
 
 class Matcher extends React.Component {
     
@@ -12,7 +12,7 @@ class Matcher extends React.Component {
             dimensions: {},
             x: 0,
             y: 0,
-            pistepoints: [],
+            pistePoints: {},
             pisteInputValue: "",
         }
         this.onKeyUp = this.onKeyUp.bind(this);
@@ -33,11 +33,15 @@ class Matcher extends React.Component {
 
     onKeyUp(e) {
         if (e.charCode === 13) {
+            let dict = this.state.pistePoints;
             e.preventDefault(); 
             let pisteName = e.target.value;
-            this.setState({ pisteInputValue: pisteName });
-            const newList = this.state.pistepoints.concat({"name": pisteName,});
-            this.setState({pistepoints: newList});
+            if(!(pisteName in dict)) {
+                dict[pisteName] = {};
+            } else {
+                console.log("piste name already exists");
+            }
+            this.setState({pisteInputValue: ""});
         }
     }
 
@@ -55,34 +59,26 @@ class Matcher extends React.Component {
     render() {
         return (
             <div id="matcher">
-                <h2>{this.state.title}</h2>
-                RenderDim: {this.state.dimensions.renderWidth} x {this.state.dimensions.renderHeight}
+                <img src={this.state.src} 
+                alt={this.state.title} width="80%" 
+                onMouseMove={this._onMouseMove.bind(this)}
+                onMouseDown={this._onMouseDown.bind(this)}
+                onLoad={this.onLoadPisteMap}
+                />
                 <br/>
-                RealDim: {this.state.dimensions.realWidth} x {this.state.dimensions.realHeight}
-                <Container>
-                    <Row>
-                        <Col>
-                            <img src={this.state.src} 
-                            alt={this.state.title} width="80%" 
-                            onMouseMove={this._onMouseMove.bind(this)}
-                            onMouseDown={this._onMouseDown.bind(this)}
-                            onLoad={this.onLoadPisteMap}
-                            />
-                            <br/>
-                            (x: {this.state.x}, y: {this.state.y})
-                            <div className="piste-input">
-                                <Form>
-                                    <Form.Control type="text" placeholder="Add piste" onKeyPress={this.onKeyUp}/>
-                                    <span>Input value is : {this.state.pisteInputValue}</span>
-                                </Form>
-                            </div>
-                            
-                        </Col>
-                    </Row>
-                </Container>
-                <ul>
-                hello {Object.keys(this.state.pistepoints)}
-                </ul>
+                (x: {this.state.x}, y: {this.state.y})
+                <div className="piste-input">
+                    <Form>
+                        <Form.Control type="text" 
+                        value={this.state.pisteInputValue} 
+                        onChange={e => this.setState({pisteInputValue: e.target.value})} 
+                        placeholder="Add piste" onKeyPress={this.onKeyUp}/>
+                    </Form>
+                </div>
+                <div className="piste-button-container">
+                    {Object.keys(this.state.pistePoints)
+                    .map(x => <Button key={x}>{x}</Button>)}
+                </div>
             </div>);
     }
 }

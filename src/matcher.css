@@ -1,1 +1,9 @@
 
+.piste-button-container button {
+    margin: 5px;
+}
+
+.piste-button-container button:focus {
+    background-color: #20dd0f !important;
+    border-color: #20dd0f;
+}
