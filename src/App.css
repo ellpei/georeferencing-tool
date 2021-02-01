@@ -9,10 +9,7 @@
 
 .header {
     font-family: 'lobster';
-    padding: 10px 0px 10px 0px;
-    margin-bottom: 20px;
-    color: white;
-    background-color: black;
+    color: black;
 }
 
 .vertical-center {

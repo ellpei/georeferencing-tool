@@ -1,5 +1,7 @@
+import './mapForm.css';
 import React from 'react';
-import {Container, Form, Button} from 'react-bootstrap';
+import {Container, Form} from 'react-bootstrap';
+import {Link} from "react-router-dom";
 
 class MapForm extends React.Component {
     constructor(props) {
@@ -13,11 +15,12 @@ class MapForm extends React.Component {
     handleDropdownChange(e) {
         this.setState({val: e.target.value});
     }
+
     render() {
         return (
             <div id="mapform" >
                 <div className="vertical-center">
-                    <Container>
+                    <Container className="selectcontainer">
                         <Form>
                             <Form.Group controlId="exampleForm.ControlSelect1">
                                 <Form.Label>Select ski area</Form.Label>
@@ -28,10 +31,7 @@ class MapForm extends React.Component {
                                 )))}
                                 </Form.Control>
                                 <br/>
-                                <Button variant="primary" type="submit" onClick={(e) => {
-                                    e.preventDefault(); 
-                                    this.props.onSearch(this.state.val);
-                                }}>Submit</Button>
+                                <Link to="/matcher" onClick={() => this.props.onSearch(this.state.val)} className="btn btn-primary">Start!</Link>
                             </Form.Group>
                         </Form>
                     </Container>

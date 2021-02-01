@@ -1,0 +1,8 @@
+select {
+    width: 200px;
+} 
+
+.selectcontainer {
+    min-width: 300px;
+    width: 20%;
+}
