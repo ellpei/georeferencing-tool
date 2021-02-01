@@ -58,10 +58,6 @@ class App extends React.Component {
                     </Route>
                 </Switch>
             </Router>
-                
-              {/*this.state.resortIndex === -1 ? 
-                <MapForm resorts={images} onSearch={this.setResort}></MapForm> : 
-                <Matcher resort={images[this.state.resortIndex]}></Matcher>*/}
             </div>
         );
     }
