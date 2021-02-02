@@ -1,4 +1,4 @@
-import './App.css';
+import './styles/App.css';
 import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import MapForm from './mapForm.js';

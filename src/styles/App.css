@@ -4,7 +4,7 @@
 
 @font-face {
     font-family: 'lobster';
-    src: url('Lobster-Regular.ttf');
+    src: url('../Lobster-Regular.ttf');
 }
 
 .header {
