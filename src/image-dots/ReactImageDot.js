@@ -7,6 +7,7 @@ const propTypes = {
   // Required functions to handle parent-level state management
   deleteDot: PropTypes.func.isRequired,
   addDot: PropTypes.func.isRequired,
+  onLoadMap: PropTypes.func.isRequired,
 
   resetDots: PropTypes.func,
 
@@ -84,7 +85,7 @@ export default class ReactImageDot extends React.Component {
             height,
           }}>
           <img src={backgroundImageUrl} alt="Piste map" 
-                width="100%" />
+            width={this.props.width} onLoad={this.props.onLoadMap} />
           {dots.map((dot, i) =>
             <Dot
               x={dot.x}

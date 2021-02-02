@@ -10,7 +10,7 @@ class Matcher extends React.Component {
     
     constructor(props) {
         super(props);
-        this.initialDots = [{ x: 35, y: 32 }, { x: 96, y: 120 }];
+        this.initialDots = [{ x: 35, y: 32 }];
         this.state = {
             title: this.props.resort.title,
             src: this.props.resort.src,
@@ -49,18 +49,6 @@ class Matcher extends React.Component {
         });
     }
 
-    _onMouseMove(e) {
-        let dim = this.state.dimensions;
-        let x = (e.nativeEvent.offsetX / dim.renderWidth) * dim.realWidth;
-        let y = (e.nativeEvent.offsetY / dim.renderHeight) * dim.realHeight;
-
-        this.setState({x: x.toFixed(2), y: y.toFixed(2)});
-    }
-
-    _onMouseDown(e) {
-        console.log('clicked on ' + this.state.x + ', ' + this.state.y);
-    }
-
     onKeyUp(e) {
         if (e.charCode === 13) {
             let dict = this.state.pistePoints;
@@ -84,7 +72,7 @@ class Matcher extends React.Component {
     }
       
     componentWillUnmount() {
-        window.addEventListener("resize", this.handleResize);
+        window.removeEventListener("resize", this.handleResize);
     } 
 
     onLoadPisteMap({target: img}) {
@@ -101,36 +89,13 @@ class Matcher extends React.Component {
     render() {
         const { dots } = this.state;
         const dim = this.state.dimensions;
-        const wW = this.state.windowWidth;
-        const wH = this.state.windowHeight;
 
         return (
             <div id="matcher">
-                <img src={this.state.src} 
-                alt={this.state.title} width="100%" 
-                onMouseMove={this._onMouseMove.bind(this)}
-                onMouseDown={this._onMouseDown.bind(this)}
-                onLoad={this.onLoadPisteMap}
-                />
-                <br/>
-                (x: {this.state.x}, y: {this.state.y})
-                <div className="piste-input">
-                    <Form>
-                        <Form.Control type="text" 
-                        value={this.state.pisteInputValue} 
-                        onChange={e => this.setState({pisteInputValue: e.target.value})} 
-                        placeholder="Add piste" onKeyPress={this.onKeyUp}/>
-                    </Form>
-                </div>
-                <div className="piste-button-container">
-                    {Object.keys(this.state.pistePoints)
-                    .map(x => <Button key={x}>{x}</Button>)}
-                </div>
-
                 <ReactImageDot
                 backgroundImageUrl={this.state.src}
-                width={wW}
-                height={wH}
+                onLoadMap={this.onLoadPisteMap}
+                width={this.state.windowWidth}
                 dots={dots}
                 deleteDot={this.deleteDot}
                 addDot={this.addDot}
@@ -140,15 +105,32 @@ class Matcher extends React.Component {
                     boxShadow: '0 2px 4px gray',
                 }} 
                 />
+                <p>Render dim w:{dim.renderWidth} h:{dim.renderHeight}</p>
+                <p>Real dim w:{dim.realWidth} h:{dim.realHeight}</p>
                 <button onClick={this.resetDots}>Reset</button>
                 {<DotsInfo
-                height={480}
-                width={480}
+                width={dim.renderWidth}
+                height={dim.renderHeight}
                 realHeight={dim.realHeight}
                 realWidth={dim.realWidth}
                 dots={dots}
                 deleteDot={this.deleteDot}
                 />}
+                
+             <div className="piste-input">
+                    <Form>
+                        <Form.Control type="text" 
+                        value={this.state.pisteInputValue} 
+                        onChange={e => this.setState({pisteInputValue: e.target.value})} 
+                        placeholder="Add piste" onKeyPress={this.onKeyUp}/>
+                    </Form>
+                    <br/>
+                </div>
+                <div className="piste-button-container">
+                    {Object.keys(this.state.pistePoints)
+                    .map(x => <Button key={x}>{x}</Button>)}
+                </div>
+
             </div>);
     }
 }
