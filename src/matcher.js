@@ -19,6 +19,7 @@ class Matcher extends React.Component {
             y: 0,
             pistePoints: {},
             pisteInputValue: "",
+            currentPiste: "",
             dots: this.initialDots,
             windowWidth: window.innerWidth*0.98,
         }
@@ -27,12 +28,27 @@ class Matcher extends React.Component {
     }
 
     addDot = (dot) => {
-        this.setState({
-          dots: [
-            ...this.state.dots,
-            dot,
-          ],
-        });
+        let dict = this.state.pistePoints;
+        let currentPiste = this.state.currentPiste; 
+        let dim = this.state.dimensions;
+
+        if(dict[currentPiste]) {
+            dict[currentPiste].push({
+                "x":(dot.x/dim.renderWidth)*dim.realWidth, 
+                "y": (dot.y/dim.renderHeight)*dim.realHeight,
+                "long": 0,
+                "lat": 0,
+                "note": "",
+            });
+            this.setState({
+              dots: [
+                ...this.state.dots,
+                dot,
+              ],
+            });
+        } else {
+            alert('Please select a piste');
+        }
     }
     
     deleteDot = (index) => {
@@ -55,11 +71,11 @@ class Matcher extends React.Component {
             e.preventDefault(); 
             let pisteName = e.target.value;
             if(!(pisteName in dict)) {
-                dict[pisteName] = {};
+                dict[pisteName] = [];
             } else {
                 console.log("piste name already exists");
             }
-            this.setState({pisteInputValue: ""});
+            this.setState({currentPiste: pisteName, pisteInputValue: ""});
         }
     }
 
@@ -86,8 +102,19 @@ class Matcher extends React.Component {
         });
     }
 
+    printPistePoints() {
+        let pPoints = this.state.pistePoints;
+        let pNames = Object.keys(pPoints);
+        
+        return (<ul>{pNames.map((pName, i) => 
+            <li key={i}>{pName}: {pPoints[pName].map( (p, i) =>
+                <span key={i}>({p.x.toFixed(2)}, {p.y.toFixed(2)}):({p.long}, {p.lat}), </span>
+            )}</li>)}
+            </ul>);
+    }
+
     render() {
-        const { dots } = this.state;
+        const { dots, pistePoints } = this.state;
         const dim = this.state.dimensions;
 
         return (
@@ -117,7 +144,18 @@ class Matcher extends React.Component {
                 deleteDot={this.deleteDot}
                 />}
                 
-             <div className="piste-input">
+                <p>Dots</p>
+                <p>{dots.map((dot, i) => <span key={i}>({dot.x}, {dot.y}), </span>)}</p>
+                
+                <p>Piste points</p>
+                {this.printPistePoints()}
+                {/*Object.keys(this.state.pistePoints)
+                    .map(x => <span key={x}>{x}: </span>)*/} 
+
+                <br/>
+                current piste: {this.state.currentPiste}
+                
+                <div className="piste-input">
                     <Form>
                         <Form.Control type="text" 
                         value={this.state.pisteInputValue} 
@@ -127,8 +165,8 @@ class Matcher extends React.Component {
                     <br/>
                 </div>
                 <div className="piste-button-container">
-                    {Object.keys(this.state.pistePoints)
-                    .map(x => <Button key={x}>{x}</Button>)}
+                    {Object.keys(pistePoints)
+                    .map(x => <Button key={x} onClick={() => this.setState({currentPiste: x})}>{x}</Button>)}
                 </div>
 
             </div>);
