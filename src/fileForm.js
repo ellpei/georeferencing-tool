@@ -146,7 +146,7 @@ class FileForm extends React.Component {
 
                 <input type="file" className="hidden"
                     multiple={false}
-                    accept=".json,.csv,.txt,.text,application/json,text/csv,text/plain"
+                    accept=".json,application/json"
                     onChange={evt => this.openFile(evt)}
                     ref={e=>this.dofileUpload = e}
                 />
