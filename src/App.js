@@ -23,7 +23,6 @@ class App extends React.Component {
     }
     setResort = (choice) => {
         this.setState({resortIndex: choice});
-        console.log("Resortindex: " + choice);
     }
 
     render() {

@@ -7,7 +7,6 @@ const propTypes = {
   // Required functions to handle parent-level state management
   deleteDot: PropTypes.func.isRequired,
   addDot: PropTypes.func.isRequired,
-  onLoadMap: PropTypes.func.isRequired,
 
   resetDots: PropTypes.func,
 
@@ -39,41 +38,66 @@ const defaultProps = {
 };
 
 export default class ReactImageDot extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      grabbing: false,
-    };
-  }
+    constructor(props) {
+        super(props);
+        this.state = {
+            grabbing: false,
+            dimensions: {},
+        };
+        this.onLoadPisteMap = this.onLoadPisteMap.bind(this);
+    }
 
-  onMouseUp = (e) => {
-    const bounds = e.target.getBoundingClientRect();
-    this.setState({
-      grabbing: false,
-    });
-    this.props.addDot({
-      x: e.clientX - bounds.left,
-      y: e.clientY - bounds.top,
-    });
-  }
+    onLoadPisteMap({target: img}) {
+        this.setState({
+            dimensions: {
+                renderWidth: img.offsetWidth, 
+                renderHeight: img.offsetHeight,
+                realWidth: img.naturalWidth,
+                realHeight: img.naturalHeight,
+            }
+        });
+    }
 
-  moveDot = (index) => {
-    this.setState({
-      grabbing: true,
-    });
-    this.props.deleteDot(index);
-  }
+    onMouseUp = (e) => {
+        const bounds = e.target.getBoundingClientRect();
+        let dim = this.state.dimensions; 
+        this.setState({
+            grabbing: false,
+        });
+        this.props.addDot({
+            x: this.renderedToRealCoord(e.clientX - bounds.left, dim.renderWidth, dim.realWidth),
+            y: this.renderedToRealCoord(e.clientY - bounds.top, dim.renderHeight, dim.realHeight),
+        });
+    }
 
-  resetDots = () => {
-    this.props.resetDots();
-  }
+    moveDot = (index) => {
+        this.setState({
+            grabbing: true,
+        });
+        this.props.deleteDot(index);
+    }
+
+    resetDots = () => {
+        this.props.resetDots();
+    }
+
+    // Translate from rendered coordinates to real piste map coordinates
+    renderedToRealCoord(coord, renderedLength, realLength) {
+        return (coord/renderedLength)*realLength;
+    }
+
+    realToRenderedCoord(coord, renderedLength, realLength) {
+        return (coord/realLength)*renderedLength;
+    }
+
 
   render() {
     const { grabbing } = this.state;
+    const dim = this.state.dimensions; 
 
     const { dots, width, height, styles, dotStyles, backgroundImageUrl, dotRadius } = this.props;
     const grabClass = grabbing ? 'react-image-dot__grabbing' : '';
-
+    
     return (
       <div className="react-image-dot__container">
       
@@ -85,11 +109,11 @@ export default class ReactImageDot extends React.Component {
             height,
           }}>
           <img src={backgroundImageUrl} alt="Piste map" 
-            width={this.props.width} onLoad={this.props.onLoadMap} />
+            width={this.props.width} onLoad={this.onLoadPisteMap} />
           {dots.map((dot, i) =>
             <Dot
-              x={dot.x}
-              y={dot.y}
+              dotX={this.realToRenderedCoord(dot.x, dim.renderWidth, dim.realWidth)}
+              dotY={this.realToRenderedCoord(dot.y, dim.renderHeight, dim.realHeight)}
               i={i}
               styles={dotStyles}
               moveDot={this.moveDot}

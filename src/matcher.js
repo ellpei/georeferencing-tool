@@ -5,50 +5,50 @@ import {Form, Button} from 'react-bootstrap';
 
 import FileForm from './fileForm.js';
 import ReactImageDot from './image-dots/ReactImageDot';
-import DotsInfo from './image-dots/DotsInfo';
 
 class Matcher extends React.Component {
     
     constructor(props) {
         super(props);
-        this.initialDots = [{ x: 35, y: 32 }];
+        this.initialDots = [];
         this.state = {
             title: this.props.resort.title,
             src: this.props.resort.src,
-            dimensions: {},
             x: 0,
             y: 0,
-            pistePoints: {},
             pisteInputValue: "",
             currentPiste: "",
             dots: this.initialDots,
+            parents: [],
             windowWidth: window.innerWidth*0.98,
         }
         this.onKeyUp = this.onKeyUp.bind(this);
-        this.onLoadPisteMap = this.onLoadPisteMap.bind(this);
+    }
+    // Translate from rendered coordinates to real piste map coordinates
+    renderedToRealCoord(coord, renderedLength, realLength) {
+        return (coord/renderedLength)*realLength;
+    }
+
+    realToRenderedCoord(coord, renderedLength, realLength) {
+        return (coord/realLength)*renderedLength;
     }
 
     addDot = (dot) => {
-        let dict = this.state.pistePoints;
         let currentPiste = this.state.currentPiste; 
-        let dim = this.state.dimensions;
+        let point = {
+            "x": dot.x,
+            "y": dot.y,
+            "long": 0, "lat": 0, 
+            "parent": currentPiste,
+            "parentType": "piste",
+            "note": ""
+        };
+        this.setState({
+            dots: [...this.state.dots, point],
+        });
 
-        if(dict[currentPiste]) {
-            dict[currentPiste].push({
-                "x":(dot.x/dim.renderWidth)*dim.realWidth, 
-                "y": (dot.y/dim.renderHeight)*dim.realHeight,
-                "long": 0,
-                "lat": 0,
-                "note": "",
-            });
-            this.setState({
-              dots: [
-                ...this.state.dots,
-                dot,
-              ],
-            });
-        } else {
-            alert('Please select a piste');
+        if(!this.state.parents.includes(point.parent)) {
+            this.setState({parents: [...this.state.parents, point.parent]});
         }
     }
     
@@ -66,15 +66,14 @@ class Matcher extends React.Component {
         });
     }
 
+    // Called when adding pistes / lifts 
     onKeyUp(e) {
         if (e.charCode === 13) {
-            let dict = this.state.pistePoints;
+            //let dict = this.state.pistePoints;
             e.preventDefault(); 
             let pisteName = e.target.value;
-            if(!(pisteName in dict)) {
-                dict[pisteName] = [];
-            } else {
-                console.log("piste name already exists");
+            if(!this.state.parents.includes(pisteName)) {
+                this.setState({parents: [...this.state.parents, pisteName]});
             }
             this.setState({currentPiste: pisteName, pisteInputValue: ""});
         }
@@ -92,35 +91,19 @@ class Matcher extends React.Component {
         window.removeEventListener("resize", this.handleResize);
     } 
 
-    onLoadPisteMap({target: img}) {
-        this.setState({
-            dimensions: {
-                renderWidth: img.offsetWidth, 
-                renderHeight: img.offsetHeight,
-                realWidth: img.naturalWidth,
-                realHeight: img.naturalHeight,
-            }
-        });
-    }
-
     loadFileData(data) {
-        this.setState({pistePoints: data});
+        this.setState({dots: data});
     }
 
     printPistePoints() {
-        let pPoints = this.state.pistePoints;
-        let pNames = Object.keys(pPoints);
-        
-        return (<ul>{pNames.map((pName, i) => 
-            <li key={i}>{pName}: {pPoints[pName].map( (p, i) =>
-                <span key={i}>({p.x.toFixed(2)}, {p.y.toFixed(2)}):({p.long}, {p.lat}):note={p.note} </span>
-            )}</li>)}
-            </ul>);
+        this.state.dots.sort((a, b) => a.parent > b.parent ? 1 : -1);
+        var res = "";
+        this.state.dots.map(d => res += JSON.stringify(d));
+        return res; 
     }
 
     render() {
-        const { dots, pistePoints } = this.state;
-        const dim = this.state.dimensions;
+        const { dots } = this.state;
 
         return (
             <div id="matcher">
@@ -137,22 +120,9 @@ class Matcher extends React.Component {
                     boxShadow: '0 2px 4px gray',
                 }} 
                 />
-                <FileForm imgSrc={this.state.src} pistePoints={this.state.pistePoints} loadData={(data) => this.loadFileData(data)}></FileForm>
-
-                <p>Render dim w:{dim.renderWidth} h:{dim.renderHeight}</p>
-                <p>Real dim w:{dim.realWidth} h:{dim.realHeight}</p>
-                <button onClick={this.resetDots}>Reset</button>
-                {<DotsInfo
-                width={dim.renderWidth}
-                height={dim.renderHeight}
-                realHeight={dim.realHeight}
-                realWidth={dim.realWidth}
-                dots={dots}
-                deleteDot={this.deleteDot}
-                />}
+                <FileForm imgSrc={this.state.src} data={this.state.dots} loadData={(data) => this.loadFileData(data)}></FileForm>
                 
-                <p>Dots</p>
-                <p>{dots.map((dot, i) => <span key={i}>({dot.x}, {dot.y}), </span>)}</p>
+                <button onClick={this.resetDots}>Reset</button>
                 
                 <p>Piste points</p>
                 {this.printPistePoints()}
@@ -170,7 +140,7 @@ class Matcher extends React.Component {
                     <br/>
                 </div>
                 <div className="piste-button-container">
-                    {Object.keys(pistePoints)
+                    {this.state.parents
                     .map(x => <Button key={x} onClick={() => this.setState({currentPiste: x})}>{x}</Button>)}
                 </div>
             

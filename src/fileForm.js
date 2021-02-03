@@ -18,7 +18,7 @@ class FileForm extends React.Component {
             json: String(filename) + ".json",
             csv: String(filename) + ".csv",
             text: String(filename) + ".txt"
-        }    
+        }
 
         this.state = {
             fileType: defaultFileType,
@@ -40,30 +40,23 @@ class FileForm extends React.Component {
     download (event) {
         event.preventDefault();
         let output;
-        let data = this.props.pistePoints; 
-        var pisteName; 
-        var point; 
+        let data = this.props.data; 
         if (this.state.fileType === "json") {
             output = JSON.stringify({pistePoints: data}, null, 4);
         } else if (this.state.fileType === "csv") {
             let contents = [];
-            contents.push (["name", "x", "y", "long", "lat", "note"]);
-            for(pisteName of Object.keys(data)) {
-                for(point of data[pisteName]) {
-                    contents.push ([pisteName, point.x, point.y, point.long, point.lat, point.note]);
-                }
-            }
+            contents.push (["x", "y", "long", "lat", "parent", "parentType", "note"]);
+            data.map(point => contents.push([point.x, point.y, point.long, point.lat, point.parent, point.parentType, point.note]));
             output = this.makeCSV(contents);
         } else if (this.state.fileType === "text") {
             output = '';
-            for(pisteName of Object.keys(data)) {
-                for(point of data[pisteName]) {
-                    output += pisteName + ":"; 
-                    output += "(" + point.x + "," + point.y + "),";
-                    output += "[" + point.long + "," + point.lat + "],"
-                    output += "\"" + point.note + "\"\n";
-                }
-            }
+            data.map(point => {
+                output += "x:" + point.x + ",y:" + point.y;
+                output += ",long:" + point.long + ",lat:" + point.lat;
+                output += ",parent:" + point.parent + ",parentType:"+point.parentType;
+                output += ",note:" + point.note + "\n";
+                return output;
+            });
         }
         const blob = new Blob([output]);
         const fileDownloadUrl = URL.createObjectURL(blob);

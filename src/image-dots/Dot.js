@@ -2,8 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 const propTypes = {
-  x: PropTypes.number.isRequired,
-  y: PropTypes.number.isRequired,
+  dotX: PropTypes.number.isRequired,
+  dotY: PropTypes.number.isRequired,
   i: PropTypes.number.isRequired,
   moveDot: PropTypes.func.isRequired,
   dotRadius: PropTypes.number,
@@ -21,7 +21,7 @@ export default class Dot extends React.Component {
   }
 
   render() {
-    const { x, y, styles, dotRadius } = this.props;
+    const { dotX, dotY, styles, dotRadius } = this.props;
     return (
       <div
         className="react-image-dot"
@@ -32,8 +32,8 @@ export default class Dot extends React.Component {
           width: dotRadius * 2,
           borderRadius: dotRadius,
           transform: `translate(${-dotRadius}, ${-dotRadius})`,
-          top: y,
-          left: x
+          top: dotY,
+          left: dotX
         }}
       />
     );
