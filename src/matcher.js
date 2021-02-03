@@ -3,6 +3,7 @@ import './styles/image-dots.css';
 import React from 'react';
 import {Form, Button} from 'react-bootstrap';
 
+import FileForm from './fileForm.js';
 import ReactImageDot from './image-dots/ReactImageDot';
 import DotsInfo from './image-dots/DotsInfo';
 
@@ -102,13 +103,17 @@ class Matcher extends React.Component {
         });
     }
 
+    loadFileData(data) {
+        this.setState({pistePoints: data});
+    }
+
     printPistePoints() {
         let pPoints = this.state.pistePoints;
         let pNames = Object.keys(pPoints);
         
         return (<ul>{pNames.map((pName, i) => 
             <li key={i}>{pName}: {pPoints[pName].map( (p, i) =>
-                <span key={i}>({p.x.toFixed(2)}, {p.y.toFixed(2)}):({p.long}, {p.lat}), </span>
+                <span key={i}>({p.x.toFixed(2)}, {p.y.toFixed(2)}):({p.long}, {p.lat}):note={p.note} </span>
             )}</li>)}
             </ul>);
     }
@@ -132,6 +137,8 @@ class Matcher extends React.Component {
                     boxShadow: '0 2px 4px gray',
                 }} 
                 />
+                <FileForm imgSrc={this.state.src} pistePoints={this.state.pistePoints} loadData={(data) => this.loadFileData(data)}></FileForm>
+
                 <p>Render dim w:{dim.renderWidth} h:{dim.renderHeight}</p>
                 <p>Real dim w:{dim.realWidth} h:{dim.realHeight}</p>
                 <button onClick={this.resetDots}>Reset</button>
@@ -149,8 +156,6 @@ class Matcher extends React.Component {
                 
                 <p>Piste points</p>
                 {this.printPistePoints()}
-                {/*Object.keys(this.state.pistePoints)
-                    .map(x => <span key={x}>{x}: </span>)*/} 
 
                 <br/>
                 current piste: {this.state.currentPiste}
@@ -168,7 +173,7 @@ class Matcher extends React.Component {
                     {Object.keys(pistePoints)
                     .map(x => <Button key={x} onClick={() => this.setState({currentPiste: x})}>{x}</Button>)}
                 </div>
-
+            
             </div>);
     }
 }
