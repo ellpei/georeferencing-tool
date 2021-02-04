@@ -22,6 +22,7 @@ class Matcher extends React.Component {
             dots: this.initialDots,
             parents: [],
             windowWidth: window.innerWidth*0.98,
+            currentDot: {},
         }
         this.onKeyUp = this.onKeyUp.bind(this);
     }
@@ -46,11 +47,13 @@ class Matcher extends React.Component {
         };
         this.setState({
             dots: [...this.state.dots, point],
+            currentDot: point,
         });
 
         if(!this.state.parents.includes(point.parent)) {
             this.setState({parents: [...this.state.parents, point.parent]});
         }
+        console.log("in addDot");
     }
     
     deleteDot = (index) => {
@@ -64,6 +67,7 @@ class Matcher extends React.Component {
     resetDots = () => {
         this.setState({
             dots: this.initialDots,
+            currentDot: {},
         });
     }
 
@@ -97,14 +101,14 @@ class Matcher extends React.Component {
     }
 
     printPistePoints() {
-        this.state.dots.sort((a, b) => a.parent > b.parent ? 1 : -1);
+        //this.state.dots.sort((a, b) => a.parent > b.parent ? 1 : -1);
         var res = "";
         this.state.dots.map(d => res += JSON.stringify(d));
         return res; 
     }
 
     render() {
-        const { dots } = this.state;
+        const { dots, currentDot } = this.state;
 
         return (
             <div id="matcher">
@@ -116,6 +120,7 @@ class Matcher extends React.Component {
                 deleteDot={this.deleteDot}
                 addDot={this.addDot}
                 dotRadius={6}
+                currentDot={currentDot}
                 dotStyles={{
                     backgroundColor: 'red',
                     boxShadow: '0 2px 4px gray',

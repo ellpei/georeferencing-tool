@@ -6,8 +6,6 @@
     background-color: white;
     width: 50%;
     border-radius: 5px;
-    left: 15%;
-    top: 20%;
     box-sizing: border-box;
     transition: all 0.3s ease-out;
 }

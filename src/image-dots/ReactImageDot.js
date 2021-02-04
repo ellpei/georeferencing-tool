@@ -45,6 +45,7 @@ export default class ReactImageDot extends React.Component {
             grabbing: false,
             dimensions: {},
             showModal: false,
+            currentDot: {},
         };
         this.onLoadPisteMap = this.onLoadPisteMap.bind(this);
         this.handleShowModal = this.handleShowModal.bind(this);
@@ -72,6 +73,8 @@ export default class ReactImageDot extends React.Component {
         this.props.addDot({
             x: this.renderedToRealCoord(e.clientX - bounds.left, dim.renderWidth, dim.realWidth),
             y: this.renderedToRealCoord(e.clientY - bounds.top, dim.renderHeight, dim.realHeight),
+            long: 1,
+            lat: 2,
         });
     }
 
@@ -107,7 +110,7 @@ export default class ReactImageDot extends React.Component {
         const { grabbing, showModal } = this.state;
         const dim = this.state.dimensions; 
 
-        const { dots, width, height, styles, dotStyles, backgroundImageUrl, dotRadius } = this.props;
+        const { dots, width, height, styles, dotStyles, backgroundImageUrl, dotRadius, currentDot } = this.props;
         const grabClass = grabbing ? 'react-image-dot__grabbing' : '';
         
         return (
@@ -133,11 +136,17 @@ export default class ReactImageDot extends React.Component {
                 key={i}
                 />
             )}
-            
+            {/** TODO handleDeleteDot */}
             </div>
-            {/** TODO: set posX and posY */}
-            <GeoCoordSelector show={showModal} posX={10} posY={10} handleClose={this.handleCloseModal}/>
-            
+            <GeoCoordSelector show={showModal} 
+            posX={this.realToRenderedCoord(currentDot.x, dim.renderWidth, dim.realWidth)+25} 
+            posY={this.realToRenderedCoord(currentDot.y, dim.renderWidth, dim.realWidth)-25} 
+            handleClose={this.handleCloseModal}
+            handleDeleteDot={this.handleDeleteDot}
+            />
+
+            <p>current dot: {JSON.stringify(currentDot)} </p>
+
             {this.props.resetDots &&
             <button onClick={this.resetDots}>Reset</button>
             }
