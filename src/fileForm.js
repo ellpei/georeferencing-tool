@@ -1,7 +1,7 @@
 import './styles/fileForm.css';
 import React from 'react';
-import {Form, Button} from 'react-bootstrap';
-
+import {Row, Form, Button} from 'react-bootstrap';
+import Container from 'react-bootstrap/Container';
 /**
  * Cred: https://jsfiddle.net/larrykluger/eo4dzptr/
  */
@@ -95,13 +95,10 @@ class FileForm extends React.Component {
         const reader = new FileReader();
             
         let fileloaded = e => {
-            // e.target.result is the file's content as text
             const fileContents = e.target.result;
             let json = JSON.parse(fileContents);
             this.props.loadData(json["pistePoints"]);
         }
-        
-        // Mainline of the method
         fileloaded = fileloaded.bind(this);
         reader.onload = fileloaded;
         reader.readAsText(fileObj);  
@@ -110,40 +107,35 @@ class FileForm extends React.Component {
     render() {
         return (
             <div id="fileForm">
-                <Form>
-                <span className="mr">File type:</span>
-                <select name="fileType"
-                    onChange={this.changeFileType}
-                    value={this.state.fileType}
-                    className="mr"
-                >
-                    <option value="csv">CSV</option>
-                    <option value="json">JSON</option>
-                    <option value="text">Text</option>
-                </select>
+                <Container className="selectcontainer">
+                    <Row className="justify-content-md-center">
+                            <Form.Control as="select" name="fileType" className="fileForm-child"
+                                onChange={this.changeFileType}
+                                value={this.state.fileType}>
+                                <option value="csv">CSV</option>
+                                <option value="json">JSON</option>
+                                <option value="text">Text</option>
+                            </Form.Control>
+                        
+                            <Button onClick={this.download} className="fileForm-child">
+                                Download
+                            </Button>
+                        
+                            <a className="hidden"
+                                download={this.fileNames[this.state.fileType]}
+                                href={this.state.fileDownloadUrl}
+                                ref={e=>this.dofileDownload = e}>download it</a>
+                        
+                            <Button onClick={this.upload} className="fileForm-child">Upload</Button>
+                            <input type="file" className="hidden"
+                                multiple={false}
+                                accept=".json,application/json"
+                                onChange={evt => this.openFile(evt)}
+                                ref={e=>this.dofileUpload = e}/>
+                        
+                    </Row>
+                </Container>
                 
-                <Button onClick={this.download}>
-                    Download
-                </Button>
-                
-                <a className="hidden"
-                    download={this.fileNames[this.state.fileType]}
-                    href={this.state.fileDownloadUrl}
-                    ref={e=>this.dofileDownload = e}
-                >download it</a>
-                
-                <p><Button onClick={this.upload}>
-                    Upload
-                </Button><br/>
-                Accepted file types: .json</p>
-
-                <input type="file" className="hidden"
-                    multiple={false}
-                    accept=".json,application/json"
-                    onChange={evt => this.openFile(evt)}
-                    ref={e=>this.dofileUpload = e}
-                />
-                </Form>
             </div>);
     }
 }
