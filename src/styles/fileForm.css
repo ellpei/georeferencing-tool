@@ -3,11 +3,11 @@
     display: none;
 }
 
-select {
+#fileForm select {
     max-width: 100px;
 } 
 
-.selectcontainer {
+#fileForm .selectcontainer {
     width: 100%;
 }
 
