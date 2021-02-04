@@ -1,5 +1,6 @@
 import './styles/matcher.css';
 import './styles/image-dots.css';
+import './styles/geoCoordSelector.css';
 import React from 'react';
 import {Form, Button} from 'react-bootstrap';
 

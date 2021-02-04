@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import Dot from './Dot';
+import GeoCoordSelector from './geoCoordSelector.js';
 
 const propTypes = {
   // Required functions to handle parent-level state management
@@ -43,8 +44,11 @@ export default class ReactImageDot extends React.Component {
         this.state = {
             grabbing: false,
             dimensions: {},
+            showModal: false,
         };
         this.onLoadPisteMap = this.onLoadPisteMap.bind(this);
+        this.handleShowModal = this.handleShowModal.bind(this);
+        this.handleCloseModal = this.handleCloseModal.bind(this);
     }
 
     onLoadPisteMap({target: img}) {
@@ -63,6 +67,7 @@ export default class ReactImageDot extends React.Component {
         let dim = this.state.dimensions; 
         this.setState({
             grabbing: false,
+            showModal: true,
         });
         this.props.addDot({
             x: this.renderedToRealCoord(e.clientX - bounds.left, dim.renderWidth, dim.realWidth),
@@ -90,44 +95,56 @@ export default class ReactImageDot extends React.Component {
         return (coord/realLength)*renderedLength;
     }
 
+    handleShowModal() {
+        this.setState({showModal: true}); 
+    }
 
-  render() {
-    const { grabbing } = this.state;
-    const dim = this.state.dimensions; 
+    handleCloseModal() {
+        this.setState({showModal: false});
+    }
 
-    const { dots, width, height, styles, dotStyles, backgroundImageUrl, dotRadius } = this.props;
-    const grabClass = grabbing ? 'react-image-dot__grabbing' : '';
-    
-    return (
-      <div className="react-image-dot__container">
-      
-        <div className={`react-image-dot__wrapper ${grabClass}`}
-          onMouseUp={this.onMouseUp}
-          style={{
-            ...styles,
-            width,
-            height,
-          }}>
-          <img src={backgroundImageUrl} alt="Piste map" 
-            width={this.props.width} onLoad={this.onLoadPisteMap} />
-          {dots.map((dot, i) =>
-            <Dot
-              dotX={this.realToRenderedCoord(dot.x, dim.renderWidth, dim.realWidth)}
-              dotY={this.realToRenderedCoord(dot.y, dim.renderHeight, dim.realHeight)}
-              i={i}
-              styles={dotStyles}
-              moveDot={this.moveDot}
-              dotRadius={dotRadius}
-              key={i}
-            />
-          )}
+    render() {
+        const { grabbing, showModal } = this.state;
+        const dim = this.state.dimensions; 
+
+        const { dots, width, height, styles, dotStyles, backgroundImageUrl, dotRadius } = this.props;
+        const grabClass = grabbing ? 'react-image-dot__grabbing' : '';
+        
+        return (
+        <div className="react-image-dot__container">
+        
+            <div className={`react-image-dot__wrapper ${grabClass}`}
+            onMouseUp={this.onMouseUp}
+            style={{
+                ...styles,
+                width,
+                height,
+            }}>
+            <img src={backgroundImageUrl} alt="Piste map" 
+                width={this.props.width} onLoad={this.onLoadPisteMap} />
+            {dots.map((dot, i) =>
+                <Dot
+                dotX={this.realToRenderedCoord(dot.x, dim.renderWidth, dim.realWidth)}
+                dotY={this.realToRenderedCoord(dot.y, dim.renderHeight, dim.realHeight)}
+                i={i}
+                styles={dotStyles}
+                moveDot={this.moveDot}
+                dotRadius={dotRadius}
+                key={i}
+                />
+            )}
+            
+            </div>
+            {/** TODO: set posX and posY */}
+            <GeoCoordSelector show={showModal} posX={10} posY={10} handleClose={this.handleCloseModal}/>
+            
+            {this.props.resetDots &&
+            <button onClick={this.resetDots}>Reset</button>
+            }
+            Show: {showModal ? "true" : "false"}
         </div>
-        {this.props.resetDots &&
-          <button onClick={this.resetDots}>Reset</button>
-        }
-      </div>
-    );
-  }
+        );
+    }
 }
 
 ReactImageDot.propTypes = propTypes;
