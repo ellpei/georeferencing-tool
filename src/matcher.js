@@ -53,7 +53,6 @@ class Matcher extends React.Component {
         if(!this.state.parents.includes(point.parent)) {
             this.setState({parents: [...this.state.parents, point.parent]});
         }
-        console.log("in addDot");
     }
     
     deleteDot = (index) => {
@@ -61,6 +60,7 @@ class Matcher extends React.Component {
             dots: this.state.dots.filter((e, i) => {
                 return i !== index;
             }),
+            currentDot: {},
         });
     }
     
@@ -74,7 +74,6 @@ class Matcher extends React.Component {
     // Called when adding pistes / lifts 
     onKeyUp(e) {
         if (e.charCode === 13) {
-            //let dict = this.state.pistePoints;
             e.preventDefault(); 
             let pisteName = e.target.value;
             if(!this.state.parents.includes(pisteName)) {
@@ -101,7 +100,6 @@ class Matcher extends React.Component {
     }
 
     printPistePoints() {
-        //this.state.dots.sort((a, b) => a.parent > b.parent ? 1 : -1);
         var res = "";
         this.state.dots.map(d => res += JSON.stringify(d));
         return res; 

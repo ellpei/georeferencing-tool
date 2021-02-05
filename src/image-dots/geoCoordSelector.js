@@ -1,7 +1,8 @@
 import '../styles/geoCoordSelector.css';
 import React from 'react';
 import Backdrop from './backdrop.js';
-import {Button, Container} from 'react-bootstrap';
+import Dot from './Dot';
+import {Button} from 'react-bootstrap';
 import Card from 'react-bootstrap/Card';
 
 
@@ -17,16 +18,16 @@ class GeoCoordSelector extends React.Component {
     }
 
     render() {
-        const {posY, posX, dotRadius, show, handleClose, handleDelete} = this.props; 
+        const {posY, posX, dotRadius, show, handleClose, handleDelete, dotStyles} = this.props; 
         return (
             <div id="geoCoordSelector">
                 {show ? 
                     <div className="coord-selector">
                     <Backdrop show={show} clicked={handleClose} />
                     <Card className="modal-body" 
-                    style={{transform: `translate(${-dotRadius}, ${-dotRadius})`,
-                        top: Math.round(posY),
-                        left: Math.round(posX)}}>
+                    style={{
+                        top: Math.round(posY)-dotRadius,
+                        left: Math.round(posX)+20}}>
                         <Card.Body>
                             <Card.Title>Select Coordinates</Card.Title>
                             <Card.Text>

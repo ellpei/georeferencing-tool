@@ -50,6 +50,7 @@ export default class ReactImageDot extends React.Component {
         this.onLoadPisteMap = this.onLoadPisteMap.bind(this);
         this.handleShowModal = this.handleShowModal.bind(this);
         this.handleCloseModal = this.handleCloseModal.bind(this);
+        this.handleDeleteDot = this.handleDeleteDot.bind(this);
     }
 
     onLoadPisteMap({target: img}) {
@@ -106,6 +107,11 @@ export default class ReactImageDot extends React.Component {
         this.setState({showModal: false});
     }
 
+    handleDeleteDot() {
+        this.props.deleteDot(this.props.dots.length-1);
+        this.handleCloseModal();
+    }
+
     render() {
         const { grabbing, showModal } = this.state;
         const dim = this.state.dimensions; 
@@ -136,13 +142,14 @@ export default class ReactImageDot extends React.Component {
                 key={i}
                 />
             )}
-            {/** TODO handleDeleteDot */}
             </div>
             <GeoCoordSelector show={showModal} 
-            posX={this.realToRenderedCoord(currentDot.x, dim.renderWidth, dim.realWidth)+25} 
-            posY={this.realToRenderedCoord(currentDot.y, dim.renderWidth, dim.realWidth)-25} 
+            posX={this.realToRenderedCoord(currentDot.x, dim.renderWidth, dim.realWidth)} 
+            posY={this.realToRenderedCoord(currentDot.y, dim.renderWidth, dim.realWidth)} 
             handleClose={this.handleCloseModal}
-            handleDeleteDot={this.handleDeleteDot}
+            handleDelete={this.handleDeleteDot}
+            dotRadius={dotRadius}
+            dotStyles={dotStyles}
             />
 
             <p>current dot: {JSON.stringify(currentDot)} </p>
