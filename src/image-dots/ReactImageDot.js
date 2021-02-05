@@ -149,9 +149,12 @@ export default class ReactImageDot extends React.Component {
             handleClose={this.handleCloseModal}
             handleDelete={this.handleDeleteDot}
             setCurrentPiste={this.props.setCurrentPiste}
+            setCurrentParentType={this.props.setCurrentParentType}
             currentPiste={this.props.currentPiste}
+            currentParentType={this.props.currentParentType}
             dotRadius={dotRadius}
             parents={this.props.parents}
+            parentTypes={this.props.parentTypes}
             dotStyles={dotStyles}
             />
 

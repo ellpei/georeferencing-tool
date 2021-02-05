@@ -16,13 +16,16 @@ class Matcher extends React.Component {
             src: this.props.resort.src,
             x: 0,
             y: 0,
-            currentPiste: "",
+            currentParent: "",
+            currentParentType: "Piste",
             dots: this.initialDots,
             parents: [],
+            parentTypes: ['Piste', 'Lift', 'Restaurant', 'Other'],
             windowWidth: window.innerWidth*0.98,
             currentDot: {},
         }
-        this.setCurrentPiste = this.setCurrentPiste.bind(this);
+        this.setCurrentParent = this.setCurrentParent.bind(this);
+        this.setCurrentParentType = this.setCurrentParentType.bind(this);
     }
     // Translate from rendered coordinates to real piste map coordinates
     renderedToRealCoord(coord, renderedLength, realLength) {
@@ -34,17 +37,17 @@ class Matcher extends React.Component {
     }
 
     addDot = (dot) => {
-        let currentPiste = this.state.currentPiste; 
+        let {currentParent, currentParentType, dots} = this.state; 
         let point = {
             "x": dot.x,
             "y": dot.y,
             "long": 0, "lat": 0, 
-            "parent": currentPiste,
-            "parentType": "piste",
+            "parent": currentParent,
+            "parentType": currentParentType,
             "note": ""
         };
         this.setState({
-            dots: [...this.state.dots, point],
+            dots: [...dots, point],
             currentDot: point,
         });
 
@@ -69,11 +72,18 @@ class Matcher extends React.Component {
         });
     }
 
-    setCurrentPiste(pisteName) {
-        if(!this.state.parents.includes(pisteName)) {
-            this.setState({parents: [...this.state.parents, pisteName]});
+    setCurrentParent(parentName) {
+        if(!this.state.parents.includes(parentName)) {
+            this.setState({parents: [...this.state.parents, parentName]});
         }
-        this.setState({currentPiste: pisteName});
+        this.setState({currentParent: parentName});
+    }
+
+    setCurrentParentType(type) {
+        if(!this.state.parentTypes.includes(type)) {
+            this.setState({parentTypes: [...this.state.parentTypes, type]});
+        }
+        this.setState({currentParentType: type});
     }
 
     handleResize = () => {
@@ -99,7 +109,7 @@ class Matcher extends React.Component {
     }
 
     render() {
-        const { dots, currentDot, currentPiste } = this.state;
+        const { dots, currentDot, currentParent, currentParentType } = this.state;
 
         return (
             <div id="matcher">
@@ -109,27 +119,27 @@ class Matcher extends React.Component {
                 width={this.state.windowWidth}
                 dots={dots}
                 parents={this.state.parents}
+                parentTypes={this.state.parentTypes}
                 deleteDot={this.deleteDot}
                 addDot={this.addDot}
-                setCurrentPiste={this.setCurrentPiste}
+                setCurrentPiste={this.setCurrentParent}
+                setCurrentParentType={this.setCurrentParentType}
                 dotRadius={6}
                 currentDot={currentDot}
-                currentPiste={currentPiste}
+                currentPiste={currentParent}
+                currentParentType={currentParentType}
                 dotStyles={{
                     backgroundColor: 'red',
                     boxShadow: '0 2px 4px gray',
                 }} 
                 />
                 <FileForm imgSrc={this.state.src} data={this.state.dots} loadData={(data) => this.loadFileData(data)}></FileForm>
-                current piste: {this.state.currentPiste}
+                current piste: {this.state.currentParent}
 
                 <button onClick={this.resetDots}>Reset</button>
                 
                 <p>Piste points</p>
                 {this.printPistePoints()}
-
-                
-            
             </div>);
     }
 }

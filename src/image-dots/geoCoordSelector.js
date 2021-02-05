@@ -1,7 +1,6 @@
 import '../styles/geoCoordSelector.css';
 import React from 'react';
 import Backdrop from './backdrop.js';
-import Dot from './Dot';
 import {Button, Form} from 'react-bootstrap';
 import Card from 'react-bootstrap/Card';
 import Creatable from 'react-select/creatable';
@@ -15,6 +14,7 @@ class GeoCoordSelector extends React.Component {
         }
         this.handleClose = this.handleClose.bind(this);
         this.onKeyUp = this.onKeyUp.bind(this);
+        this.onChangeParentType = this.onChangeParentType.bind(this);
     }
 
     handleClose() {
@@ -37,8 +37,12 @@ class GeoCoordSelector extends React.Component {
         return res; 
     }
 
+    onChangeParentType(event) {
+        this.props.setCurrentParentType(event.target.value);
+    }
+
     render() {
-        const {posY, posX, dotRadius, show, handleClose, handleDelete, dotStyles} = this.props; 
+        const {posY, posX, dotRadius, show, handleClose, handleDelete, dotStyles, parentTypes} = this.props; 
     
         return (
             <div id="geoCoordSelector">
@@ -55,13 +59,19 @@ class GeoCoordSelector extends React.Component {
                             <Card.Text>
                             
                             </Card.Text>
-                            Select or add parent:
-                            <Creatable 
-                            onCreateOption={this.props.setCurrentPiste}
-                            onChange={(x) => this.props.setCurrentPiste(x.value)}
-                            defaultValue={this.getValueLabelList([this.props.currentPiste])}
-                            options={this.getValueLabelList(this.props.parents)}
-                        />
+                            <Form>
+                                Select or add parent:
+                                <Creatable 
+                                onCreateOption={this.props.setCurrentPiste}
+                                onChange={(x) => this.props.setCurrentPiste(x.value)}
+                                defaultValue={this.getValueLabelList([this.props.currentPiste])}
+                                options={this.getValueLabelList(this.props.parents)}/>
+                                
+                                <div>
+                                    {parentTypes.map(type => <span key={type}><input type="radio" value={type} onChange={this.onChangeParentType} name="type" className="parent-type-selector" checked={this.props.currentParentType === type}/>{type}</span>)}
+                                </div>
+                            </Form>
+                            
                                                  
                         </Card.Body>
                         <Card.Footer>
