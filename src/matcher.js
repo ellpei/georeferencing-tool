@@ -16,16 +16,13 @@ class Matcher extends React.Component {
             src: this.props.resort.src,
             x: 0,
             y: 0,
-            currentParent: "",
-            currentParentType: "Piste",
             dots: this.initialDots,
             parents: [],
             parentTypes: ['Piste', 'Lift', 'Restaurant', 'Other'],
             windowWidth: window.innerWidth*0.98,
-            currentDot: {},
         }
-        this.setCurrentParent = this.setCurrentParent.bind(this);
-        this.setCurrentParentType = this.setCurrentParentType.bind(this);
+        this.addParent = this.addParent.bind(this);
+        this.addParentType = this.addParentType.bind(this);
     }
     // Translate from rendered coordinates to real piste map coordinates
     renderedToRealCoord(coord, renderedLength, realLength) {
@@ -37,23 +34,18 @@ class Matcher extends React.Component {
     }
 
     addDot = (dot) => {
-        let {currentParent, currentParentType, dots} = this.state; 
-        let point = {
-            "x": dot.x,
-            "y": dot.y,
-            "long": 0, "lat": 0, 
-            "parent": currentParent,
-            "parentType": currentParentType,
-            "note": ""
-        };
+        let {dots} = this.state; 
+        
         this.setState({
-            dots: [...dots, point],
-            currentDot: point,
+            dots: [...dots, dot],
         });
-
-        if(!this.state.parents.includes(point.parent)) {
-            this.setState({parents: [...this.state.parents, point.parent]});
+        if(!this.state.parents.includes(dot.parent)) {
+            this.setState({parents: [...this.state.parents, dot.parent]});
         }
+    }
+
+    saveDot = (index) => {
+        console.log('in save dot');
     }
     
     deleteDot = (index) => {
@@ -61,29 +53,25 @@ class Matcher extends React.Component {
             dots: this.state.dots.filter((e, i) => {
                 return i !== index;
             }),
-            currentDot: {},
         });
     }
     
     resetDots = () => {
         this.setState({
             dots: this.initialDots,
-            currentDot: {},
         });
     }
 
-    setCurrentParent(parentName) {
+    addParent(parentName) {
         if(!this.state.parents.includes(parentName)) {
             this.setState({parents: [...this.state.parents, parentName]});
         }
-        this.setState({currentParent: parentName});
     }
 
-    setCurrentParentType(type) {
+    addParentType(type) {
         if(!this.state.parentTypes.includes(type)) {
             this.setState({parentTypes: [...this.state.parentTypes, type]});
         }
-        this.setState({currentParentType: type});
     }
 
     handleResize = () => {
@@ -109,7 +97,7 @@ class Matcher extends React.Component {
     }
 
     render() {
-        const { dots, currentDot, currentParent, currentParentType } = this.state;
+        const { dots } = this.state;
 
         return (
             <div id="matcher">
@@ -121,20 +109,17 @@ class Matcher extends React.Component {
                 parents={this.state.parents}
                 parentTypes={this.state.parentTypes}
                 deleteDot={this.deleteDot}
+                saveDot={this.saveDot}
                 addDot={this.addDot}
-                setCurrentPiste={this.setCurrentParent}
-                setCurrentParentType={this.setCurrentParentType}
+                addParent={this.addParent}
+                addParentType={this.addParentType}
                 dotRadius={6}
-                currentDot={currentDot}
-                currentPiste={currentParent}
-                currentParentType={currentParentType}
                 dotStyles={{
                     backgroundColor: 'red',
                     boxShadow: '0 2px 4px gray',
                 }} 
                 />
                 <FileForm imgSrc={this.state.src} data={this.state.dots} loadData={(data) => this.loadFileData(data)}></FileForm>
-                current piste: {this.state.currentParent}
 
                 <button onClick={this.resetDots}>Reset</button>
                 

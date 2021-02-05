@@ -46,11 +46,16 @@ export default class ReactImageDot extends React.Component {
             dimensions: {},
             showModal: false,
             currentDot: {},
+            currentParent: "",
+            currentParentType: "Piste",
         };
         this.onLoadPisteMap = this.onLoadPisteMap.bind(this);
         this.handleShowModal = this.handleShowModal.bind(this);
         this.handleCloseModal = this.handleCloseModal.bind(this);
+        this.handleSave = this.handleSave.bind(this);
         this.handleDeleteDot = this.handleDeleteDot.bind(this);
+        this.setCurrentParent = this.setCurrentParent.bind(this);
+        this.setCurrentParentType = this.setCurrentParentType.bind(this);
     }
 
     onLoadPisteMap({target: img}) {
@@ -66,17 +71,31 @@ export default class ReactImageDot extends React.Component {
 
     onMouseUp = (e) => {
         const bounds = e.target.getBoundingClientRect();
-        let dim = this.state.dimensions; 
+        let {dimensions, currentParent, currentParentType} = this.state; 
+        let dot = {
+            "x": this.renderedToRealCoord(e.clientX - bounds.left, dimensions.renderWidth, dimensions.realWidth),
+            "y": this.renderedToRealCoord(e.clientY - bounds.top, dimensions.renderHeight, dimensions.realHeight),
+            "long": 1, "lat": 2, 
+            "parent": currentParent,
+            "parentType": currentParentType,
+            "note": ""
+        };
         this.setState({
             grabbing: false,
             showModal: true,
+            currentDot: dot
         });
-        this.props.addDot({
-            x: this.renderedToRealCoord(e.clientX - bounds.left, dim.renderWidth, dim.realWidth),
-            y: this.renderedToRealCoord(e.clientY - bounds.top, dim.renderHeight, dim.realHeight),
-            long: 1,
-            lat: 2,
-        });
+        this.props.addDot(dot);
+    }
+
+    setCurrentParent(parent) {
+        this.setState({currentParent: parent});
+        this.props.addParent(parent);
+    }
+
+    setCurrentParentType(type) {
+        this.setState({currentParentType: type});
+        this.props.addParentType(type);
     }
 
     moveDot = (index) => {
@@ -107,16 +126,21 @@ export default class ReactImageDot extends React.Component {
         this.setState({showModal: false});
     }
 
+    handleSave() {
+        this.props.saveDot(this.state.currentDot);
+        this.handleCloseModal();
+    }
+
     handleDeleteDot() {
         this.props.deleteDot(this.props.dots.length-1);
         this.handleCloseModal();
     }
 
     render() {
-        const { grabbing, showModal } = this.state;
+        const { grabbing, showModal, currentDot } = this.state;
         const dim = this.state.dimensions; 
 
-        const { dots, width, height, styles, dotStyles, backgroundImageUrl, dotRadius, currentDot } = this.props;
+        const { dots, width, height, styles, dotStyles, backgroundImageUrl, dotRadius } = this.props;
         const grabClass = grabbing ? 'react-image-dot__grabbing' : '';
         
         return (
@@ -147,11 +171,12 @@ export default class ReactImageDot extends React.Component {
             posX={this.realToRenderedCoord(currentDot.x, dim.renderWidth, dim.realWidth)} 
             posY={this.realToRenderedCoord(currentDot.y, dim.renderWidth, dim.realWidth)} 
             handleClose={this.handleCloseModal}
+            handleSave={this.handleSave}
             handleDelete={this.handleDeleteDot}
-            setCurrentPiste={this.props.setCurrentPiste}
-            setCurrentParentType={this.props.setCurrentParentType}
-            currentPiste={this.props.currentPiste}
-            currentParentType={this.props.currentParentType}
+            setCurrentParent={this.setCurrentParent}
+            setCurrentParentType={this.setCurrentParentType}
+            currentParent={this.state.currentParent}
+            currentParentType={this.state.currentParentType}
             dotRadius={dotRadius}
             parents={this.props.parents}
             parentTypes={this.props.parentTypes}

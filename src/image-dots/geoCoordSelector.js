@@ -13,22 +13,11 @@ class GeoCoordSelector extends React.Component {
             pisteInputValue: "",
         }
         this.handleClose = this.handleClose.bind(this);
-        this.onKeyUp = this.onKeyUp.bind(this);
         this.onChangeParentType = this.onChangeParentType.bind(this);
     }
 
     handleClose() {
         this.setState({show: false});
-    }
-
-    // Called when adding pistes / lifts 
-    onKeyUp(e) {
-        if (e.charCode === 13) {
-            e.preventDefault(); 
-            let pisteName = e.target.value;
-            this.props.setCurrentPiste(pisteName);
-            this.setState({pisteInputValue: ""});
-        }
     }
 
     getValueLabelList(list) {
@@ -38,11 +27,12 @@ class GeoCoordSelector extends React.Component {
     }
 
     onChangeParentType(event) {
+        event.preventDefault(); 
         this.props.setCurrentParentType(event.target.value);
     }
 
     render() {
-        const {posY, posX, dotRadius, show, handleClose, handleDelete, dotStyles, parentTypes} = this.props; 
+        const {posY, posX, dotRadius, show, handleClose, handleDelete, handleSave, parentTypes} = this.props; 
     
         return (
             <div id="geoCoordSelector">
@@ -62,13 +52,18 @@ class GeoCoordSelector extends React.Component {
                             <Form>
                                 Select or add parent:
                                 <Creatable 
-                                onCreateOption={this.props.setCurrentPiste}
-                                onChange={(x) => this.props.setCurrentPiste(x.value)}
-                                defaultValue={this.getValueLabelList([this.props.currentPiste])}
+                                onCreateOption={this.setCurrentParent}
+                                onChange={(x) => this.props.setCurrentParent(x.value)}
+                                defaultValue={this.getValueLabelList([this.props.currentParent])}
                                 options={this.getValueLabelList(this.props.parents)}/>
-                                
                                 <div>
-                                    {parentTypes.map(type => <span key={type}><input type="radio" value={type} onChange={this.onChangeParentType} name="type" className="parent-type-selector" checked={this.props.currentParentType === type}/>{type}</span>)}
+                                    {parentTypes.map(type => 
+                                        <span key={type}>
+                                            <input type="radio" value={type} 
+                                            onChange={this.onChangeParentType} 
+                                            name="type" className="parent-type-selector" 
+                                            checked={this.props.currentParentType === type}/>{type}
+                                        </span>)}
                                 </div>
                             </Form>
                             
@@ -77,7 +72,7 @@ class GeoCoordSelector extends React.Component {
                         <Card.Footer>
                         <Button variant="secondary" onClick={handleDelete}>Delete</Button>
                             <Button variant="secondary" onClick={handleClose}>Close</Button>
-                            <Button variant="primary" onClick={handleClose}>Save</Button>  
+                            <Button variant="primary" onClick={handleSave}>Save</Button>  
                         </Card.Footer> 
                     </Card>
                     </div>
