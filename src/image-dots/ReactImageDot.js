@@ -148,7 +148,10 @@ export default class ReactImageDot extends React.Component {
             posY={this.realToRenderedCoord(currentDot.y, dim.renderWidth, dim.realWidth)} 
             handleClose={this.handleCloseModal}
             handleDelete={this.handleDeleteDot}
+            setCurrentPiste={this.props.setCurrentPiste}
+            currentPiste={this.props.currentPiste}
             dotRadius={dotRadius}
+            parents={this.props.parents}
             dotStyles={dotStyles}
             />
 
@@ -157,7 +160,6 @@ export default class ReactImageDot extends React.Component {
             {this.props.resetDots &&
             <button onClick={this.resetDots}>Reset</button>
             }
-            Show: {showModal ? "true" : "false"}
         </div>
         );
     }

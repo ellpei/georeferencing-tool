@@ -2,7 +2,6 @@ import './styles/matcher.css';
 import './styles/image-dots.css';
 import './styles/geoCoordSelector.css';
 import React from 'react';
-import {Form, Button} from 'react-bootstrap';
 
 import FileForm from './fileForm.js';
 import ReactImageDot from './image-dots/ReactImageDot';
@@ -17,14 +16,13 @@ class Matcher extends React.Component {
             src: this.props.resort.src,
             x: 0,
             y: 0,
-            pisteInputValue: "",
             currentPiste: "",
             dots: this.initialDots,
             parents: [],
             windowWidth: window.innerWidth*0.98,
             currentDot: {},
         }
-        this.onKeyUp = this.onKeyUp.bind(this);
+        this.setCurrentPiste = this.setCurrentPiste.bind(this);
     }
     // Translate from rendered coordinates to real piste map coordinates
     renderedToRealCoord(coord, renderedLength, realLength) {
@@ -71,16 +69,11 @@ class Matcher extends React.Component {
         });
     }
 
-    // Called when adding pistes / lifts 
-    onKeyUp(e) {
-        if (e.charCode === 13) {
-            e.preventDefault(); 
-            let pisteName = e.target.value;
-            if(!this.state.parents.includes(pisteName)) {
-                this.setState({parents: [...this.state.parents, pisteName]});
-            }
-            this.setState({currentPiste: pisteName, pisteInputValue: ""});
+    setCurrentPiste(pisteName) {
+        if(!this.state.parents.includes(pisteName)) {
+            this.setState({parents: [...this.state.parents, pisteName]});
         }
+        this.setState({currentPiste: pisteName});
     }
 
     handleResize = () => {
@@ -106,7 +99,7 @@ class Matcher extends React.Component {
     }
 
     render() {
-        const { dots, currentDot } = this.state;
+        const { dots, currentDot, currentPiste } = this.state;
 
         return (
             <div id="matcher">
@@ -115,38 +108,27 @@ class Matcher extends React.Component {
                 onLoadMap={this.onLoadPisteMap}
                 width={this.state.windowWidth}
                 dots={dots}
+                parents={this.state.parents}
                 deleteDot={this.deleteDot}
                 addDot={this.addDot}
+                setCurrentPiste={this.setCurrentPiste}
                 dotRadius={6}
                 currentDot={currentDot}
+                currentPiste={currentPiste}
                 dotStyles={{
                     backgroundColor: 'red',
                     boxShadow: '0 2px 4px gray',
                 }} 
                 />
                 <FileForm imgSrc={this.state.src} data={this.state.dots} loadData={(data) => this.loadFileData(data)}></FileForm>
-                
+                current piste: {this.state.currentPiste}
+
                 <button onClick={this.resetDots}>Reset</button>
                 
                 <p>Piste points</p>
                 {this.printPistePoints()}
 
-                <br/>
-                current piste: {this.state.currentPiste}
                 
-                <div className="piste-input">
-                    <Form>
-                        <Form.Control type="text" 
-                        value={this.state.pisteInputValue} 
-                        onChange={e => this.setState({pisteInputValue: e.target.value})} 
-                        placeholder="Add piste" onKeyPress={this.onKeyUp}/>
-                    </Form>
-                    <br/>
-                </div>
-                <div className="piste-button-container">
-                    {this.state.parents
-                    .map(x => <Button key={x} onClick={() => this.setState({currentPiste: x})}>{x}</Button>)}
-                </div>
             
             </div>);
     }
