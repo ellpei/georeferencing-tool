@@ -8,28 +8,14 @@ const propTypes = {
   // Required functions to handle parent-level state management
   deleteDot: PropTypes.func.isRequired,
   addDot: PropTypes.func.isRequired,
-
   resetDots: PropTypes.func,
-
-  // CSS Styles for dots
   dotStyles: PropTypes.object,
-
-  // The radius of the dot
   dotRadius: PropTypes.number,
-
-  // The background image url to use
   backgroundImageUrl: PropTypes.string,
-
-  // Additional styles for container
   styles: PropTypes.object,
-
   // The width in pixels of the box. If unset, will be 100%
   width: PropTypes.number,
-
-  // The width in pixels of height
   height: PropTypes.number,
-
-  // To use pixel coordinates vs a scale from 0-1
   pixelCoordinates: PropTypes.bool,
 };
 
@@ -53,7 +39,6 @@ export default class ReactImageDot extends React.Component {
         this.handleShowModal = this.handleShowModal.bind(this);
         this.handleCloseModal = this.handleCloseModal.bind(this);
         this.handleSave = this.handleSave.bind(this);
-        this.handleDeleteDot = this.handleDeleteDot.bind(this);
         this.setCurrentParent = this.setCurrentParent.bind(this);
         this.setCurrentParentType = this.setCurrentParentType.bind(this);
     }
@@ -71,42 +56,50 @@ export default class ReactImageDot extends React.Component {
 
     onMouseUp = (e) => {
         const bounds = e.target.getBoundingClientRect();
-        let {dimensions, currentParent, currentParentType} = this.state; 
+        let {dimensions, currentParent, currentParentType, currentDot} = this.state; 
         let dot = {
             "x": this.renderedToRealCoord(e.clientX - bounds.left, dimensions.renderWidth, dimensions.realWidth),
             "y": this.renderedToRealCoord(e.clientY - bounds.top, dimensions.renderHeight, dimensions.realHeight),
-            "long": 1, "lat": 2, 
             "parent": currentParent,
             "parentType": currentParentType,
-            "note": ""
         };
         this.setState({
             grabbing: false,
             showModal: true,
-            currentDot: dot
+            currentDot: {...dot,...currentDot},
+            currentParent: currentDot.parent? currentDot.parent : currentParent,
+
         });
-        this.props.addDot(dot);
+        //this.props.addDot(dot);
+        console.log('on mouse up');
     }
 
     setCurrentParent(parent) {
-        this.setState({currentParent: parent});
+        let dot = this.state.currentDot;
+        dot.parent = parent;
+        this.setState({currentDot: dot, currentParent: parent});
         this.props.addParent(parent);
     }
 
     setCurrentParentType(type) {
-        this.setState({currentParentType: type});
+        let dot = this.state.currentDot;
+        dot.parentType = type;
+        this.setState({currentDot: dot, currentParentType: type});
         this.props.addParentType(type);
     }
 
     moveDot = (index) => {
+        console.log("move dot");
         this.setState({
             grabbing: true,
+            currentDot: this.props.dots[index],
         });
         this.props.deleteDot(index);
     }
 
     resetDots = () => {
         this.props.resetDots();
+        this.setState({currentDot: {}});
     }
 
     // Translate from rendered coordinates to real piste map coordinates
@@ -123,16 +116,14 @@ export default class ReactImageDot extends React.Component {
     }
 
     handleCloseModal() {
-        this.setState({showModal: false});
+        this.setState({showModal: false, currentDot: {}});
     }
 
-    handleSave() {
+    handleSave({note}) {
+        let dot = this.state.currentDot;
+        dot.note = note;
+        this.setState({currentDot: dot});
         this.props.saveDot(this.state.currentDot);
-        this.handleCloseModal();
-    }
-
-    handleDeleteDot() {
-        this.props.deleteDot(this.props.dots.length-1);
         this.handleCloseModal();
     }
 
@@ -154,29 +145,43 @@ export default class ReactImageDot extends React.Component {
                 height,
             }}>
             <img src={backgroundImageUrl} alt="Piste map" 
-                width={this.props.width} onLoad={this.onLoadPisteMap} />
+            width={this.props.width} onLoad={this.onLoadPisteMap} />
+            
             {dots.map((dot, i) =>
                 <Dot
-                dotX={this.realToRenderedCoord(dot.x, dim.renderWidth, dim.realWidth)}
-                dotY={this.realToRenderedCoord(dot.y, dim.renderHeight, dim.realHeight)}
+                dotX={Math.round(this.realToRenderedCoord(dot.x, dim.renderWidth, dim.realWidth))}
+                dotY={Math.round(this.realToRenderedCoord(dot.y, dim.renderHeight, dim.realHeight))}
                 i={i}
                 styles={dotStyles}
                 moveDot={this.moveDot}
                 dotRadius={dotRadius}
                 key={i}
-                />
-            )}
+                />)}
+            
+            {Object.keys(currentDot).length === 0 ? null: <Dot 
+                dotX={Math.round(this.realToRenderedCoord(currentDot.x, dim.renderWidth, dim.realWidth))}
+                dotY={Math.round(this.realToRenderedCoord(currentDot.y, dim.renderHeight, dim.realHeight))}
+                i={0}
+                styles={{
+                    backgroundColor: 'limegreen',
+                    boxShadow: '0 2px 4px gray',
+                }}
+                moveDot={() => console.log('try to move temp dot')}
+                dotRadius={dotRadius}
+                key={-1}
+                />}
+            
             </div>
             <GeoCoordSelector show={showModal} 
             posX={this.realToRenderedCoord(currentDot.x, dim.renderWidth, dim.realWidth)} 
             posY={this.realToRenderedCoord(currentDot.y, dim.renderWidth, dim.realWidth)} 
             handleClose={this.handleCloseModal}
             handleSave={this.handleSave}
-            handleDelete={this.handleDeleteDot}
             setCurrentParent={this.setCurrentParent}
             setCurrentParentType={this.setCurrentParentType}
             currentParent={this.state.currentParent}
             currentParentType={this.state.currentParentType}
+            currentDot={this.state.currentDot}
             dotRadius={dotRadius}
             parents={this.props.parents}
             parentTypes={this.props.parentTypes}

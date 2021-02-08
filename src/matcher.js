@@ -44,8 +44,10 @@ class Matcher extends React.Component {
         }
     }
 
-    saveDot = (index) => {
-        console.log('in save dot');
+    saveDot = (dot) => {
+        let {dots} = this.state; 
+        this.deleteDot(dots.length-1);
+        this.addDot(dot);
     }
     
     deleteDot = (index) => {
