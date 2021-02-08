@@ -172,7 +172,7 @@ export default class ReactImageDot extends React.Component {
                 />}
             
             </div>
-            <GeoCoordSelector show={showModal} 
+            <GeoCoordSelector show={showModal} dimensions={dim}
             posX={this.realToRenderedCoord(currentDot.x, dim.renderWidth, dim.realWidth)} 
             posY={this.realToRenderedCoord(currentDot.y, dim.renderWidth, dim.realWidth)} 
             handleClose={this.handleCloseModal}
@@ -182,10 +182,8 @@ export default class ReactImageDot extends React.Component {
             currentParent={this.state.currentParent}
             currentParentType={this.state.currentParentType}
             currentDot={this.state.currentDot}
-            dotRadius={dotRadius}
             parents={this.props.parents}
             parentTypes={this.props.parentTypes}
-            dotStyles={dotStyles}
             />
 
             <p>current dot: {JSON.stringify(currentDot)} </p>

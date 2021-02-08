@@ -2,9 +2,10 @@ import './styles/matcher.css';
 import './styles/image-dots.css';
 import './styles/geoCoordSelector.css';
 import React from 'react';
-
+import {Button} from 'react-bootstrap';
 import FileForm from './fileForm.js';
 import ReactImageDot from './image-dots/ReactImageDot';
+import DotsInfo from './image-dots/DotsInfo';
 
 class Matcher extends React.Component {
     
@@ -89,6 +90,7 @@ class Matcher extends React.Component {
     } 
 
     loadFileData(data) {
+        this.initialDots = data;
         this.setState({dots: data});
     }
 
@@ -122,11 +124,9 @@ class Matcher extends React.Component {
                 }} 
                 />
                 <FileForm imgSrc={this.state.src} data={this.state.dots} loadData={(data) => this.loadFileData(data)}></FileForm>
+                <DotsInfo dots={this.state.dots} deleteDot={this.deleteDot}></DotsInfo>
+                <Button variant='success' onClick={this.resetDots}>Reset</Button>
 
-                <button onClick={this.resetDots}>Reset</button>
-                
-                <p>Piste points</p>
-                {this.printPistePoints()}
             </div>);
     }
 }

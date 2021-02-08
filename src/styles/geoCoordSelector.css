@@ -4,10 +4,14 @@
     position: fixed;
     z-index: 500;
     background-color: white;
-    width: 50%;
+    width: 45%;
     border-radius: 5px;
     box-sizing: border-box;
     transition: all 0.3s ease-out;
+}
+
+.card {
+    padding: 0px;
 }
 
 .modal-backdrop {

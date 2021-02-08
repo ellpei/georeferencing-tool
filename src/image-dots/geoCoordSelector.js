@@ -12,6 +12,7 @@ class GeoCoordSelector extends React.Component {
         this.state = {
             pisteInputValue: "",
             note: this.props.currentDot.note ? this.props.currentDot.note : '',
+           
         }
         this.handleClose = this.handleClose.bind(this);
         this.onChangeParentType = this.onChangeParentType.bind(this);
@@ -43,14 +44,14 @@ class GeoCoordSelector extends React.Component {
     }
 
     onKeyPress(e) {
-        if(e.key == 'Enter') {
+        if(e.key === 'Enter') {
             this.handleSave();
         }
     }
 
     render() {
-        const {posY, posX, dotRadius, show, handleClose, parentTypes} = this.props; 
-    
+        const {show, handleClose, parentTypes} = this.props; 
+        var left = this.props.posX > this.props.dimensions.renderWidth/2 ? 10 : Math.round(this.props.dimensions.renderWidth/2)-10;
         return (
             <div id="geoCoordSelector">
                 {show ? 
@@ -59,8 +60,8 @@ class GeoCoordSelector extends React.Component {
                     
                     <Card className="modal-body" 
                     style={{
-                        top: Math.round(posY)-dotRadius,
-                        left: Math.round(posX)+20}}>
+                        top: 10,
+                        left: left}}>
                         <Card.Body>
                             <Card.Title>Select Coordinates</Card.Title>
                             <Card.Text>
