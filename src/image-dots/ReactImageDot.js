@@ -58,8 +58,8 @@ export default class ReactImageDot extends React.Component {
         const bounds = e.target.getBoundingClientRect();
         let {dimensions, currentParent, currentParentType, currentDot} = this.state; 
         let dot = {
-            "x": this.renderedToRealCoord(e.clientX - bounds.left, dimensions.renderWidth, dimensions.realWidth),
-            "y": this.renderedToRealCoord(e.clientY - bounds.top, dimensions.renderHeight, dimensions.realHeight),
+            "x": Math.round(this.renderedToRealCoord(e.clientX - bounds.left, dimensions.renderWidth, dimensions.realWidth)),
+            "y": Math.round(this.renderedToRealCoord(e.clientY - bounds.top, dimensions.renderHeight, dimensions.realHeight)),
             "parent": currentParent,
             "parentType": currentParentType,
         };
@@ -72,6 +72,11 @@ export default class ReactImageDot extends React.Component {
         });
         //this.props.addDot(dot);
         console.log('on mouse up');
+    }
+
+    updateCurrentDot = (dot) => {
+        let currentDot = this.state.currentDot;
+        this.setState({currentDot: {...currentDot,...dot}});
     }
 
     setCurrentParent(parent) {
@@ -119,10 +124,7 @@ export default class ReactImageDot extends React.Component {
         this.setState({showModal: false, currentDot: {}});
     }
 
-    handleSave({note}) {
-        let dot = this.state.currentDot;
-        dot.note = note;
-        this.setState({currentDot: dot});
+    handleSave() {
         this.props.saveDot(this.state.currentDot);
         this.handleCloseModal();
     }
@@ -179,6 +181,7 @@ export default class ReactImageDot extends React.Component {
             handleSave={this.handleSave}
             setCurrentParent={this.setCurrentParent}
             setCurrentParentType={this.setCurrentParentType}
+            updateCurrentDot={this.updateCurrentDot}
             currentParent={this.state.currentParent}
             currentParentType={this.state.currentParentType}
             currentDot={this.state.currentDot}

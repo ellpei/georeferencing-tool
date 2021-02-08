@@ -21,20 +21,18 @@ export default function DotsInfo({
         </thead>
         <tbody>
         {dots.map((dot, i) => {
-            return (
-            <tr>
-                <td>{i} </td>
-                <td>{dot.x.toFixed(2)}</td>
-                <td>{dot.y.toFixed(2)}</td>
-                <td>{dot.long}</td> 
-                <td>{dot.lat}</td>
-                <td>{dot.parent}</td>
-                <td>{dot.parentType}</td>
-                <td>{dot.note}</td>
-                <td><Button variant='danger' onClick={() => deleteDot(i)}>×</Button></td>
-            </tr>
-            );
-        })} </tbody>
+            return (<tr key={i}>
+                    <td>{i} </td>
+                    <td>{dot.x}</td>
+                    <td>{dot.y}</td>
+                    <td>{dot.long}</td> 
+                    <td>{dot.lat}</td>
+                    <td>{dot.parent}</td>
+                    <td>{dot.parentType}</td>
+                    <td>{dot.note}</td>
+                    <td><Button variant='danger' onClick={() => deleteDot(i)}>×</Button></td>
+            </tr>);})}
+        </tbody>
       </Table>
   );
 }

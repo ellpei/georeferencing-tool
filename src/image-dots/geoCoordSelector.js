@@ -1,7 +1,7 @@
 import '../styles/geoCoordSelector.css';
 import React from 'react';
 import Backdrop from './backdrop.js';
-import {Button, Form} from 'react-bootstrap';
+import {Button, Form, Row, Col} from 'react-bootstrap';
 import Card from 'react-bootstrap/Card';
 import Creatable from 'react-select/creatable';
 
@@ -11,13 +11,9 @@ class GeoCoordSelector extends React.Component {
         super(props);
         this.state = {
             pisteInputValue: "",
-            note: this.props.currentDot.note ? this.props.currentDot.note : '',
-           
         }
         this.handleClose = this.handleClose.bind(this);
         this.onChangeParentType = this.onChangeParentType.bind(this);
-        this.handleChangeNote = this.handleChangeNote.bind(this);
-        this.handleSave = this.handleSave.bind(this);
         this.onKeyPress = this.onKeyPress.bind(this);
     }
 
@@ -35,17 +31,9 @@ class GeoCoordSelector extends React.Component {
         this.props.setCurrentParentType(event.target.value);
     }
 
-    handleChangeNote(event) {
-        this.setState({note: event.target.value});
-    }
-
-    handleSave() {
-        this.props.handleSave({note: this.state.note});
-    }
-
     onKeyPress(e) {
         if(e.key === 'Enter') {
-            this.handleSave();
+            this.props.handleSave();
         }
     }
 
@@ -68,6 +56,30 @@ class GeoCoordSelector extends React.Component {
                             
                             </Card.Text>
                             <Form>
+                                <Form.Group as={Row}>
+                                    <Form.Label column sm="3">x:</Form.Label>
+                                    <Col sm="3">
+                                        <Form.Control type="number" defaultValue={this.props.currentDot.x} 
+                                        onChange={(e) => {this.props.updateCurrentDot({x: e.target.value})}}/>
+                                    </Col>
+                                    <Form.Label column sm="3">y:</Form.Label>
+                                    <Col sm="3">
+                                        <Form.Control type="number" defaultValue={this.props.currentDot.y} 
+                                        onChange={(e) => {this.props.updateCurrentDot({y: e.target.value})}}/>
+                                    </Col>
+                                </Form.Group>
+                                <Form.Group as={Row}>
+                                    <Form.Label column sm="3">long:</Form.Label>
+                                    <Col sm="3">
+                                        <Form.Control type="number" defaultValue={this.props.currentDot.long} 
+                                        onChange={(e) => {this.props.updateCurrentDot({long: e.target.value})}}/>
+                                    </Col>
+                                    <Form.Label column sm="3">lat:</Form.Label>
+                                    <Col sm="3">
+                                        <Form.Control type="number" defaultValue={this.props.currentDot.lat} 
+                                        onChange={(e) => {this.props.updateCurrentDot({lat: e.target.value})}}/>
+                                    </Col>
+                                </Form.Group>
                                 Select or add parent:
                                 <Creatable 
                                 onCreateOption={this.setCurrentParent}
@@ -83,13 +95,17 @@ class GeoCoordSelector extends React.Component {
                                             checked={this.props.currentParentType === type}/>{type}
                                         </span>)}
                                 </div>
-                                <Form.Control type="text" value={this.state.note} placeholder="Notes..." onChange={this.handleChangeNote} onKeyPress={this.onKeyPress}/>
+                                <Form.Control type="text" 
+                                defaultValue={this.props.currentDot.note} 
+                                placeholder="Notes..." 
+                                onChange={(e) => this.props.updateCurrentDot({note: e.target.value})} 
+                                onKeyPress={this.onKeyPress}/>
                             </Form>
                         </Card.Body>
                         <Card.Footer>
                         <Button variant="secondary" onClick={handleClose}>Delete</Button>
                             <Button variant="secondary" onClick={handleClose}>Close</Button>
-                            <Button variant="primary" onClick={this.handleSave}>Save</Button>  
+                            <Button variant="primary" onClick={this.props.handleSave}>Save</Button>  
                         </Card.Footer> 
                     </Card>
                     </div>
