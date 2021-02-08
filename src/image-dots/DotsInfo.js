@@ -25,7 +25,7 @@ export default function DotsInfo({
                     <td>{i} </td>
                     <td>{dot.x}</td>
                     <td>{dot.y}</td>
-                    <td>{dot.long}</td> 
+                    <td>{dot.lng}</td> 
                     <td>{dot.lat}</td>
                     <td>{dot.parent}</td>
                     <td>{dot.parentType}</td>

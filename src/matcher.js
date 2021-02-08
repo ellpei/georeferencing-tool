@@ -94,12 +94,6 @@ class Matcher extends React.Component {
         this.setState({dots: data});
     }
 
-    printPistePoints() {
-        var res = "";
-        this.state.dots.map(d => res += JSON.stringify(d));
-        return res; 
-    }
-
     render() {
         const { dots } = this.state;
 

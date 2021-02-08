@@ -70,8 +70,6 @@ export default class ReactImageDot extends React.Component {
             currentParent: currentDot.parent? currentDot.parent : currentParent,
 
         });
-        //this.props.addDot(dot);
-        console.log('on mouse up');
     }
 
     updateCurrentDot = (dot) => {
@@ -172,11 +170,9 @@ export default class ReactImageDot extends React.Component {
                 dotRadius={dotRadius}
                 key={-1}
                 />}
-            
             </div>
             <GeoCoordSelector show={showModal} dimensions={dim}
             posX={this.realToRenderedCoord(currentDot.x, dim.renderWidth, dim.realWidth)} 
-            posY={this.realToRenderedCoord(currentDot.y, dim.renderWidth, dim.realWidth)} 
             handleClose={this.handleCloseModal}
             handleSave={this.handleSave}
             setCurrentParent={this.setCurrentParent}
@@ -188,9 +184,6 @@ export default class ReactImageDot extends React.Component {
             parents={this.props.parents}
             parentTypes={this.props.parentTypes}
             />
-
-            <p>current dot: {JSON.stringify(currentDot)} </p>
-
             {this.props.resetDots &&
             <button onClick={this.resetDots}>Reset</button>
             }

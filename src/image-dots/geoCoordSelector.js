@@ -4,6 +4,7 @@ import Backdrop from './backdrop.js';
 import {Button, Form, Row, Col} from 'react-bootstrap';
 import Card from 'react-bootstrap/Card';
 import Creatable from 'react-select/creatable';
+import GoogleMap from './googleMap.js';
 
 class GeoCoordSelector extends React.Component {
     
@@ -37,9 +38,13 @@ class GeoCoordSelector extends React.Component {
         }
     }
 
+    setLatLong = (pos) => {
+        this.props.updateCurrentDot({lat: pos.lat(), lng: pos.lng()});
+    }
+
     render() {
         const {show, handleClose, parentTypes} = this.props; 
-        var left = this.props.posX > this.props.dimensions.renderWidth/2 ? 10 : Math.round(this.props.dimensions.renderWidth/2)-10;
+        var left = this.props.posX > this.props.dimensions.renderWidth/2 ? 10 : Math.round(this.props.dimensions.renderWidth/2)+20;
         return (
             <div id="geoCoordSelector">
                 {show ? 
@@ -53,7 +58,8 @@ class GeoCoordSelector extends React.Component {
                         <Card.Body>
                             <Card.Title>Select Coordinates</Card.Title>
                             <Card.Text>
-                            
+                            <p>current dot: {JSON.stringify(this.props.currentDot)} </p>
+
                             </Card.Text>
                             <Form>
                                 <Form.Group as={Row}>
@@ -69,16 +75,17 @@ class GeoCoordSelector extends React.Component {
                                     </Col>
                                 </Form.Group>
                                 <Form.Group as={Row}>
-                                    <Form.Label column sm="3">long:</Form.Label>
-                                    <Col sm="3">
-                                        <Form.Control type="number" defaultValue={this.props.currentDot.long} 
-                                        onChange={(e) => {this.props.updateCurrentDot({long: e.target.value})}}/>
-                                    </Col>
                                     <Form.Label column sm="3">lat:</Form.Label>
-                                    <Col sm="3">
-                                        <Form.Control type="number" defaultValue={this.props.currentDot.lat} 
-                                        onChange={(e) => {this.props.updateCurrentDot({lat: e.target.value})}}/>
-                                    </Col>
+                                    <Form.Label column sm="3">
+                                        {this.props.currentDot.lat}
+                                    </Form.Label>
+                                    <Form.Label column sm="3">lng:</Form.Label>
+                                    <Form.Label column sm="3">
+                                        {this.props.currentDot.lng}
+                                    </Form.Label>
+                                </Form.Group>
+                                <Form.Group>
+                                    <GoogleMap setLatLong={this.setLatLong} currentDot={this.props.currentDot}></GoogleMap>
                                 </Form.Group>
                                 Select or add parent:
                                 <Creatable 
