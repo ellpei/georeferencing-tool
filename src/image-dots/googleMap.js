@@ -13,11 +13,10 @@ class GoogleMap extends React.Component {
 
     constructor(props) {
         super(props);
-        let {lat, lng} = this.props.currentDot;
         this.state = {
             center: {
-                lat: lat !== undefined ? lat : 63.42833519737357,
-                lng: lng !== undefined ? lng : 13.078345603820786,
+                lat: this.props.currentDot.lat,
+                lng: this.props.currentDot.lng,
             },
             zoom: 13,
             marker: {},

@@ -34,6 +34,7 @@ export default class ReactImageDot extends React.Component {
             currentDot: {},
             currentParent: "",
             currentParentType: "Piste",
+            lastCoords: this.props.coords !== undefined ? this.props.coords : {lat: 63.42833519737357, lng: 13.078345603820786},
         };
         this.onLoadPisteMap = this.onLoadPisteMap.bind(this);
         this.handleShowModal = this.handleShowModal.bind(this);
@@ -56,25 +57,28 @@ export default class ReactImageDot extends React.Component {
 
     onMouseUp = (e) => {
         const bounds = e.target.getBoundingClientRect();
-        let {dimensions, currentParent, currentParentType, currentDot} = this.state; 
+        let {dimensions, currentParent, currentParentType, currentDot, lastCoords} = this.state; 
         let dot = {
             "x": Math.round(this.renderedToRealCoord(e.clientX - bounds.left, dimensions.renderWidth, dimensions.realWidth)),
             "y": Math.round(this.renderedToRealCoord(e.clientY - bounds.top, dimensions.renderHeight, dimensions.realHeight)),
             "parent": currentParent,
             "parentType": currentParentType,
+            "lat": lastCoords.lat,
+            "lng": lastCoords.lng,
         };
         this.setState({
             grabbing: false,
             showModal: true,
             currentDot: {...dot,...currentDot},
             currentParent: currentDot.parent? currentDot.parent : currentParent,
-
         });
     }
 
     updateCurrentDot = (dot) => {
         let currentDot = this.state.currentDot;
-        this.setState({currentDot: {...currentDot,...dot}});
+        this.setState({
+            lastCoords: {lat: dot.lat, lng: dot.lng},
+            currentDot: {...currentDot,...dot},});
     }
 
     setCurrentParent(parent) {
