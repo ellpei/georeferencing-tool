@@ -58,7 +58,7 @@ class GeoCoordSelector extends React.Component {
                         <Card.Body>
                             <Card.Title>Select Coordinates</Card.Title>
                             <Card.Text>
-                            <p>current dot: {JSON.stringify(this.props.currentDot)} </p>
+                            {/*<p>current dot: {JSON.stringify(this.props.currentDot)} </p>*/}
 
                             </Card.Text>
                             <Form>

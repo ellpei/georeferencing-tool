@@ -1,5 +1,13 @@
+import '../styles/googleMaps.css';
 import React from 'react';
-import GoogleMapReact from 'google-map-react';
+
+function loadJS(src) {
+    var ref = window.document.getElementsByTagName("script")[0];
+    var script = window.document.createElement("script");
+    script.src = src;
+    script.async = true;
+    ref.parentNode.insertBefore(script, ref);
+}
 
 class GoogleMap extends React.Component {
 
@@ -15,40 +23,46 @@ class GoogleMap extends React.Component {
             marker: {},
         };
         this.apiKey = process.env.REACT_APP_GOOGLE_API_KEY;
-        this.handleApiLoaded = this.handleApiLoaded.bind(this);
+        this.mapRef = React.createRef(); 
     }
 
-    handleApiLoaded = (map, maps) => {
-        let marker = new maps.Marker({
-            position: this.state.center,
+    componentDidMount() {
+        window.initMap = this.initMap;
+        loadJS('https://maps.googleapis.com/maps/api/js?key='+this.apiKey+'&callback=initMap')
+    }
+
+    initMap = () => {
+        const google = window.google;
+        let map = this.mapRef; 
+        let {center, zoom} = this.state;
+
+        map = new google.maps.Map(this.mapRef.current, {
+            center: center,
+            zoom: zoom,
+        });
+
+        let marker = new google.maps.Marker({
+            position: center,
             map,
-            title: "Test",
+            title: "Marker",
         });
         this.setState({marker: marker});
         
         map.addListener("click", (mapsMouseEvent) => {
             marker.setPosition(mapsMouseEvent.latLng);
             this.props.setLatLong(mapsMouseEvent.latLng);
+            map.panTo(mapsMouseEvent.latLng);
         });
-    };
+    }
 
     render() {
         return (
             <div id="google-map" style={{ height: '40vh', width: '100%' }}>
-                <GoogleMapReact
-                    bootstrapURLKeys={{ 
-                        key: this.apiKey, 
-                        libraries: ['localContext', 'places']}}
-                    defaultCenter={this.state.center}
-                    defaultZoom={this.state.zoom}
-                    yesIWantToUseGoogleMapApiInternals
-                    onGoogleApiLoaded={({ map, maps }) => this.handleApiLoaded(map, maps)}
-                    layerTypes={['TransitLayer']}
-                >
-              </GoogleMapReact>
+              <div ref={this.mapRef} id="map"></div>
             </div>
         );
     }
 }
+
 
 export default GoogleMap;
