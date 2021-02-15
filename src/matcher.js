@@ -113,7 +113,8 @@ class Matcher extends React.Component {
                 addParentType={this.addParentType}
                 dotRadius={6}
                 dotStyles={{
-                    backgroundColor: 'red',
+                    //backgroundColor: 'red',
+                    backgroundColor: 'rgba(255, 0, 0, 0.7)',
                     boxShadow: '0 2px 4px gray',
                 }} 
                 />

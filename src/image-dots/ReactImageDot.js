@@ -76,8 +76,10 @@ export default class ReactImageDot extends React.Component {
 
     updateCurrentDot = (dot) => {
         let currentDot = this.state.currentDot;
+        if(dot.lat !== undefined && dot.lng !== undefined) {
+            this.setState({lastCoords: {lat: dot.lat, lng: dot.lng}});
+        }
         this.setState({
-            lastCoords: {lat: dot.lat, lng: dot.lng},
             currentDot: {...currentDot,...dot},});
     }
 
@@ -168,6 +170,7 @@ export default class ReactImageDot extends React.Component {
                 i={0}
                 styles={{
                     backgroundColor: 'limegreen',
+                    opacity: '0.7',
                     boxShadow: '0 2px 4px gray',
                 }}
                 moveDot={() => console.log('try to move temp dot')}
