@@ -44,7 +44,8 @@ class GeoCoordSelector extends React.Component {
 
     render() {
         const {show, handleClose, parentTypes} = this.props; 
-        var left = this.props.posX > this.props.dimensions.renderWidth/2 ? 10 : Math.round(this.props.dimensions.renderWidth/2)+20;
+        const wW = window.innerWidth;
+        var left = this.props.posX > wW/2 ? 0 : Math.round(wW*0.525);
         return (
             <div id="geoCoordSelector">
                 {show ? 
@@ -58,8 +59,6 @@ class GeoCoordSelector extends React.Component {
                         <Card.Body>
                             <Card.Title>Select Coordinates</Card.Title>
                             <Card.Text>
-                            {/*<p>current dot: {JSON.stringify(this.props.currentDot)} </p>*/}
-
                             </Card.Text>
                             <Form>
                                 <Form.Group as={Row}>
