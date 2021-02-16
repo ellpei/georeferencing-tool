@@ -12,7 +12,7 @@ const propTypes = {
 }
 
 const defaultProps = {
-  dotRadius: 5,
+  dotRadius: 1,
 };
 
 export default class Dot extends React.Component {
@@ -30,7 +30,6 @@ export default class Dot extends React.Component {
           ...styles,
           height: dotRadius * 2,
           width: dotRadius * 2,
-          borderRadius: dotRadius,
           transform: `translate(${-dotRadius}, ${-dotRadius})`,
           top: dotY,
           left: dotX

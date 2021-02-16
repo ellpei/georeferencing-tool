@@ -110,12 +110,7 @@ class Matcher extends React.Component {
                 addDot={this.addDot}
                 addParent={this.addParent}
                 addParentType={this.addParentType}
-                dotRadius={6}
-                dotStyles={{
-                    //backgroundColor: 'red',
-                    backgroundColor: 'rgba(255, 0, 0, 0.7)',
-                    boxShadow: '0 2px 4px gray',
-                }} 
+                dotRadius={1}
                 />
                 <FileForm imgSrc={this.state.src} data={this.state.dots} loadData={(data) => this.loadFileData(data)}></FileForm>
                 <DotsInfo dots={this.state.dots} deleteDot={this.deleteDot}></DotsInfo>

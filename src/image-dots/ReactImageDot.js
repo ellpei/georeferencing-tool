@@ -137,7 +137,7 @@ export default class ReactImageDot extends React.Component {
         const { grabbing, showModal, currentDot } = this.state;
         const dim = this.state.dimensions; 
 
-        const { dots, dotStyles, backgroundImageUrl, dotRadius } = this.props;
+        const { dots, backgroundImageUrl, dotRadius } = this.props;
         const grabClass = grabbing ? 'react-image-dot__grabbing' : '';
         
         return (
@@ -155,7 +155,10 @@ export default class ReactImageDot extends React.Component {
                 dotX={Math.round(this.realToRenderedCoord(dot.x, dim.renderWidth, dim.realWidth))}
                 dotY={Math.round(this.realToRenderedCoord(dot.y, dim.renderHeight, dim.realHeight))}
                 i={i}
-                styles={dotStyles}
+                styles={{
+                    boxShadow: '0px 0px 0px 2px red',
+                    backgroundColor: 'red',
+                }}
                 moveDot={this.moveDot}
                 dotRadius={dotRadius}
                 key={i}
@@ -166,9 +169,8 @@ export default class ReactImageDot extends React.Component {
                 dotY={Math.round(this.realToRenderedCoord(currentDot.y, dim.renderHeight, dim.realHeight))}
                 i={0}
                 styles={{
-                    backgroundColor: 'limegreen',
-                    opacity: '0.7',
-                    boxShadow: '0 2px 4px gray',
+                    boxShadow: '0px 0px 0px 2px green',
+                    backgroundColor: 'green',
                 }}
                 moveDot={() => console.log('try to move temp dot')}
                 dotRadius={dotRadius}
