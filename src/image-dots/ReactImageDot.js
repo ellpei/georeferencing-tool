@@ -156,8 +156,8 @@ export default class ReactImageDot extends React.Component {
                 dotY={Math.round(this.realToRenderedCoord(dot.y, dim.renderHeight, dim.realHeight))}
                 i={i}
                 styles={{
-                    boxShadow: '0px 0px 0px 2px red',
-                    backgroundColor: 'red',
+                    boxShadow: '0px 0px 0px 2px purple',
+                    backgroundColor: 'purple',
                 }}
                 moveDot={this.moveDot}
                 dotRadius={dotRadius}
