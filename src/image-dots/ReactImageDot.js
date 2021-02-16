@@ -137,7 +137,7 @@ export default class ReactImageDot extends React.Component {
         const { grabbing, showModal, currentDot } = this.state;
         const dim = this.state.dimensions; 
 
-        const { dots, width, height, styles, dotStyles, backgroundImageUrl, dotRadius } = this.props;
+        const { dots, dotStyles, backgroundImageUrl, dotRadius } = this.props;
         const grabClass = grabbing ? 'react-image-dot__grabbing' : '';
         
         return (
@@ -145,13 +145,10 @@ export default class ReactImageDot extends React.Component {
         
             <div className={`react-image-dot__wrapper ${grabClass}`}
             onMouseUp={this.onMouseUp}
-            style={{
-                ...styles,
-                width,
-                height,
-            }}>
+            width={dim.realWidth}
+            height={dim.realHeight}>
             <img src={backgroundImageUrl} alt="Piste map" 
-            width={this.props.width} onLoad={this.onLoadPisteMap} />
+            width={dim.realWidth} onLoad={this.onLoadPisteMap} />
             
             {dots.map((dot, i) =>
                 <Dot

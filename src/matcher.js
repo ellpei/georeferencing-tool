@@ -102,7 +102,6 @@ class Matcher extends React.Component {
                 <ReactImageDot
                 backgroundImageUrl={this.state.src}
                 onLoadMap={this.onLoadPisteMap}
-                width={this.state.windowWidth}
                 dots={dots}
                 parents={this.state.parents}
                 parentTypes={this.state.parentTypes}
