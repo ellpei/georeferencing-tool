@@ -32,7 +32,7 @@ export default class ReactImageDot extends React.Component {
             dimensions: {},
             showModal: false,
             currentDot: {},
-            currentParent: "",
+            currentParent: [],
             currentParentType: "Piste",
             lastCoords: this.props.coords !== undefined ? this.props.coords : {lat: 63.42833519737357, lng: 13.078345603820786},
         };
@@ -83,11 +83,21 @@ export default class ReactImageDot extends React.Component {
             currentDot: {...currentDot,...dot},});
     }
 
-    setCurrentParent(parent) {
+    setCurrentParent(parentList) {
         let dot = this.state.currentDot;
-        dot.parent = parent;
-        this.setState({currentDot: dot, currentParent: parent});
-        this.props.addParent(parent);
+        let newParents = [];
+        var parent;
+        for(parent of parentList) {
+            /*if(!dot.parent.includes(parent.value)) {
+                dot.parent = [...dot.parent, parent.value];
+                this.props.addParent(parent.value);
+            }*/
+            newParents = [...newParents, parent.value];
+            this.props.addParent(parent.value);
+        }
+        dot.parent = newParents;
+
+        this.setState({currentDot: dot, currentParent: newParents});
     }
 
     setCurrentParentType(type) {

@@ -40,9 +40,6 @@ class Matcher extends React.Component {
         this.setState({
             dots: [...dots, dot],
         });
-        if(!this.state.parents.includes(dot.parent)) {
-            this.setState({parents: [...this.state.parents, dot.parent]});
-        }
     }
 
     saveDot = (dot) => {
@@ -65,9 +62,9 @@ class Matcher extends React.Component {
         });
     }
 
-    addParent(parentName) {
-        if(!this.state.parents.includes(parentName)) {
-            this.setState({parents: [...this.state.parents, parentName]});
+    addParent(parent) {
+        if(!this.state.parents.includes(parent)) {
+            this.setState({parents: [...this.state.parents, parent]});
         }
     }
 
@@ -91,7 +88,19 @@ class Matcher extends React.Component {
 
     loadFileData(data) {
         this.initialDots = data;
-        this.setState({dots: data});
+        let dots = []; 
+        let parents = []; 
+        var dot;
+        for(dot of data) {
+            var parent; 
+            for(parent of dot.parent) {
+                if(!parents.includes(parent)) {
+                    parents = [...parents, parent];
+                }
+            }
+            dots = [...dots, dot];
+        }
+        this.setState({dots: dots, parents: parents});
     }
 
     render() {

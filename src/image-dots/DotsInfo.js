@@ -27,7 +27,7 @@ export default function DotsInfo({
                     <td>{dot.y}</td>
                     <td>{dot.lng}</td> 
                     <td>{dot.lat}</td>
-                    <td>{dot.parent}</td>
+                    <td>{JSON.stringify(dot.parent)}</td>
                     <td>{dot.parentType}</td>
                     <td>{dot.note}</td>
                     <td><Button variant='danger' onClick={() => deleteDot(i)}>×</Button></td>

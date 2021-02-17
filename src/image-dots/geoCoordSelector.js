@@ -22,10 +22,13 @@ class GeoCoordSelector extends React.Component {
         this.setState({show: false});
     }
 
-    getValueLabelList(list) {
-        let res = [];
-        list.map(x => res.push({value: x, label: x}));
-        return res; 
+    getValueLabelList(parents) {
+        if(Array.isArray(parents)) {
+            let res = [];
+            parents.map(x => res.push({value: x, label: x}));
+            return res; 
+        } 
+        return [{value: parents, label: parents}];
     }
 
     onChangeParentType(event) {
@@ -87,11 +90,11 @@ class GeoCoordSelector extends React.Component {
                                     <GoogleMap setLatLong={this.setLatLong} currentDot={this.props.currentDot}></GoogleMap>
                                 </Form.Group>
                                 Select or add parent:
-                                <Creatable 
-                                onCreateOption={this.setCurrentParent}
-                                onChange={(x) => this.props.setCurrentParent(x.value)}
-                                defaultValue={this.getValueLabelList([this.props.currentParent])}
-                                options={this.getValueLabelList(this.props.parents)}/>
+                                <Creatable isMulti={true}
+                                onChange={(x) => this.props.setCurrentParent(x)}
+                                defaultValue={this.getValueLabelList(this.props.currentParent)}
+                                options={this.getValueLabelList(this.props.parents)}
+                                />
                                 <div>
                                     {parentTypes.map(type => 
                                         <span key={type}>

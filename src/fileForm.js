@@ -46,14 +46,14 @@ class FileForm extends React.Component {
         } else if (this.state.fileType === "csv") {
             let contents = [];
             contents.push (["x", "y", "long", "lat", "parent", "parentType", "note"]);
-            data.map(point => contents.push([point.x, point.y, point.long, point.lat, point.parent, point.parentType, point.note]));
+            data.map(point => contents.push([point.x, point.y, point.lng, point.lat, point.parent, point.parentType, point.note]));
             output = this.makeCSV(contents);
         } else if (this.state.fileType === "text") {
             output = '';
             data.map(point => {
                 output += "x:" + point.x + ",y:" + point.y;
                 output += ",long:" + point.long + ",lat:" + point.lat;
-                output += ",parent:" + point.parent + ",parentType:"+point.parentType;
+                output += ",parent:[" + point.parent + "],parentType:"+point.parentType;
                 output += ",note:" + point.note + "\n";
                 return output;
             });
@@ -96,8 +96,12 @@ class FileForm extends React.Component {
             
         let fileloaded = e => {
             const fileContents = e.target.result;
-            let json = JSON.parse(fileContents);
-            this.props.loadData(json["pistePoints"]);
+            try {
+                let json = JSON.parse(fileContents);
+                this.props.loadData(json["pistePoints"]);
+            } catch(e) {
+                alert(e);
+            }
         }
         fileloaded = fileloaded.bind(this);
         reader.onload = fileloaded;
