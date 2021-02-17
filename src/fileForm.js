@@ -77,7 +77,7 @@ class FileForm extends React.Component {
         let csv = '';
         content.forEach(value => {
             value.forEach((item, i) => {
-                let innerValue = item === null ? '' : item.toString();
+                let innerValue = item === undefined ? '' : item.toString();
                 let result = innerValue.replace(/"/g, '""');
                 if (result.search(/("|,|\n)/g) >= 0) {
                     result = '"' + result + '"'
