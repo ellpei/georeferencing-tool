@@ -7,7 +7,7 @@ import Creatable from 'react-select/creatable';
 import GoogleMap from './googleMap.js';
 
 class GeoCoordSelector extends React.Component {
-    
+
     constructor(props) {
         super(props);
         this.state = {
@@ -26,8 +26,8 @@ class GeoCoordSelector extends React.Component {
         if(Array.isArray(parents)) {
             let res = [];
             parents.map(x => res.push({value: x, label: x}));
-            return res; 
-        } 
+            return res;
+        }
         return [{value: parents, label: parents}];
     }
 
@@ -46,16 +46,16 @@ class GeoCoordSelector extends React.Component {
     }
 
     render() {
-        const {show, handleClose, parentTypes} = this.props; 
+        const {show, handleClose, parentTypes} = this.props;
         const wW = window.innerWidth;
         var left = this.props.posX > wW/2 ? 0 : Math.round(wW*0.525);
         return (
             <div id="geoCoordSelector">
-                {show ? 
+                {show ?
                     <div className="coord-selector">
                     <Backdrop show={show} clicked={handleClose} />
-                    
-                    <Card className="modal-body" 
+
+                    <Card className="modal-body"
                     style={{
                         top: 10,
                         left: left}}>
@@ -67,12 +67,12 @@ class GeoCoordSelector extends React.Component {
                                 <Form.Group as={Row}>
                                     <Form.Label column sm="3">x:</Form.Label>
                                     <Col sm="3">
-                                        <Form.Control type="number" defaultValue={this.props.currentDot.x} 
+                                        <Form.Control type="number" defaultValue={this.props.currentDot.x}
                                         onChange={(e) => {this.props.updateCurrentDot({x: e.target.value})}}/>
                                     </Col>
                                     <Form.Label column sm="3">y:</Form.Label>
                                     <Col sm="3">
-                                        <Form.Control type="number" defaultValue={this.props.currentDot.y} 
+                                        <Form.Control type="number" defaultValue={this.props.currentDot.y}
                                         onChange={(e) => {this.props.updateCurrentDot({y: e.target.value})}}/>
                                     </Col>
                                 </Form.Group>
@@ -87,7 +87,10 @@ class GeoCoordSelector extends React.Component {
                                     </Form.Label>
                                 </Form.Group>
                                 <Form.Group>
-                                    <GoogleMap setLatLong={this.setLatLong} currentDot={this.props.currentDot}></GoogleMap>
+                                    <GoogleMap
+                                    setLatLong={this.setLatLong}
+                                    currentDot={this.props.currentDot}
+                                    dots={this.props.dots}></GoogleMap>
                                 </Form.Group>
                                 Select or add parent:
                                 <Creatable isMulti={true}
@@ -96,32 +99,32 @@ class GeoCoordSelector extends React.Component {
                                 options={this.getValueLabelList(this.props.parents)}
                                 />
                                 <div>
-                                    {parentTypes.map(type => 
+                                    {parentTypes.map(type =>
                                         <span key={type}>
-                                            <input type="radio" value={type} 
-                                            onChange={this.onChangeParentType} 
-                                            name="type" className="parent-type-selector" 
+                                            <input type="radio" value={type}
+                                            onChange={this.onChangeParentType}
+                                            name="type" className="parent-type-selector"
                                             checked={this.props.currentParentType === type}/>{type}
                                         </span>)}
                                 </div>
-                                <Form.Control type="text" 
-                                defaultValue={this.props.currentDot.note} 
-                                placeholder="Notes..." 
-                                onChange={(e) => this.props.updateCurrentDot({note: e.target.value})} 
+                                <Form.Control type="text"
+                                defaultValue={this.props.currentDot.note}
+                                placeholder="Notes..."
+                                onChange={(e) => this.props.updateCurrentDot({note: e.target.value})}
                                 onKeyPress={this.onKeyPress}/>
                             </Form>
                         </Card.Body>
                         <Card.Footer>
                         <Button variant="secondary" onClick={handleClose}>Delete</Button>
                             <Button variant="secondary" onClick={handleClose}>Close</Button>
-                            <Button variant="primary" onClick={this.props.handleSave}>Save</Button>  
-                        </Card.Footer> 
+                            <Button variant="primary" onClick={this.props.handleSave}>Save</Button>
+                        </Card.Footer>
                     </Card>
                     </div>
                  : null}
-                
+
             </div>);
     }
 }
 
-export default GeoCoordSelector; 
+export default GeoCoordSelector;

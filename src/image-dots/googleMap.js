@@ -22,7 +22,7 @@ class GoogleMap extends React.Component {
             marker: {},
         };
         this.apiKey = process.env.REACT_APP_GOOGLE_API_KEY;
-        this.mapRef = React.createRef(); 
+        this.mapRef = React.createRef();
     }
 
     componentDidMount() {
@@ -32,7 +32,7 @@ class GoogleMap extends React.Component {
 
     initMap = () => {
         const google = window.google;
-        let map = this.mapRef; 
+        let map = this.mapRef;
         let {center, zoom} = this.state;
 
         map = new google.maps.Map(this.mapRef.current, {
@@ -46,12 +46,33 @@ class GoogleMap extends React.Component {
             title: "Marker",
         });
         this.setState({marker: marker});
-        
+
         map.addListener("click", (mapsMouseEvent) => {
             marker.setPosition(mapsMouseEvent.latLng);
             this.props.setLatLong(mapsMouseEvent.latLng);
             map.panTo(mapsMouseEvent.latLng);
         });
+
+
+        // plot all the other markers
+        var dot;
+        for(dot of this.props.dots) {
+          var latLng = new google.maps.LatLng(dot.lat,dot.lng);
+          var m = new google.maps.Marker({
+              position: latLng,
+              map,
+              title: JSON.stringify(dot.parent),
+              icon: {
+                  path: google.maps.SymbolPath.CIRCLE,
+                  fillColor: '#00F',
+                  fillOpacity: 0.6,
+                  strokeColor: '#00A',
+                  strokeOpacity: 0.9,
+                  strokeWeight: 1,
+                  scale: 4
+              }
+          });
+        }
     }
 
     render() {

@@ -47,7 +47,7 @@ export default class ReactImageDot extends React.Component {
     onLoadPisteMap({target: img}) {
         this.setState({
             dimensions: {
-                renderWidth: img.offsetWidth, 
+                renderWidth: img.offsetWidth,
                 renderHeight: img.offsetHeight,
                 realWidth: img.naturalWidth,
                 realHeight: img.naturalHeight,
@@ -57,7 +57,7 @@ export default class ReactImageDot extends React.Component {
 
     onMouseUp = (e) => {
         const bounds = e.target.getBoundingClientRect();
-        let {dimensions, currentParent, currentParentType, currentDot, lastCoords} = this.state; 
+        let {dimensions, currentParent, currentParentType, currentDot, lastCoords} = this.state;
         let dot = {
             "x": Math.round(this.renderedToRealCoord(e.clientX - bounds.left, dimensions.renderWidth, dimensions.realWidth)),
             "y": Math.round(this.renderedToRealCoord(e.clientY - bounds.top, dimensions.renderHeight, dimensions.realHeight)),
@@ -131,7 +131,7 @@ export default class ReactImageDot extends React.Component {
     }
 
     handleShowModal() {
-        this.setState({showModal: true}); 
+        this.setState({showModal: true});
     }
 
     handleCloseModal() {
@@ -145,21 +145,21 @@ export default class ReactImageDot extends React.Component {
 
     render() {
         const { grabbing, showModal, currentDot } = this.state;
-        const dim = this.state.dimensions; 
+        const dim = this.state.dimensions;
 
         const { dots, backgroundImageUrl, dotRadius } = this.props;
         const grabClass = grabbing ? 'react-image-dot__grabbing' : '';
-        
+
         return (
         <div className="react-image-dot__container">
-        
+
             <div className={`react-image-dot__wrapper ${grabClass}`}
             onMouseUp={this.onMouseUp}
             width={dim.realWidth}
             height={dim.realHeight}>
-            <img src={backgroundImageUrl} alt="Piste map" 
+            <img src={backgroundImageUrl} alt="Piste map"
             width={dim.realWidth} onLoad={this.onLoadPisteMap} />
-            
+
             {dots.map((dot, i) =>
                 <Dot
                 dotX={Math.round(this.realToRenderedCoord(dot.x, dim.renderWidth, dim.realWidth))}
@@ -173,8 +173,8 @@ export default class ReactImageDot extends React.Component {
                 dotRadius={dotRadius}
                 key={i}
                 />)}
-            
-            {Object.keys(currentDot).length === 0 ? null: <Dot 
+
+            {Object.keys(currentDot).length === 0 ? null: <Dot
                 dotX={Math.round(this.realToRenderedCoord(currentDot.x, dim.renderWidth, dim.realWidth))}
                 dotY={Math.round(this.realToRenderedCoord(currentDot.y, dim.renderHeight, dim.realHeight))}
                 i={0}
@@ -188,7 +188,7 @@ export default class ReactImageDot extends React.Component {
                 />}
             </div>
             <GeoCoordSelector show={showModal} dimensions={dim}
-            posX={this.realToRenderedCoord(currentDot.x, dim.renderWidth, dim.realWidth)} 
+            posX={this.realToRenderedCoord(currentDot.x, dim.renderWidth, dim.realWidth)}
             handleClose={this.handleCloseModal}
             handleSave={this.handleSave}
             setCurrentParent={this.setCurrentParent}
@@ -199,6 +199,7 @@ export default class ReactImageDot extends React.Component {
             currentDot={this.state.currentDot}
             parents={this.props.parents}
             parentTypes={this.props.parentTypes}
+            dots={this.props.dots}
             />
             {this.props.resetDots &&
             <button onClick={this.resetDots}>Reset</button>
