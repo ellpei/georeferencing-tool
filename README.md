@@ -36,5 +36,5 @@ Your app is ready to be deployed!
 See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
 ## API keys 
-Google Maps API key needed, create file `src/.env` and add the following line:\
+Google Maps API key needed, create file `.env` in project root folder and add the following line:\
 `REACT_APP_GOOGLE_API_KEY=[insert API_KEY]`
