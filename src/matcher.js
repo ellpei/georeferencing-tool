@@ -8,7 +8,7 @@ import ReactImageDot from './image-dots/ReactImageDot';
 import DotsInfo from './image-dots/DotsInfo';
 
 class Matcher extends React.Component {
-    
+
     constructor(props) {
         super(props);
         this.initialDots = [];
@@ -19,7 +19,7 @@ class Matcher extends React.Component {
             y: 0,
             dots: this.initialDots,
             parents: [],
-            parentTypes: ['Piste', 'Lift', 'Restaurant', 'Other'],
+            parentTypes: ['Piste', 'Lift', 'Terrain', 'Restaurant', 'Other'],
             windowWidth: window.innerWidth*0.98,
         }
         this.addParent = this.addParent.bind(this);
@@ -35,19 +35,19 @@ class Matcher extends React.Component {
     }
 
     addDot = (dot) => {
-        let {dots} = this.state; 
-        
+        let {dots} = this.state;
+
         this.setState({
             dots: [...dots, dot],
         });
     }
 
     saveDot = (dot) => {
-        let {dots} = this.state; 
+        let {dots} = this.state;
         this.deleteDot(dots.length-1);
         this.addDot(dot);
     }
-    
+
     deleteDot = (index) => {
         this.setState({
             dots: this.state.dots.filter((e, i) => {
@@ -55,7 +55,7 @@ class Matcher extends React.Component {
             }),
         });
     }
-    
+
     resetDots = () => {
         this.setState({
             dots: this.initialDots,
@@ -81,23 +81,25 @@ class Matcher extends React.Component {
     componentDidMount() {
         window.addEventListener("resize", this.handleResize);
     }
-      
+
     componentWillUnmount() {
         window.removeEventListener("resize", this.handleResize);
-    } 
+    }
 
     loadFileData(data) {
         this.initialDots = data;
-        let dots = []; 
-        let parents = []; 
+        let dots = [];
+        let parents = [];
         var dot;
         for(dot of data) {
-            var parent; 
+            var parent;
             for(parent of dot.parent) {
                 if(!parents.includes(parent)) {
                     parents = [...parents, parent];
                 }
             }
+            dot.x = parseInt(dot.x);
+            dot.y = parseInt(dot.y);
             dots = [...dots, dot];
         }
         this.setState({dots: dots, parents: parents});
@@ -129,4 +131,4 @@ class Matcher extends React.Component {
     }
 }
 
-export default Matcher; 
+export default Matcher;

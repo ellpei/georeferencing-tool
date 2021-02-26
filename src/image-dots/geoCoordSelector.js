@@ -92,12 +92,6 @@ class GeoCoordSelector extends React.Component {
                                     currentDot={this.props.currentDot}
                                     dots={this.props.dots}></GoogleMap>
                                 </Form.Group>
-                                Select or add parent:
-                                <Creatable isMulti={true}
-                                onChange={(x) => this.props.setCurrentParent(x)}
-                                defaultValue={this.getValueLabelList(this.props.currentParent)}
-                                options={this.getValueLabelList(this.props.parents)}
-                                />
                                 <div>
                                     {parentTypes.map(type =>
                                         <span key={type}>
@@ -107,6 +101,15 @@ class GeoCoordSelector extends React.Component {
                                             checked={this.props.currentParentType === type}/>{type}
                                         </span>)}
                                 </div>
+                                {this.props.currentParentType === 'Terrain' ? null :
+                                  <Form.Group>
+                                    Select or add parent:
+                                    <Creatable isMulti={true}
+                                    onChange={(x) => this.props.setCurrentParent(x)}
+                                    defaultValue={this.getValueLabelList(this.props.currentParent)}
+                                    options={this.getValueLabelList(this.props.parents)}
+                                    />
+                                  </Form.Group>}
                                 <Form.Control type="text"
                                 defaultValue={this.props.currentDot.note}
                                 placeholder="Notes..."

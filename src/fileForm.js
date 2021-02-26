@@ -6,10 +6,10 @@ import Container from 'react-bootstrap/Container';
  * Cred: https://jsfiddle.net/larrykluger/eo4dzptr/
  */
 class FileForm extends React.Component {
-    
+
     constructor(props) {
         super(props);
-        const defaultFileType = "json"; 
+        const defaultFileType = "json";
         let imgSrc = this.props.imgSrc;
         let filename = imgSrc.substr(imgSrc.lastIndexOf('/')+1, imgSrc.length);
         filename = filename.substr(0, filename.lastIndexOf('.'));
@@ -40,7 +40,7 @@ class FileForm extends React.Component {
     download (event) {
         event.preventDefault();
         let output;
-        let data = this.props.data; 
+        let data = this.props.data;
         if (this.state.fileType === "json") {
             output = JSON.stringify({pistePoints: data}, null, 4);
         } else if (this.state.fileType === "csv") {
@@ -60,12 +60,12 @@ class FileForm extends React.Component {
         }
         const blob = new Blob([output]);
         const fileDownloadUrl = URL.createObjectURL(blob);
-        this.setState ({fileDownloadUrl: fileDownloadUrl}, 
+        this.setState ({fileDownloadUrl: fileDownloadUrl},
           () => {
-            this.dofileDownload.click(); 
-            URL.revokeObjectURL(fileDownloadUrl);  
+            this.dofileDownload.click();
+            URL.revokeObjectURL(fileDownloadUrl);
             this.setState({fileDownloadUrl: ""})
-        }) 
+        })
     }
 
     upload(event) {
@@ -89,11 +89,11 @@ class FileForm extends React.Component {
         })
         return csv;
     }
-    
+
     openFile(evt) {
         const fileObj = evt.target.files[0];
         const reader = new FileReader();
-            
+
         let fileloaded = e => {
             const fileContents = e.target.result;
             try {
@@ -105,7 +105,7 @@ class FileForm extends React.Component {
         }
         fileloaded = fileloaded.bind(this);
         reader.onload = fileloaded;
-        reader.readAsText(fileObj);  
+        reader.readAsText(fileObj);
     }
 
     render() {
@@ -120,28 +120,28 @@ class FileForm extends React.Component {
                                 <option value="json">JSON</option>
                                 <option value="text">Text</option>
                             </Form.Control>
-                        
+
                             <Button onClick={this.download} className="fileForm-child">
                                 Download
                             </Button>
-                        
+
                             <a className="hidden"
                                 download={this.fileNames[this.state.fileType]}
                                 href={this.state.fileDownloadUrl}
                                 ref={e=>this.dofileDownload = e}>download it</a>
-                        
+
                             <Button onClick={this.upload} className="fileForm-child">Upload</Button>
                             <input type="file" className="hidden"
                                 multiple={false}
                                 accept=".json,application/json"
                                 onChange={evt => this.openFile(evt)}
                                 ref={e=>this.dofileUpload = e}/>
-                        
+
                     </Row>
                 </Container>
-                
+
             </div>);
     }
 }
 
-export default FileForm; 
+export default FileForm;
