@@ -94,6 +94,8 @@ class FileForm extends React.Component {
         const fileObj = evt.target.files[0];
         const reader = new FileReader();
 
+        if(!(fileObj instanceof Blob)) return 
+
         let fileloaded = e => {
             const fileContents = e.target.result;
             try {
