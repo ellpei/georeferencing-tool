@@ -6,7 +6,7 @@ import Matcher from './matcher.js';
 import images from './images';
 import Docs from './docs.js';
 import About from './about.js';
-import {Navbar, Nav} from 'react-bootstrap'; 
+import {Navbar, Nav} from 'react-bootstrap';
 import {
     BrowserRouter as Router,
     Switch,
@@ -18,11 +18,20 @@ class App extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            resortIndex: -1,
+            resortObject: null
         };
     }
+
     setResort = (choice) => {
-        this.setState({resortIndex: choice});
+        this.setState({
+            resortObject: images[choice]
+        });
+    }
+
+    uploadMap = (file) => {
+        this.setState({
+            resortObject: { src: file, title: 'MyMap'}
+        });
     }
 
     render() {
@@ -42,7 +51,7 @@ class App extends React.Component {
                 </Navbar>
                 <Switch>
                     <Route exact path="/">
-                        <MapForm resorts={images} onSearch={this.setResort}/>
+                        <MapForm resorts={images} onSelect={this.setResort} onUpload={this.uploadMap}/>
                     </Route>
                     <Route path="/docs">
                         <Docs />
@@ -51,8 +60,8 @@ class App extends React.Component {
                         <About />
                     </Route>
                     <Route path="/matcher">
-                        {this.state.resortIndex !== -1 ? 
-                            <Matcher resort={images[this.state.resortIndex]}></Matcher> :
+                        {this.state.resortObject ?
+                            <Matcher resort={this.state.resortObject}></Matcher> :
                         <Redirect to={{ pathname: '/', state: { from: this.props.location } }} />}
                     </Route>
                 </Switch>
@@ -60,8 +69,8 @@ class App extends React.Component {
             </div>
         );
     }
-    
-  
+
+
 }
 
 

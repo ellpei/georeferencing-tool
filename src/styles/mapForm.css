@@ -1,8 +1,19 @@
 select {
     width: 200px;
-} 
+}
 
 .selectcontainer {
     min-width: 300px;
     width: 20%;
+    display: flex;
+    justify-content: center;
+    align-items: center; /* Optional */
+}
+
+.image-wrapper {
+    width: 100%;
+}
+
+.image-wrapper img {
+    width: 100%;
 }

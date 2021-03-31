@@ -8,12 +8,27 @@ class MapForm extends React.Component {
         super(props);
         this.state = {
             val: this.props.resorts[0].id,
+            uploadedMap: null
         }
-        this.handleDropdownChange = this.handleDropdownChange.bind(this);
     }
 
-    handleDropdownChange(e) {
+    handleDropdownChange = (e) => {
         this.setState({val: e.target.value});
+    }
+
+    handleStart = () => {
+        if(this.state.uploadedMap == null) {
+            this.props.onSelect(this.state.val)
+        } else {
+            this.props.onUpload(this.state.uploadedMap)
+        }
+    }
+
+    handleFileChange = (e) => {
+        if(e.target.files[0] == null) return
+        this.setState({
+            uploadedMap: URL.createObjectURL(e.target.files[0])
+        })
     }
 
     render() {
@@ -23,7 +38,7 @@ class MapForm extends React.Component {
                     <Container className="selectcontainer">
                         <Form>
                             <Form.Group controlId="exampleForm.ControlSelect1">
-                                <Form.Label>Select ski area</Form.Label>
+                                <Form.Label>Select or upload ski map</Form.Label>
                                 <Form.Control as="select"
                                 onChange={this.handleDropdownChange}>
                                 {this.props.resorts.map((resort => (
@@ -31,7 +46,16 @@ class MapForm extends React.Component {
                                 )))}
                                 </Form.Control>
                                 <br/>
-                                <Link to="/matcher" onClick={() => this.props.onSearch(this.state.val)} className="btn btn-primary">Start!</Link>
+                                <Form.File onChange={this.handleFileChange}
+                                multiple={false}
+                                accept="image/png, image/jpeg"/>
+                                <br/>
+                                {this.state.uploadedMap ?
+                                    <div className="image-wrapper">
+                                        <img src={this.state.uploadedMap}/>
+                                        <br/><br/>
+                                    </div> : null }
+                                <Link to="/matcher" onClick={this.handleStart} className="btn btn-primary">Start!</Link>
                             </Form.Group>
                         </Form>
                     </Container>
@@ -39,6 +63,6 @@ class MapForm extends React.Component {
             </div>
         );
     }
-    
+
 }
 export default MapForm;
