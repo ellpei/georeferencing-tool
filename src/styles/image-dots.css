@@ -2,6 +2,7 @@
   background-size: cover;
   position: relative;
   background-color: gray;
+  float:left;
 }
 
 .react-image-dot {
