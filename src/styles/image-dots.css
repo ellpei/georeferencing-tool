@@ -3,6 +3,9 @@
   position: relative;
   background-color: gray;
   float:left;
+  border-style: dotted;
+  border-color: gray;
+  border-width: 1px;
 }
 
 .react-image-dot {

@@ -151,7 +151,7 @@ export default class ReactImageDot extends React.Component {
         const grabClass = grabbing ? 'react-image-dot__grabbing' : '';
 
         return (
-        <div className="react-image-dot__container">
+        <div id="react-image-dot">
 
             <div className={`react-image-dot__wrapper ${grabClass}`}
             onMouseUp={this.onMouseUp}

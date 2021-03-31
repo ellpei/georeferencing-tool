@@ -122,7 +122,7 @@ class Matcher extends React.Component {
                 addParent={this.addParent}
                 addParentType={this.addParentType}
                 dotRadius={1}
-                />
+                /><br/>
                 <FileForm imgSrc={this.state.src} data={this.state.dots} loadData={(data) => this.loadFileData(data)}></FileForm>
                 <DotsInfo dots={this.state.dots} deleteDot={this.deleteDot}></DotsInfo>
                 <Button variant='success' onClick={this.resetDots}>Reset</Button>
