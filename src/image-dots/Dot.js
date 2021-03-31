@@ -1,15 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-
-const propTypes = {
-  dotX: PropTypes.number.isRequired,
-  dotY: PropTypes.number.isRequired,
-  i: PropTypes.number.isRequired,
-  moveDot: PropTypes.func.isRequired,
-  dotRadius: PropTypes.number,
-
-  styles: PropTypes.object,
-}
 
 const defaultProps = {
   dotRadius: 1,
@@ -39,5 +28,4 @@ export default class Dot extends React.Component {
   }
 }
 
-Dot.propTypes = propTypes;
 Dot.defaultProps = defaultProps;

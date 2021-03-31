@@ -52,7 +52,7 @@ class MapForm extends React.Component {
                                 <br/>
                                 {this.state.uploadedMap ?
                                     <div className="image-wrapper">
-                                        <img src={this.state.uploadedMap}/>
+                                        <img src={this.state.uploadedMap} alt="preview"/>
                                         <br/><br/>
                                     </div> : null }
                                 <Link to="/matcher" onClick={this.handleStart} className="btn btn-primary">Start!</Link>

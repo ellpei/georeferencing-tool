@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-
+import Canvas from './Canvas';
 import Dot from './Dot';
 import GeoCoordSelector from './geoCoordSelector.js';
 
@@ -36,15 +36,9 @@ export default class ReactImageDot extends React.Component {
             currentParentType: "Piste",
             lastCoords: this.props.coords !== undefined ? this.props.coords : {lat: 63.42833519737357, lng: 13.078345603820786},
         };
-        this.onLoadPisteMap = this.onLoadPisteMap.bind(this);
-        this.handleShowModal = this.handleShowModal.bind(this);
-        this.handleCloseModal = this.handleCloseModal.bind(this);
-        this.handleSave = this.handleSave.bind(this);
-        this.setCurrentParent = this.setCurrentParent.bind(this);
-        this.setCurrentParentType = this.setCurrentParentType.bind(this);
     }
 
-    onLoadPisteMap({target: img}) {
+    onLoadPisteMap = ({target: img}) => {
         this.setState({
             dimensions: {
                 renderWidth: img.offsetWidth,
@@ -83,7 +77,7 @@ export default class ReactImageDot extends React.Component {
             currentDot: {...currentDot,...dot},});
     }
 
-    setCurrentParent(parentList) {
+    setCurrentParent = (parentList) => {
         let dot = this.state.currentDot;
         let newParents = [];
         var parent;
@@ -100,7 +94,7 @@ export default class ReactImageDot extends React.Component {
         this.setState({currentDot: dot, currentParent: newParents});
     }
 
-    setCurrentParentType(type) {
+    setCurrentParentType = (type) => {
         let dot = this.state.currentDot;
         dot.parentType = type;
         this.setState({currentDot: dot, currentParentType: type});
@@ -122,32 +116,31 @@ export default class ReactImageDot extends React.Component {
     }
 
     // Translate from rendered coordinates to real piste map coordinates
-    renderedToRealCoord(coord, renderedLength, realLength) {
+    renderedToRealCoord = (coord, renderedLength, realLength) => {
         return (coord/renderedLength)*realLength;
     }
 
-    realToRenderedCoord(coord, renderedLength, realLength) {
+    realToRenderedCoord = (coord, renderedLength, realLength) => {
         return (coord/realLength)*renderedLength;
     }
 
-    handleShowModal() {
+    handleShowModal = () => {
         this.setState({showModal: true});
     }
 
-    handleCloseModal() {
+    handleCloseModal = () => {
         this.setState({showModal: false, currentDot: {}});
     }
 
-    handleSave() {
+    handleSave = () => {
         this.props.saveDot(this.state.currentDot);
         this.handleCloseModal();
     }
 
     render() {
-        const { grabbing, showModal, currentDot } = this.state;
+        const {grabbing, showModal, currentDot} = this.state;
         const dim = this.state.dimensions;
-
-        const { dots, backgroundImageUrl, dotRadius } = this.props;
+        const {dots, backgroundImageUrl, dotRadius, triangles} = this.props;
         const grabClass = grabbing ? 'react-image-dot__grabbing' : '';
 
         return (
@@ -157,7 +150,18 @@ export default class ReactImageDot extends React.Component {
             onMouseUp={this.onMouseUp}
             width={dim.realWidth}
             height={dim.realHeight}>
-            <img src={backgroundImageUrl} alt="Piste map"
+
+            <Canvas
+            id="canvas"
+            width={dim.realWidth}
+            height={dim.realHeight}
+            triangles={triangles}
+            text="testing!!!">
+            </Canvas>
+
+            <img
+            id="pistemap-img"
+            src={backgroundImageUrl} alt="Piste map"
             width={dim.realWidth} onLoad={this.onLoadPisteMap} />
 
             {dots.map((dot, i) =>
@@ -187,7 +191,9 @@ export default class ReactImageDot extends React.Component {
                 key={-1}
                 />}
             </div>
-            <GeoCoordSelector show={showModal} dimensions={dim}
+            <GeoCoordSelector
+            show={showModal}
+            dimensions={dim}
             posX={this.realToRenderedCoord(currentDot.x, dim.renderWidth, dim.realWidth)}
             handleClose={this.handleCloseModal}
             handleSave={this.handleSave}
@@ -202,8 +208,7 @@ export default class ReactImageDot extends React.Component {
             dots={this.props.dots}
             />
             {this.props.resetDots &&
-            <button onClick={this.resetDots}>Reset</button>
-            }
+            <button onClick={this.resetDots}>Reset</button>}
         </div>
         );
     }

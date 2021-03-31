@@ -1,4 +1,3 @@
-import './styles/matcher.css';
 import './styles/image-dots.css';
 import './styles/geoCoordSelector.css';
 import React from 'react';
@@ -6,6 +5,7 @@ import {Button} from 'react-bootstrap';
 import FileForm from './fileForm.js';
 import ReactImageDot from './image-dots/ReactImageDot';
 import DotsInfo from './image-dots/DotsInfo';
+import Delaunay from './delaunay/index.js';
 
 class Matcher extends React.Component {
 
@@ -18,6 +18,8 @@ class Matcher extends React.Component {
             x: 0,
             y: 0,
             dots: this.initialDots,
+            triangledots: [],
+            triangles: [],
             parents: [],
             parentTypes: ['Piste', 'Lift', 'Terrain', 'Restaurant', 'Other'],
             windowWidth: window.innerWidth*0.98,
@@ -35,11 +37,16 @@ class Matcher extends React.Component {
     }
 
     addDot = (dot) => {
-        let {dots} = this.state;
+        let dots = [...this.state.dots, dot];
+        this.setState({
+            dots: [...dots],
+            triangledots: [...this.state.triangledots, new Delaunay.Point(dot.x, dot.y)],
+        });
+        let triangles = Delaunay.triangulate(this.state.triangledots);
 
         this.setState({
-            dots: [...dots, dot],
-        });
+            triangles: [...triangles],
+        })
     }
 
     saveDot = (dot) => {
@@ -106,16 +113,17 @@ class Matcher extends React.Component {
     }
 
     render() {
-        const { dots } = this.state;
+        const { dots, parents, parentTypes, src} = this.state;
 
         return (
             <div id="matcher">
                 <ReactImageDot
-                backgroundImageUrl={this.state.src}
+                backgroundImageUrl={src}
                 onLoadMap={this.onLoadPisteMap}
                 dots={dots}
-                parents={this.state.parents}
-                parentTypes={this.state.parentTypes}
+                triangles={this.state.triangles}
+                parents={parents}
+                parentTypes={parentTypes}
                 deleteDot={this.deleteDot}
                 saveDot={this.saveDot}
                 addDot={this.addDot}
@@ -123,9 +131,11 @@ class Matcher extends React.Component {
                 addParentType={this.addParentType}
                 dotRadius={1}
                 /><br/>
-                <FileForm imgSrc={this.state.src} data={this.state.dots} loadData={(data) => this.loadFileData(data)}></FileForm>
-                <DotsInfo dots={this.state.dots} deleteDot={this.deleteDot}></DotsInfo>
-                <Button variant='success' onClick={this.resetDots}>Reset</Button>
+                <div className="bottom-toolbox">
+                    <FileForm imgSrc={this.state.src} data={this.state.dots} loadData={(data) => this.loadFileData(data)}></FileForm>
+                    <DotsInfo dots={this.state.dots} deleteDot={this.deleteDot}></DotsInfo>
+                    <Button variant='success' onClick={this.resetDots}>Reset</Button>
+                </div>
 
             </div>);
     }

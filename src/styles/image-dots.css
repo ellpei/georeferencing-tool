@@ -22,3 +22,12 @@
   cursor: -moz-grabbing;
   cursor: grabbing;
 }
+
+#canvas {
+    position: absolute;
+    z-index: 1;
+}
+
+.bottom-toolbox {
+    position: relative;
+}

@@ -58,7 +58,7 @@ class GoogleMap extends React.Component {
         var dot;
         for(dot of this.props.dots) {
           var latLng = new google.maps.LatLng(dot.lat,dot.lng);
-          var m = new google.maps.Marker({
+          google.maps.Marker({
               position: latLng,
               map,
               title: JSON.stringify(dot.parent),
