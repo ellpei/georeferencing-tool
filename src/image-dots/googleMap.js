@@ -2,11 +2,14 @@ import '../styles/googleMaps.css';
 import React from 'react';
 
 function loadJS(src) {
-    var ref = window.document.getElementsByTagName("script")[0];
-    var script = window.document.createElement("script");
+    let script = window.document.querySelector(`script[src="${src}"]`);
+    if(script) {
+        script.remove();
+    }
+    script = window.document.createElement("script");
     script.src = src;
     script.async = true;
-    ref.parentNode.insertBefore(script, ref);
+    window.document.body.appendChild(script);
 }
 
 class GoogleMap extends React.Component {
@@ -20,14 +23,19 @@ class GoogleMap extends React.Component {
             },
             zoom: 13,
             marker: {},
+            mapLoaded: false,
         };
         this.apiKey = process.env.REACT_APP_GOOGLE_API_KEY;
         this.mapRef = React.createRef();
     }
 
     componentDidMount() {
+        this.loadMap();
+    }
+
+    loadMap = () => {
         window.initMap = this.initMap;
-        loadJS('https://maps.googleapis.com/maps/api/js?key='+this.apiKey+'&callback=initMap')
+        loadJS('https://maps.googleapis.com/maps/api/js?key='+this.apiKey+'&callback=initMap');
     }
 
     initMap = () => {
@@ -52,13 +60,11 @@ class GoogleMap extends React.Component {
             this.props.setLatLong(mapsMouseEvent.latLng);
             map.panTo(mapsMouseEvent.latLng);
         });
-
-
         // plot all the other markers
         var dot;
         for(dot of this.props.dots) {
           var latLng = new google.maps.LatLng(dot.lat,dot.lng);
-          google.maps.Marker({
+          let m = new google.maps.Marker({
               position: latLng,
               map,
               title: JSON.stringify(dot.parent),
