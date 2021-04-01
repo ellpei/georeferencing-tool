@@ -37,16 +37,14 @@ class Matcher extends React.Component {
     }
 
     addDot = (dot) => {
-        let dots = [...this.state.dots, dot];
+        let dots = this.state.dots;
+        let triangledots = [...this.state.triangledots, new Delaunay.Point(dot.x, dot.y)];
         this.setState({
-            dots: [...dots],
-            triangledots: [...this.state.triangledots, new Delaunay.Point(dot.x, dot.y)],
-        });
-        let triangles = Delaunay.triangulate(this.state.triangledots);
-
-        this.setState({
-            triangles: [...triangles],
-        })
+            dots: [...dots, dot],
+            triangledots: triangledots,
+        }, function() {
+            this.setState({triangles: Delaunay.triangulate(this.state.triangledots)})
+          });
     }
 
     saveDot = (dot) => {
