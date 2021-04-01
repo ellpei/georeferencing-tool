@@ -18,7 +18,6 @@ class Matcher extends React.Component {
             x: 0,
             y: 0,
             dots: this.initialDots,
-            triangledots: [],
             triangles: [],
             parents: [],
             parentTypes: ['Piste', 'Lift', 'Terrain', 'Restaurant', 'Other'],
@@ -38,12 +37,10 @@ class Matcher extends React.Component {
 
     addDot = (dot) => {
         let dots = this.state.dots;
-        let triangledots = [...this.state.triangledots, new Delaunay.Point(dot.x, dot.y)];
         this.setState({
-            dots: [...dots, dot],
-            triangledots: triangledots,
+            dots: [...dots, new Delaunay.Point(dot)],
         }, function() {
-            this.setState({triangles: Delaunay.triangulate(this.state.triangledots)})
+            this.setState({triangles: Delaunay.triangulate(this.state.dots)})
           });
     }
 
@@ -55,15 +52,17 @@ class Matcher extends React.Component {
 
     deleteDot = (index) => {
         this.setState({
-            dots: this.state.dots.filter((e, i) => {
-                return i !== index;
-            }),
+            dots: this.state.dots.filter((e, i) => {return i !== index;}),
+        }, function() {
+            this.setState({triangles: Delaunay.triangulate(this.state.dots)})
         });
     }
 
     resetDots = () => {
         this.setState({
             dots: this.initialDots,
+        }, function() {
+            this.setState({triangles: []})
         });
     }
 
