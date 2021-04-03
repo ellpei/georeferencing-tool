@@ -12,21 +12,34 @@ function loadJS(src) {
     window.document.body.appendChild(script);
 }
 
+var markers = [];
+
 class GoogleMap extends React.Component {
 
     constructor(props) {
         super(props);
         this.state = {
             center: {
-                lat: this.props.currentDot.lat,
-                lng: this.props.currentDot.lng,
+                lat: this.props.currentDot.lat || 63.42833519737357,
+                lng: this.props.currentDot.lng || 13.078345603820786,
             },
             zoom: 13,
-            marker: {},
+            map: {},
+            currentMarker: {},
             mapLoaded: false,
         };
         this.apiKey = process.env.REACT_APP_GOOGLE_API_KEY;
         this.mapRef = React.createRef();
+    }
+
+    getSnapshotBeforeUpdate(prevProps) {
+        return { markerUpdateRequired: prevProps.dots !== this.props.dots };
+    }
+
+    componentDidUpdate(prevProps, prevState, snapshot) {
+          if (snapshot.markerUpdateRequired) {
+              this.plotDotMarkers()
+          }
     }
 
     componentDidMount() {
@@ -47,20 +60,29 @@ class GoogleMap extends React.Component {
             center: center,
             zoom: zoom,
         });
+        this.setState({map: map})
 
-        let marker = new google.maps.Marker({
+        let currentMarker = new google.maps.Marker({
             position: center,
             map,
             title: "Marker",
         });
-        this.setState({marker: marker});
+        this.setState({currentMarker: currentMarker});
 
         map.addListener("click", (mapsMouseEvent) => {
-            marker.setPosition(mapsMouseEvent.latLng);
+            currentMarker.setPosition(mapsMouseEvent.latLng);
             this.props.setLatLong(mapsMouseEvent.latLng);
             map.panTo(mapsMouseEvent.latLng);
         });
+        this.plotDotMarkers()
+    }
+
+    plotDotMarkers = () => {
         // plot all the other markers
+        const google = window.google;
+        let map = this.state.map;
+        markers.map(m => m.setMap(null));
+        markers = [];
         var dot;
         for(dot of this.props.dots) {
           var latLng = new google.maps.LatLng(dot.lat,dot.lng);
@@ -78,14 +100,14 @@ class GoogleMap extends React.Component {
                   scale: 4
               }
           });
+          markers.push(m);
         }
     }
 
     render() {
-        return (
-            <div id="google-map" style={{ height: '40vh', width: '100%' }}>
-              <div ref={this.mapRef} id="map"></div>
-            </div>
+        return (<div id="google-map" style={{ height: '40vh', width: '100%' }}>
+                  <div ref={this.mapRef} id="map"></div>
+                </div>
         );
     }
 }

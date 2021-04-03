@@ -20,8 +20,8 @@ export default class Dot extends React.Component {
           height: dotRadius * 2,
           width: dotRadius * 2,
           transform: `translate(${-dotRadius}, ${-dotRadius})`,
-          top: dotY,
-          left: dotX
+          top: dotY || 0,
+          left: dotX || 0
         }}
       />
     );

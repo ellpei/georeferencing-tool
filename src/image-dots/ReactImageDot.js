@@ -27,14 +27,15 @@ const defaultProps = {
 export default class ReactImageDot extends React.Component {
     constructor(props) {
         super(props);
+        let lastCoords = this.props.coords !== undefined ? this.props.coords : {lat: 63.42833519737357, lng: 13.078345603820786};
         this.state = {
             grabbing: false,
             dimensions: {},
             showModal: false,
-            currentDot: {},
             currentParent: [],
             currentParentType: "Piste",
-            lastCoords: this.props.coords !== undefined ? this.props.coords : {lat: 63.42833519737357, lng: 13.078345603820786},
+            lastCoords: lastCoords,
+            currentDot: {lat: lastCoords.lat, lng: lastCoords.lng},
         };
     }
 
@@ -112,7 +113,8 @@ export default class ReactImageDot extends React.Component {
 
     resetDots = () => {
         this.props.resetDots();
-        this.setState({currentDot: {}});
+
+        this.setState({currentDot: this.state.lastCoords});
     }
 
     // Translate from rendered coordinates to real piste map coordinates
@@ -206,6 +208,7 @@ export default class ReactImageDot extends React.Component {
             parents={this.props.parents}
             parentTypes={this.props.parentTypes}
             dots={this.props.dots}
+            triangles={triangles}
             />
             {this.props.resetDots &&
             <button onClick={this.resetDots}>Reset</button>}

@@ -50,8 +50,8 @@ class GeoCoordSelector extends React.Component {
         const wW = window.innerWidth;
         var left = this.props.posX > wW/2 ? 0 : Math.round(wW*0.525);
         return (
-            <div id="geoCoordSelector">
-                {show ?
+            <div id="geoCoordSelector" className={show ? "" : "hidden"}>
+
                     <div className="coord-selector">
                     <Backdrop show={show} clicked={handleClose} />
 
@@ -90,7 +90,8 @@ class GeoCoordSelector extends React.Component {
                                     <GoogleMap
                                     setLatLong={this.setLatLong}
                                     currentDot={this.props.currentDot}
-                                    dots={this.props.dots}></GoogleMap>
+                                    dots={this.props.dots}
+                                    triangles={this.props.triangles}></GoogleMap>
                                 </Form.Group>
                                 <div>
                                     {parentTypes.map(type =>
@@ -124,8 +125,6 @@ class GeoCoordSelector extends React.Component {
                         </Card.Footer>
                     </Card>
                     </div>
-                 : null}
-
             </div>);
     }
 }

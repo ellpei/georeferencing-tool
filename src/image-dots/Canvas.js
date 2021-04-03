@@ -15,7 +15,6 @@ class Canvas extends React.Component {
     }
 
     componentDidUpdate() {
-        console.log("canvas triangles:"+this.props.triangles.length);
         this.updateCanvas();
     }
 
@@ -30,11 +29,9 @@ class Canvas extends React.Component {
 
         var triangles = this.props.triangles;
 
-        //ctx.clearRect(0, 0, this.props.width, this.props.height);
         var i, t;
 	  	for ( i = 0; i < triangles.length; i++ ) {
-            console.log("drawing triangle");
-			t = triangles[ i ];
+			t = triangles[i];
 			ctx.beginPath();
 			ctx.moveTo(t.p1.x, t.p1.y);
 			ctx.lineTo(t.p2.x, t.p2.y);
@@ -42,13 +39,6 @@ class Canvas extends React.Component {
 			ctx.lineTo(t.p1.x, t.p1.y);
 			ctx.stroke();
 		}
-
-        /*
-        ctx.beginPath();
-        ctx.moveTo(10, 30);
-        ctx.lineTo(25, 56);
-        ctx.lineWidth = 2;
-        ctx.stroke();*/
     }
 
     render() {
