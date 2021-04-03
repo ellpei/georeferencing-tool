@@ -106,7 +106,9 @@ class Matcher extends React.Component {
             dot.y = parseInt(dot.y);
             dots = [...dots, dot];
         }
-        this.setState({dots: dots, parents: parents});
+        this.setState({dots: dots, parents: parents}, function() {
+            this.setState({triangles: Delaunay.triangulate(this.state.dots)})
+        });
     }
 
     render() {
