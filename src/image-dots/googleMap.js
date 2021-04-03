@@ -13,6 +13,7 @@ function loadJS(src) {
 }
 
 var markers = [];
+var mapTriangles = [];
 
 class GoogleMap extends React.Component {
 
@@ -27,18 +28,25 @@ class GoogleMap extends React.Component {
             map: {},
             currentMarker: {},
             mapLoaded: false,
+            google: {},
         };
         this.apiKey = process.env.REACT_APP_GOOGLE_API_KEY;
         this.mapRef = React.createRef();
     }
 
     getSnapshotBeforeUpdate(prevProps) {
-        return { markerUpdateRequired: prevProps.dots !== this.props.dots };
+        return {
+            markerUpdateRequired: prevProps.dots !== this.props.dots,
+            triangleUpdateRequired: prevProps.triangles !== this.props.triangles,
+        };
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
           if (snapshot.markerUpdateRequired) {
-              this.plotDotMarkers()
+              this.plotDotMarkers();
+          }
+          if(snapshot.triangleUpdateRequired) {
+              this.drawTriangles();
           }
     }
 
@@ -60,48 +68,71 @@ class GoogleMap extends React.Component {
             center: center,
             zoom: zoom,
         });
-        this.setState({map: map})
+        this.setState({});
 
         let currentMarker = new google.maps.Marker({
             position: center,
             map,
             title: "Marker",
         });
-        this.setState({currentMarker: currentMarker});
+        this.setState({
+            map: map,
+            google: google,
+            currentMarker: currentMarker
+        });
 
         map.addListener("click", (mapsMouseEvent) => {
             currentMarker.setPosition(mapsMouseEvent.latLng);
             this.props.setLatLong(mapsMouseEvent.latLng);
             map.panTo(mapsMouseEvent.latLng);
         });
-        this.plotDotMarkers()
+        this.plotDotMarkers();
+        this.drawTriangles();
     }
 
     plotDotMarkers = () => {
-        // plot all the other markers
-        const google = window.google;
-        let map = this.state.map;
+        const {google, map} = this.state;
         markers.map(m => m.setMap(null));
-        markers = [];
-        var dot;
-        for(dot of this.props.dots) {
-          var latLng = new google.maps.LatLng(dot.lat,dot.lng);
-          let m = new google.maps.Marker({
-              position: latLng,
-              map,
-              title: JSON.stringify(dot.parent),
-              icon: {
-                  path: google.maps.SymbolPath.CIRCLE,
-                  fillColor: '#00F',
-                  fillOpacity: 0.6,
-                  strokeColor: '#00A',
-                  strokeOpacity: 0.9,
-                  strokeWeight: 1,
-                  scale: 4
-              }
-          });
-          markers.push(m);
-        }
+        markers = this.props.dots.map(dot => {
+            var latLng = new google.maps.LatLng(dot.lat,dot.lng);
+            let m = new google.maps.Marker({
+                position: latLng,
+                map,
+                title: JSON.stringify(dot.parent),
+                icon: {
+                    path: google.maps.SymbolPath.CIRCLE,
+                    fillColor: '#00F',
+                    fillOpacity: 0.6,
+                    strokeColor: '#00A',
+                    strokeOpacity: 0.9,
+                    strokeWeight: 1,
+                    scale: 4
+                }
+            });
+            return m;
+        });
+    }
+
+    drawTriangles = () => {
+        const {google, map} = this.state;
+        mapTriangles.map(t => t.setMap(null));
+        mapTriangles = this.props.triangles.map(t => {
+            const triangleCoords = [
+              { lat: t.p1.lat, lng: t.p1.lng },
+              { lat: t.p2.lat, lng: t.p2.lng },
+              { lat: t.p3.lat, lng: t.p3.lng },
+              { lat: t.p1.lat, lng: t.p1.lng },
+            ];
+            const p = new google.maps.Polygon({
+              paths: triangleCoords,
+              strokeColor: "#000000",
+              strokeOpacity: 0.8,
+              strokeWeight: 1,
+              fillOpacity: 0.0,
+            });
+            p.setMap(map);
+            return p;
+        });
     }
 
     render() {
