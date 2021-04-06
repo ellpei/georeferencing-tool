@@ -21,7 +21,7 @@ class App extends React.Component {
             resortObject: null
         };
     }
-
+    
     setResort = (choice) => {
         this.setState({
             resortObject: images[choice]

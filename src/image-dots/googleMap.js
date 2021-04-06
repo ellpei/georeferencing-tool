@@ -123,12 +123,11 @@ class GoogleMap extends React.Component {
               { lat: t.p3.lat, lng: t.p3.lng },
               { lat: t.p1.lat, lng: t.p1.lng },
             ];
-            const p = new google.maps.Polygon({
-              paths: triangleCoords,
+            const p = new google.maps.Polyline({
+              path: triangleCoords,
               strokeColor: "#000000",
               strokeOpacity: 0.8,
               strokeWeight: 1,
-              fillOpacity: 0.0,
             });
             p.setMap(map);
             return p;

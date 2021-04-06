@@ -22,15 +22,10 @@ class Canvas extends React.Component {
         let canvas = this.refs.canvas;
         const ctx = canvas.getContext('2d');
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-
         ctx.strokeStyle = "red";
-        ctx.font = "80px Courier"
-        ctx.fillText(this.props.text, 100, 100)
-
         var triangles = this.props.triangles;
-
         var i, t;
-	  	for ( i = 0; i < triangles.length; i++ ) {
+	  	for (i = 0; i < triangles.length; i++) {
 			t = triangles[i];
 			ctx.beginPath();
 			ctx.moveTo(t.p1.x, t.p1.y);

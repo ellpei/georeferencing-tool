@@ -1,5 +1,4 @@
-{
-    "pistePoints": [
+const anchorPoints = [
         {
             "x": 267,
             "y": 533,
@@ -4520,4 +4519,4 @@
             "lng": 13.094295946856391
         }
     ]
-}
+export default anchorPoints; 

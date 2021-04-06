@@ -29,11 +29,7 @@ function triangulate(vertices) {
 	var xmid = (xmax + xmin) * 0.5;
 	var ymid = (ymax + ymin) * 0.5;
 
-	// Set up the supertriangle
-	// This is a triangle which encompasses all the sample points.
-	// The supertriangle coordinates are added to the end of the
-	// vertex list. The supertriangle is the first triangle in
-	// the triangle list.
+
 	vertices.push(new geom.Point({x:(xmid - 2 * dmax), y:(ymid - dmax), id: nv+1}));
 	vertices.push(new geom.Point({x:xmid, y:(ymid + 2 * dmax), id: nv+2}));
 	vertices.push(new geom.Point({x:(xmid + 2 * dmax), y:(ymid - dmax), id: nv+3}));

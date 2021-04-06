@@ -1,10 +1,3 @@
-
-/*function Point(x, y, lat, lng) {
-    this.x = x || 0;
-    this.y = y || 0;
-    this.lat = lat || 0;
-    this.lng = lng || 0;
-}*/
 function Point({x, y, lat, lng, note, parentType, parent}) {
     this.x = x || 0;
     this.y = y || 0;
@@ -25,6 +18,14 @@ Point.prototype.distance = function(otherpoint) {
 Point.prototype.equals = function(otherpoint) {
 	return (this.x === otherpoint.x && this.y === otherpoint.y);
 };
+
+Point.prototype.sub = function(other) {
+    return new Point(this.x - other.x, this.y - other.y);
+}
+
+Point.prototype.cross = function(other) {
+    return this.y * other.x - this.x * other.y;
+}
 
 Point.prototype.copy = function(p) {
     this.set(p);

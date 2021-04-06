@@ -3,9 +3,10 @@ import PropTypes from 'prop-types';
 import Canvas from './Canvas';
 import Dot from './Dot';
 import GeoCoordSelector from './geoCoordSelector.js';
+import Delaunay from '../delaunay/index.js';
+import {applyToPoint, fromTriangles} from 'transformation-matrix';
 
 const propTypes = {
-  // Required functions to handle parent-level state management
   deleteDot: PropTypes.func.isRequired,
   addDot: PropTypes.func.isRequired,
   resetDots: PropTypes.func,
@@ -13,7 +14,6 @@ const propTypes = {
   dotRadius: PropTypes.number,
   backgroundImageUrl: PropTypes.string,
   styles: PropTypes.object,
-  // The width in pixels of the box. If unset, will be 100%
   width: PropTypes.number,
   height: PropTypes.number,
   pixelCoordinates: PropTypes.bool,
@@ -50,23 +50,39 @@ export default class ReactImageDot extends React.Component {
         });
     }
 
+    calcEstimatedGeoCoord = (point) => {
+        for(const triangle of this.props.triangles) {
+            if(triangle.encloses(point)) {
+                let matrix = fromTriangles(triangle.getPisteMapCoords(), triangle.getGeoCoords());
+                return applyToPoint(matrix, {x: point.x, y: point.y});
+            }
+        }
+        return null;
+    }
+
     onMouseUp = (e) => {
+        console.log("on mouse up ");
         const bounds = e.target.getBoundingClientRect();
         let {dimensions, currentParent, currentParentType, currentDot, lastCoords} = this.state;
+        let x = Math.round(this.renderedToRealCoord(e.clientX - bounds.left, dimensions.renderWidth, dimensions.realWidth));
+        let y = Math.round(this.renderedToRealCoord(e.clientY - bounds.top, dimensions.renderHeight, dimensions.realHeight))
+        let estimatedCoords = this.calcEstimatedGeoCoord(new Delaunay.Point({x: x, y: y}));
+
         let dot = {
-            "x": Math.round(this.renderedToRealCoord(e.clientX - bounds.left, dimensions.renderWidth, dimensions.realWidth)),
-            "y": Math.round(this.renderedToRealCoord(e.clientY - bounds.top, dimensions.renderHeight, dimensions.realHeight)),
+            "x": x,
+            "y": y,
             "parent": currentParent,
             "parentType": currentParentType,
-            "lat": lastCoords.lat,
-            "lng": lastCoords.lng,
+            "lat": estimatedCoords ? estimatedCoords.x : lastCoords.lat,
+            "lng": estimatedCoords ? estimatedCoords.y : lastCoords.lng,
         };
+
         this.setState({
             grabbing: false,
             showModal: true,
-            currentDot: {...dot,...currentDot},
+            currentDot: {...currentDot, ...dot},
             currentParent: currentDot.parent? currentDot.parent : currentParent,
-        });
+        }, () => {console.log("current dot: " + JSON.stringify(this.state.currentDot))});
     }
 
     updateCurrentDot = (dot) => {
@@ -83,10 +99,6 @@ export default class ReactImageDot extends React.Component {
         let newParents = [];
         var parent;
         for(parent of parentList) {
-            /*if(!dot.parent.includes(parent.value)) {
-                dot.parent = [...dot.parent, parent.value];
-                this.props.addParent(parent.value);
-            }*/
             newParents = [...newParents, parent.value];
             this.props.addParent(parent.value);
         }

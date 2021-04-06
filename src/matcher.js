@@ -1,5 +1,6 @@
 import './styles/image-dots.css';
 import './styles/geoCoordSelector.css';
+import anchorPoints from './assets/are_anchorpoints.js';
 import React from 'react';
 import {Button} from 'react-bootstrap';
 import FileForm from './fileForm.js';
@@ -17,7 +18,9 @@ class Matcher extends React.Component {
             src: this.props.resort.src,
             x: 0,
             y: 0,
+            referencePoints: anchorPoints,
             dots: this.initialDots,
+            //dots: anchorPoints,
             triangles: [],
             parents: [],
             parentTypes: ['Piste', 'Lift', 'Terrain', 'Restaurant', 'Other'],
@@ -26,6 +29,7 @@ class Matcher extends React.Component {
         this.addParent = this.addParent.bind(this);
         this.addParentType = this.addParentType.bind(this);
     }
+
     // Translate from rendered coordinates to real piste map coordinates
     renderedToRealCoord(coord, renderedLength, realLength) {
         return (coord/renderedLength)*realLength;
@@ -36,6 +40,7 @@ class Matcher extends React.Component {
     }
 
     addDot = (dot) => {
+        console.log("in adddot");
         let dots = this.state.dots;
         this.setState({
             dots: [...dots, new Delaunay.Point(dot)],
@@ -91,6 +96,7 @@ class Matcher extends React.Component {
     }
 
     loadFileData(data) {
+        data = data.map(x => new Delaunay.Point(x));
         this.initialDots = data;
         let dots = [];
         let parents = [];
