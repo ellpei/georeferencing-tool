@@ -4,7 +4,6 @@ import Canvas from './Canvas';
 import Dot from './Dot';
 import GeoCoordSelector from './geoCoordSelector.js';
 import Delaunay from '../delaunay/index.js';
-import {applyToPoint, fromTriangles} from 'transformation-matrix';
 
 const propTypes = {
   deleteDot: PropTypes.func.isRequired,
@@ -52,16 +51,14 @@ export default class ReactImageDot extends React.Component {
 
     calcEstimatedGeoCoord = (point) => {
         for(const triangle of this.props.triangles) {
-            if(triangle.encloses(point)) {
-                let matrix = fromTriangles(triangle.getPisteMapCoords(), triangle.getGeoCoords());
-                return applyToPoint(matrix, {x: point.x, y: point.y});
+            if(triangle.enclosesMapCoords(point)) {
+                return triangle.transformMapCoords(point);
             }
         }
         return null;
     }
 
     onMouseUp = (e) => {
-        console.log("on mouse up ");
         const bounds = e.target.getBoundingClientRect();
         let {dimensions, currentParent, currentParentType, currentDot, lastCoords} = this.state;
         let x = Math.round(this.renderedToRealCoord(e.clientX - bounds.left, dimensions.renderWidth, dimensions.realWidth));

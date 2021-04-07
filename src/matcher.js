@@ -20,7 +20,6 @@ class Matcher extends React.Component {
             y: 0,
             referencePoints: anchorPoints,
             dots: this.initialDots,
-            //dots: anchorPoints,
             triangles: [],
             parents: [],
             parentTypes: ['Piste', 'Lift', 'Terrain', 'Restaurant', 'Other'],
@@ -39,13 +38,48 @@ class Matcher extends React.Component {
         return (coord/realLength)*renderedLength;
     }
 
+    findEnclosingTriangle = (point, triangles) => {
+        for(const triangle of triangles) {
+            if(triangle.enclosesGeoCoords(point)) {
+                return triangle;
+            }
+        }
+    }
+    // Calculate the total error using reference points
+    // Used for thesis experiments of åre
+    calculateError = () => {
+        let {referencePoints, triangles} = this.state;
+        if(triangles.length < 1) return null; 
+        var numClassified = 0;
+        let error = 0;
+        for(const refPoint of referencePoints) {
+            let point = new Delaunay.Point(refPoint);
+            let enclosingTriangle = this.findEnclosingTriangle(point, triangles);
+            if(enclosingTriangle) {
+                let mapCoords = enclosingTriangle.transformGeoCoords(point);
+                let distance = point.distance(new Delaunay.Point(mapCoords));
+                error += distance;
+                numClassified++;
+            }
+        }
+        console.log("Total error: " + error);
+        console.log("Avg error: " + error/numClassified);
+        console.log("# of classified points: " + numClassified);
+        return {error: error, numClassified: numClassified};
+    }
+
     addDot = (dot) => {
-        console.log("in adddot");
         let dots = this.state.dots;
         this.setState({
             dots: [...dots, new Delaunay.Point(dot)],
         }, function() {
-            this.setState({triangles: Delaunay.triangulate(this.state.dots)})
+            this.setState({
+                triangles: Delaunay.triangulate(this.state.dots)
+            }, function() {
+                this.setState({
+                    currentError: this.calculateError()
+                });
+            });
           });
     }
 

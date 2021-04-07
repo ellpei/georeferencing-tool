@@ -97,7 +97,7 @@ class GoogleMap extends React.Component {
     }
 
     updateCurrentMarker = () => {
-        const {google, map, currentMarker} = this.state;
+        const {map, currentMarker} = this.state;
         let center = this.getCenter();
         currentMarker.setPosition(center);
         map.setCenter(center);
