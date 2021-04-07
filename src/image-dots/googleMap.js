@@ -20,10 +20,6 @@ class GoogleMap extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            center: {
-                lat: this.props.currentDot.lat || 63.42833519737357,
-                lng: this.props.currentDot.lng || 13.078345603820786,
-            },
             zoom: 13,
             map: {},
             currentMarker: {},
@@ -36,18 +32,22 @@ class GoogleMap extends React.Component {
 
     getSnapshotBeforeUpdate(prevProps) {
         return {
-            markerUpdateRequired: prevProps.dots !== this.props.dots,
+            markerUpdateRequired: prevProps.currentDot !== this.props.currentDot,
+            dotMarkersUpdateRequired: prevProps.dots !== this.props.dots,
             triangleUpdateRequired: prevProps.triangles !== this.props.triangles,
         };
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
-          if (snapshot.markerUpdateRequired) {
-              this.plotDotMarkers();
-          }
-          if(snapshot.triangleUpdateRequired) {
-              this.drawTriangles();
-          }
+        if(snapshot.markerUpdateRequired) {
+            this.updateCurrentMarker();
+        }
+        if (snapshot.dotMarkersUpdateRequired) {
+            this.plotDotMarkers();
+        }
+        if(snapshot.triangleUpdateRequired) {
+            this.drawTriangles();
+        }
     }
 
     componentDidMount() {
@@ -59,19 +59,25 @@ class GoogleMap extends React.Component {
         loadJS('https://maps.googleapis.com/maps/api/js?key='+this.apiKey+'&callback=initMap');
     }
 
+    getCenter = () => {
+        return { 
+            lat: parseFloat(this.props.currentDot.lat) || 63.42833519737357,
+            lng: parseFloat(this.props.currentDot.lng) || 13.078345603820786
+        };
+    }
+
     initMap = () => {
         const google = window.google;
         let map = this.mapRef;
-        let {center, zoom} = this.state;
+        let {zoom} = this.state;
 
         map = new google.maps.Map(this.mapRef.current, {
-            center: center,
+            center: this.getCenter(),
             zoom: zoom,
         });
-        this.setState({});
 
         let currentMarker = new google.maps.Marker({
-            position: center,
+            position: this.getCenter(),
             map,
             title: "Marker",
         });
@@ -88,6 +94,13 @@ class GoogleMap extends React.Component {
         });
         this.plotDotMarkers();
         this.drawTriangles();
+    }
+
+    updateCurrentMarker = () => {
+        const {google, map, currentMarker} = this.state;
+        let center = this.getCenter();
+        currentMarker.setPosition(center);
+        map.setCenter(center);
     }
 
     plotDotMarkers = () => {

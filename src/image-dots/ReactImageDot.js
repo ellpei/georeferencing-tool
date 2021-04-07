@@ -82,7 +82,7 @@ export default class ReactImageDot extends React.Component {
             showModal: true,
             currentDot: {...currentDot, ...dot},
             currentParent: currentDot.parent? currentDot.parent : currentParent,
-        }, () => {console.log("current dot: " + JSON.stringify(this.state.currentDot))});
+        });
     }
 
     updateCurrentDot = (dot) => {
