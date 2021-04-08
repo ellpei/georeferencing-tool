@@ -1,6 +1,6 @@
 import './styles/fileForm.css';
 import React from 'react';
-import {Row, Form, Button} from 'react-bootstrap';
+import {Row, Col, Form, Button} from 'react-bootstrap';
 import Container from 'react-bootstrap/Container';
 /**
  * Cred: https://jsfiddle.net/larrykluger/eo4dzptr/
@@ -24,20 +24,22 @@ class FileForm extends React.Component {
             fileType: defaultFileType,
             fileDownloadUrl: null,
             resort: filename,
+            currentError: this.props.currentError,
         }
-
-        this.changeFileType = this.changeFileType.bind(this);
-        this.download = this.download.bind(this);
-        this.upload = this.upload.bind(this);
-        this.openFile = this.openFile.bind(this);
     }
 
-    changeFileType (event) {
+    componentDidUpdate(prevProps) {
+        if(prevProps.currentError !== this.props.currentError) {
+            this.setState({currentError: this.props.currentError});
+        }
+    }
+
+    changeFileType = (event) => {
         const value = event.target.value;
         this.setState({fileType: value});
     }
 
-    download (event) {
+    download = (event) => {
         event.preventDefault();
         let output;
         let data = this.props.data;
@@ -68,12 +70,12 @@ class FileForm extends React.Component {
         })
     }
 
-    upload(event) {
+    upload = (event) => {
         event.preventDefault();
         this.dofileUpload.click();
     }
 
-    makeCSV (content) {
+    makeCSV = (content) => {
         let csv = '';
         content.forEach(value => {
             value.forEach((item, i) => {
@@ -90,11 +92,11 @@ class FileForm extends React.Component {
         return csv;
     }
 
-    openFile(evt) {
+    openFile = (evt) => {
         const fileObj = evt.target.files[0];
         const reader = new FileReader();
 
-        if(!(fileObj instanceof Blob)) return 
+        if(!(fileObj instanceof Blob)) return
 
         let fileloaded = e => {
             const fileContents = e.target.result;
@@ -110,11 +112,48 @@ class FileForm extends React.Component {
         reader.readAsText(fileObj);
     }
 
+    downloadTestReport = (event) => {
+        console.log("download test report");
+        event.preventDefault();
+        let output;
+        //let dots = this.props.data;
+
+        let contents = [];
+        contents.push (["# of classified points", "RMSE"]);
+        //dots.map(point => contents.push([point.x, point.y, point.lng, point.lat, point.parent, point.parentType, point.note]));
+        output = this.makeCSV(contents);
+
+        const blob = new Blob([output]);
+        const fileDownloadUrl = URL.createObjectURL(blob);
+        this.setState ({fileDownloadUrl: URL.createObjectURL(blob)},
+          () => {
+            this.doTestReportDownload.click();
+            URL.revokeObjectURL(fileDownloadUrl);
+            this.setState({fileDownloadUrl: ""})
+        })
+    }
+
     render() {
         return (
             <div id="fileForm">
-                <Container className="selectcontainer">
+                <Container>
                     <Row className="justify-content-md-center">
+                        <Col md="auto" className="">
+                            <Row className="justify-content-md-center">Root Mean Squared Error: { this.state.currentError ?  (this.state.currentError.error/Math.sqrt( this.state.currentError.numClassified)).toFixed(2) : '0'} </Row>
+                            <Row className="justify-content-md-center">Number of classified points: { this.state.currentError ?  this.state.currentError.numClassified : '0'}</Row>
+                        </Col>
+                        <Col md="auto">
+                        <Button className="" variant='primary' onClick={this.downloadTestReport}>
+                            Download Report
+                        </Button>
+                        <a className="hidden"
+                            download={'testReport.csv'}
+                            href={this.state.fileDownloadUrl}
+                            ref={e=>this.doTestReportDownload = e}>download it</a>
+                        </Col>
+                    </Row>
+                    <Row className="justify-content-md-center">
+                        <Col md="auto">
                             <Form.Control as="select" name="fileType" className="fileForm-child"
                                 onChange={this.changeFileType}
                                 value={this.state.fileType}>
@@ -122,23 +161,24 @@ class FileForm extends React.Component {
                                 <option value="json">JSON</option>
                                 <option value="text">Text</option>
                             </Form.Control>
-
+                        </Col>
+                        <Col md="auto">
                             <Button onClick={this.download} className="fileForm-child">
                                 Download
                             </Button>
-
                             <a className="hidden"
                                 download={this.fileNames[this.state.fileType]}
                                 href={this.state.fileDownloadUrl}
                                 ref={e=>this.dofileDownload = e}>download it</a>
-
+                        </Col>
+                        <Col md="auto">
                             <Button onClick={this.upload} className="fileForm-child">Upload</Button>
                             <input type="file" className="hidden"
                                 multiple={false}
                                 accept=".json,application/json"
                                 onChange={evt => this.openFile(evt)}
                                 ref={e=>this.dofileUpload = e}/>
-
+                        </Col>
                     </Row>
                 </Container>
 

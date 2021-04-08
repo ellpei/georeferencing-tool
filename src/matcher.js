@@ -28,7 +28,6 @@ class Matcher extends React.Component {
         this.addParent = this.addParent.bind(this);
         this.addParentType = this.addParentType.bind(this);
     }
-
     // Translate from rendered coordinates to real piste map coordinates
     renderedToRealCoord(coord, renderedLength, realLength) {
         return (coord/renderedLength)*realLength;
@@ -49,7 +48,7 @@ class Matcher extends React.Component {
     // Used for thesis experiments of åre
     calculateError = () => {
         let {referencePoints, triangles} = this.state;
-        if(triangles.length < 1) return null; 
+        if(triangles.length < 1) return null;
         var numClassified = 0;
         let error = 0;
         for(const refPoint of referencePoints) {
@@ -62,9 +61,6 @@ class Matcher extends React.Component {
                 numClassified++;
             }
         }
-        console.log("Total error: " + error);
-        console.log("Avg error: " + error/numClassified);
-        console.log("# of classified points: " + numClassified);
         return {error: error, numClassified: numClassified};
     }
 
@@ -152,7 +148,7 @@ class Matcher extends React.Component {
     }
 
     render() {
-        const { dots, parents, parentTypes, src} = this.state;
+        const { dots, parents, parentTypes, src, currentError} = this.state;
 
         return (
             <div id="matcher">
@@ -171,7 +167,7 @@ class Matcher extends React.Component {
                 dotRadius={1}
                 /><br/>
                 <div className="bottom-toolbox">
-                    <FileForm imgSrc={this.state.src} data={this.state.dots} loadData={(data) => this.loadFileData(data)}></FileForm>
+                    <FileForm imgSrc={this.state.src} data={this.state.dots} loadData={(data) => this.loadFileData(data)} currentError={currentError}></FileForm>
                     <DotsInfo dots={this.state.dots} deleteDot={this.deleteDot}></DotsInfo>
                     <Button variant='success' onClick={this.resetDots}>Reset</Button>
                 </div>
