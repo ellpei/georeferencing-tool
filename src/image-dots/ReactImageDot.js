@@ -157,7 +157,7 @@ export default class ReactImageDot extends React.Component {
         return (
         <div id="react-image-dot">
 
-            <div className={`react-image-dot__wrapper ${grabClass}`}
+            <div className={`react-image-dot__wrapper ${grabClass} no-select`}
             onMouseUp={this.onMouseUp}
             width={dim.realWidth}
             height={dim.realHeight}>
@@ -166,8 +166,7 @@ export default class ReactImageDot extends React.Component {
             id="canvas"
             width={dim.realWidth}
             height={dim.realHeight}
-            triangles={triangles}
-            text="testing!!!">
+            triangles={triangles}>
             </Canvas>
 
             <img

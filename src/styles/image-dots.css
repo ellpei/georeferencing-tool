@@ -15,12 +15,22 @@
   cursor: -moz-grab;
   cursor: grab;
   border-radius: 100%;
+  z-index: 2;
 }
 
 .react-image-dot__grabbing {
   cursor: -webkit-grabbing;
   cursor: -moz-grabbing;
   cursor: grabbing;
+}
+
+.no-select {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
 #canvas {
