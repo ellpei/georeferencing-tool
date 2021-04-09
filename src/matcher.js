@@ -44,10 +44,52 @@ class Matcher extends React.Component {
             }
         }
     }
+
+    generateTestReport = () => {
+        let N = this.state.dots.length;
+        let results = [];
+        results.push({
+            n: N,
+            numClassified: this.state.currentError.numClassified,
+            minRMSE: this.state.currentError.error/Math.sqrt(this.state.currentError.numClassified),
+            triangles: this.state.triangles
+        });
+        let testSet = this.state.dots.slice();
+        // Calculate min RMSE for each subset of size n
+        var n;
+        for(n = N-1; n >= 3; n--) {
+            var minRMSE = Infinity;
+            var minTriangles = [];
+            var minNumClassified = 0;
+            var minIndexToBeRemoved = 0;
+            var i;
+            for(i = 0; i < n; i++) {
+                let subset = testSet.slice();
+                subset.splice(i, 1);
+                let triangles = Delaunay.triangulate(subset);
+                let {error, numClassified} = this.calculateError(triangles);
+                let rmse = error/Math.sqrt(numClassified);
+                if(rmse < minRMSE) {
+                    minIndexToBeRemoved = i;
+                    minRMSE = rmse;
+                    minNumClassified = numClassified;
+                    minTriangles = triangles;
+                }
+            }
+            results.push({
+                n: n,
+                numClassified: minNumClassified,
+                minRMSE: minRMSE,
+                minTriangles: minTriangles,
+            });
+            testSet.splice(minIndexToBeRemoved, 1);
+        }
+        return results;
+    }
     // Calculate the total error using reference points
     // Used for thesis experiments of åre
-    calculateError = () => {
-        let {referencePoints, triangles} = this.state;
+    calculateError = (triangles) => {
+        let {referencePoints} = this.state;
         if(triangles.length < 1) return null;
         var numClassified = 0;
         let error = 0;
@@ -73,7 +115,7 @@ class Matcher extends React.Component {
                 triangles: Delaunay.triangulate(this.state.dots)
             }, function() {
                 this.setState({
-                    currentError: this.calculateError()
+                    currentError: this.calculateError(this.state.triangles)
                 });
             });
           });
@@ -143,7 +185,9 @@ class Matcher extends React.Component {
             dots = [...dots, dot];
         }
         this.setState({dots: dots, parents: parents}, function() {
-            this.setState({triangles: Delaunay.triangulate(this.state.dots)})
+            this.setState({triangles: Delaunay.triangulate(this.state.dots)}, function () {
+                this.setState({currentError: this.calculateError(this.state.triangles)})
+            })
         });
     }
 
@@ -174,7 +218,9 @@ class Matcher extends React.Component {
         }
         this.initialDots = points;
         this.setState({dots: points, parents: parents}, function() {
-            this.setState({triangles: Delaunay.triangulate(this.state.dots)})
+            this.setState({triangles: Delaunay.triangulate(this.state.dots)}, function () {
+                this.setState({currentError: this.calculateError(this.state.triangles)})
+            })
         });
     }
 
@@ -204,12 +250,12 @@ class Matcher extends React.Component {
                         triangles={this.state.triangles}
                         loadPointData={this.loadPointData}
                         loadTriangleData={this.loadTriangleData}
-                        currentError={currentError}>
+                        currentError={currentError}
+                        generateTestReport={this.generateTestReport}>
                     </FileForm>
                     <DotsInfo dots={this.state.dots} deleteDot={this.deleteDot}></DotsInfo>
                     <Button variant='success' onClick={this.resetDots}>Reset</Button>
                 </div>
-
             </div>);
     }
 }

@@ -120,13 +120,9 @@ class FileForm extends React.Component {
     downloadTestReport = (event) => {
         console.log("download test report");
         event.preventDefault();
-        let output;
-        //let dots = this.props.data;
-
-        let contents = [];
-        contents.push (["# of classified points", "RMSE"]);
-        //dots.map(point => contents.push([point.x, point.y, point.lng, point.lat, point.parent, point.parentType, point.note]));
-        output = this.makeCSV(contents);
+        let results = this.props.generateTestReport();
+        console.log("test report: " + JSON.stringify())
+        let output = JSON.stringify({testReport: results}, null, 4);
 
         const blob = new Blob([output]);
         const fileDownloadUrl = URL.createObjectURL(blob);
@@ -145,14 +141,14 @@ class FileForm extends React.Component {
                     <Row className="justify-content-md-center">
                         <Col md="auto" className="">
                             <Row className="justify-content-md-center">Root Mean Squared Error: { this.state.currentError ?  (this.state.currentError.error/Math.sqrt( this.state.currentError.numClassified)).toFixed(2) : '0'} </Row>
-                            <Row className="justify-content-md-center">Number of classified points: { this.state.currentError ?  this.state.currentError.numClassified : '0'}</Row>
+                            <Row className="justify-content-md-center"># of classified ref points: { this.state.currentError ?  this.state.currentError.numClassified : '0'}</Row>
                         </Col>
                         <Col md="auto">
                         <Button className="" variant='primary' onClick={this.downloadTestReport}>
                             Generate Test Report
                         </Button>
                         <a className="hidden"
-                            download={'testReport.csv'}
+                            download={'testReport.json'}
                             href={this.state.fileDownloadUrl}
                             ref={e=>this.doTestReportDownload = e}>download it</a>
                         </Col>
