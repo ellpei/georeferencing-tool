@@ -118,10 +118,9 @@ class FileForm extends React.Component {
     }
 
     downloadTestReport = (event) => {
-        console.log("download test report");
+        console.log("generating test report");
         event.preventDefault();
         let results = this.props.generateTestReport();
-        console.log("test report: " + JSON.stringify())
         let output = JSON.stringify({testReport: results}, null, 4);
 
         const blob = new Blob([output]);
