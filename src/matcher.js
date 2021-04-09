@@ -125,7 +125,7 @@ class Matcher extends React.Component {
         window.removeEventListener("resize", this.handleResize);
     }
 
-    loadFileData(data) {
+    loadPointData = (data) => {
         data = data.map(x => new Delaunay.Point(x));
         this.initialDots = data;
         let dots = [];
@@ -143,6 +143,37 @@ class Matcher extends React.Component {
             dots = [...dots, dot];
         }
         this.setState({dots: dots, parents: parents}, function() {
+            this.setState({triangles: Delaunay.triangulate(this.state.dots)})
+        });
+    }
+
+    includesPoint = (pointList, point) => {
+        for(const p of pointList) {
+            if(p.x === point.x && p.y === point.y) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    loadTriangleData = (data) => {
+        let points = [];
+        let parents = [];
+        for(const triangle of data) {
+            for(const point of triangle) {
+                let pointObj = new Delaunay.Point(point);
+                if(!this.includesPoint(points, pointObj)) {
+                    points = [...points, pointObj];
+                    for(const parent of pointObj.parent) {
+                        if(!parents.includes(parent)) {
+                            parents = [...parents, parent];
+                        }
+                    }
+                }
+            }
+        }
+        this.initialDots = points;
+        this.setState({dots: points, parents: parents}, function() {
             this.setState({triangles: Delaunay.triangulate(this.state.dots)})
         });
     }
@@ -167,7 +198,14 @@ class Matcher extends React.Component {
                 dotRadius={1}
                 /><br/>
                 <div className="bottom-toolbox">
-                    <FileForm imgSrc={this.state.src} data={this.state.dots} loadData={(data) => this.loadFileData(data)} currentError={currentError}></FileForm>
+                    <FileForm
+                        imgSrc={this.state.src}
+                        points={this.state.dots}
+                        triangles={this.state.triangles}
+                        loadPointData={this.loadPointData}
+                        loadTriangleData={this.loadTriangleData}
+                        currentError={currentError}>
+                    </FileForm>
                     <DotsInfo dots={this.state.dots} deleteDot={this.deleteDot}></DotsInfo>
                     <Button variant='success' onClick={this.resetDots}>Reset</Button>
                 </div>

@@ -20,6 +20,10 @@ function Triangle (point1, point2, point3) {
 
     this.matrixGeoToMap = matrixTrans.fromTriangles(this.getGeoCoords(), this.getPisteMapCoords());
     this.matrixMapToGeo = matrixTrans.fromTriangles(this.getPisteMapCoords(), this.getGeoCoords());
+
+    this.toJSON = function() {
+        return [this.p1, this.p2, this.p3];
+    }
 }
 
 Triangle.prototype.constructor = Triangle;

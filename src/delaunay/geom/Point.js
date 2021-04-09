@@ -6,6 +6,18 @@ function Point({x, y, lat, lng, note, parentType, parent}) {
     this.note = note || "";
     this.parentType = parentType || "";
     this.parent = parent || [];
+
+    this.toJSON = function() {
+        return {
+            x: this.x,
+            y: this.y,
+            lat: this.lat,
+            lng: this.lng,
+            parentType: this.parentType,
+            parent: this.parent,
+            note: this.note
+        };
+    }
 }
 
 Point.prototype.constructor = Point;

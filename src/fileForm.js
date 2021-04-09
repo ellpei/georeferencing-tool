@@ -42,9 +42,10 @@ class FileForm extends React.Component {
     download = (event) => {
         event.preventDefault();
         let output;
-        let data = this.props.data;
+        let data = this.props.points;
         if (this.state.fileType === "json") {
-            output = JSON.stringify({pistePoints: data}, null, 4);
+            //output = JSON.stringify({pistePoints: data}, null, 4);
+            output = JSON.stringify({triangles: this.props.triangles}, null, 4);
         } else if (this.state.fileType === "csv") {
             let contents = [];
             contents.push (["x", "y", "long", "lat", "parent", "parentType", "note"]);
@@ -88,7 +89,7 @@ class FileForm extends React.Component {
                     csv += result;
             })
             csv += '\n';
-        })
+        });
         return csv;
     }
 
@@ -102,7 +103,11 @@ class FileForm extends React.Component {
             const fileContents = e.target.result;
             try {
                 let json = JSON.parse(fileContents);
-                this.props.loadData(json["pistePoints"]);
+                if(json.hasOwnProperty('pistePoints')) {
+                    this.props.loadPointData(json['pistePoints']);
+                } else if(json.hasOwnProperty('triangles')) {
+                    this.props.loadTriangleData(json['triangles']);
+                }
             } catch(e) {
                 alert(e);
             }
@@ -144,7 +149,7 @@ class FileForm extends React.Component {
                         </Col>
                         <Col md="auto">
                         <Button className="" variant='primary' onClick={this.downloadTestReport}>
-                            Download Report
+                            Generate Test Report
                         </Button>
                         <a className="hidden"
                             download={'testReport.csv'}
