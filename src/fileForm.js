@@ -130,7 +130,7 @@ class FileForm extends React.Component {
             this.doTestReportDownload.click();
             URL.revokeObjectURL(fileDownloadUrl);
             this.setState({fileDownloadUrl: ""})
-        })
+        });
     }
 
     render() {

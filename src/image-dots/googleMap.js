@@ -60,7 +60,7 @@ class GoogleMap extends React.Component {
     }
 
     getCenter = () => {
-        return { 
+        return {
             lat: parseFloat(this.props.currentDot.lat) || 63.42833519737357,
             lng: parseFloat(this.props.currentDot.lng) || 13.078345603820786
         };
@@ -74,6 +74,7 @@ class GoogleMap extends React.Component {
         map = new google.maps.Map(this.mapRef.current, {
             center: this.getCenter(),
             zoom: zoom,
+            mapTypeId: google.maps.MapTypeId.HYBRID
         });
 
         let currentMarker = new google.maps.Marker({
