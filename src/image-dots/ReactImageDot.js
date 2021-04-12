@@ -50,12 +50,20 @@ export default class ReactImageDot extends React.Component {
     }
 
     calcEstimatedGeoCoord = (point) => {
+        var nearestTriangle;
+        let minDistance = Infinity;
+
         for(const triangle of this.props.triangles) {
             if(triangle.enclosesMapCoords(point)) {
                 return triangle.transformMapCoords(point);
             }
+            let distance = triangle.mapDistanceToPoint(point);
+            if(distance < minDistance) {
+                minDistance = distance;
+                nearestTriangle = triangle;
+            }
         }
-        return null;
+        return nearestTriangle ? nearestTriangle.transformMapCoords(point) : null;
     }
 
     onMouseUp = (e) => {

@@ -2,23 +2,23 @@ import React from 'react'
 
 class Canvas extends React.Component {
 
-    constructor(props) {
-        super(props)
-        var triangle;
-        for(triangle of this.props.triangles) {
-            console.log(triangle);
-        }
-    }
-
     componentDidMount() {
         this.updateCanvas();
     }
 
-    componentDidUpdate() {
-        this.updateCanvas();
+    getSnapshotBeforeUpdate(prevProps) {
+        return {
+            triangleUpdateRequired: prevProps.triangles !== this.props.triangles,
+        };
     }
 
-    updateCanvas() {
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        if(snapshot.triangleUpdateRequired) {
+            this.updateCanvas();
+        }
+    }
+
+    updateCanvas = () => {
         let canvas = this.refs.canvas;
         const ctx = canvas.getContext('2d');
         ctx.clearRect(0, 0, canvas.width, canvas.height);

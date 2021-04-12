@@ -18,15 +18,13 @@ class Matcher extends React.Component {
             src: this.props.resort.src,
             x: 0,
             y: 0,
-            referencePoints: anchorPoints,
+            referencePoints: anchorPoints.map(x => new Delaunay.Point(x)),
             dots: this.initialDots,
             triangles: [],
             parents: [],
             parentTypes: ['Piste', 'Lift', 'Terrain', 'Restaurant', 'Other'],
             windowWidth: window.innerWidth*0.98,
         }
-        this.addParent = this.addParent.bind(this);
-        this.addParentType = this.addParentType.bind(this);
     }
     // Translate from rendered coordinates to real piste map coordinates
     renderedToRealCoord(coord, renderedLength, realLength) {
@@ -38,26 +36,29 @@ class Matcher extends React.Component {
     }
 
     findEnclosingTriangle = (point, triangles) => {
+        var nearestTriangle;
+        let minDistance = Infinity;
+
         for(const triangle of triangles) {
             if(triangle.enclosesGeoCoords(point)) {
                 return triangle;
             }
+            let distance = triangle.geoDistanceToPoint(point);
+            if(distance < minDistance) {
+                minDistance = distance;
+                nearestTriangle = triangle;
+            }
         }
+        return nearestTriangle;
     }
 
     generateTestReport = () => {
         let N = this.state.dots.length;
         let results = [];
-        results.push({
-            n: N,
-            numClassified: this.state.currentError.numClassified,
-            minRMSE: this.state.currentError.error/Math.sqrt(this.state.currentError.numClassified),
-            triangles: this.state.triangles
-        });
         let testSet = this.state.dots.slice();
         // Calculate min RMSE for each subset of size n
         var n;
-        for(n = N-1; n >= 3; n--) {
+        for(n = N; n >= 3; n--) {
             var minRMSE = Infinity;
             var minTriangles = [];
             var minNumClassified = 0;
@@ -67,8 +68,12 @@ class Matcher extends React.Component {
                 let subset = testSet.slice();
                 subset.splice(i, 1);
                 let triangles = Delaunay.triangulate(subset);
-                let {error, numClassified} = this.calculateError(triangles);
-                let rmse = error/Math.sqrt(numClassified);
+                let errorObj = this.calculateError(triangles);
+                if(errorObj == null) {
+                    continue;
+                }
+                let {error, numClassified} = errorObj;
+                let rmse = Math.sqrt(error*error/numClassified);
                 if(rmse < minRMSE) {
                     minIndexToBeRemoved = i;
                     minRMSE = rmse;
@@ -93,8 +98,7 @@ class Matcher extends React.Component {
         if(triangles.length < 1) return null;
         var numClassified = 0;
         let error = 0;
-        for(const refPoint of referencePoints) {
-            let point = new Delaunay.Point(refPoint);
+        for(const point of referencePoints) {
             let enclosingTriangle = this.findEnclosingTriangle(point, triangles);
             if(enclosingTriangle) {
                 let mapCoords = enclosingTriangle.transformGeoCoords(point);
@@ -113,10 +117,6 @@ class Matcher extends React.Component {
         }, function() {
             this.setState({
                 triangles: Delaunay.triangulate(this.state.dots)
-            }, function() {
-                this.setState({
-                    currentError: this.calculateError(this.state.triangles)
-                });
             });
           });
     }
@@ -143,13 +143,13 @@ class Matcher extends React.Component {
         });
     }
 
-    addParent(parent) {
+    addParent = (parent) => {
         if(!this.state.parents.includes(parent)) {
             this.setState({parents: [...this.state.parents, parent]});
         }
     }
 
-    addParentType(type) {
+    addParentType = (type) => {
         if(!this.state.parentTypes.includes(type)) {
             this.setState({parentTypes: [...this.state.parentTypes, type]});
         }
@@ -185,9 +185,7 @@ class Matcher extends React.Component {
             dots = [...dots, dot];
         }
         this.setState({dots: dots, parents: parents}, function() {
-            this.setState({triangles: Delaunay.triangulate(this.state.dots)}, function () {
-                this.setState({currentError: this.calculateError(this.state.triangles)})
-            })
+            this.setState({triangles: Delaunay.triangulate(this.state.dots)})
         });
     }
 
