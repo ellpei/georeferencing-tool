@@ -3,6 +3,7 @@ import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import MapForm from './mapForm.js';
 import Matcher from './matcher.js';
+import MapCoordCollector from './mapcoords-only/MapCoordCollector.js';
 import images from './images';
 import Docs from './docs.js';
 import About from './about.js';
@@ -18,54 +19,72 @@ class App extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            resortObject: null
+            resortObject: null,
+            useGeoCoords: true,
         };
     }
-    
-    setResort = (choice) => {
+
+    setResort = (choice, useGeoCoords) => {
         this.setState({
-            resortObject: images[choice]
+            resortObject: images[choice],
+            useGeoCoords: useGeoCoords
         });
     }
 
-    uploadMap = (file) => {
+    uploadMap = (file, useGeoCoords) => {
         this.setState({
-            resortObject: { src: file, title: 'MyMap'}
+            resortObject: { src: file, title: 'MyMap'},
+            useGeoCoords: useGeoCoords,
         });
     }
 
     render() {
         return (
             <div className="App">
-            <Router>
-                <Navbar bg="light" variant="light">
-                    <Navbar.Brand href="/">
-                        <div className="header">
-                            <h1>GeoMatcher</h1>
-                        </div>
-                    </Navbar.Brand>
-                    <Nav className="mr-auto">
-                        <Nav.Link href="/docs">Docs</Nav.Link>
-                        <Nav.Link href="/about">About</Nav.Link>
-                    </Nav>
-                </Navbar>
-                <Switch>
-                    <Route exact path="/">
-                        <MapForm resorts={images} onSelect={this.setResort} onUpload={this.uploadMap}/>
-                    </Route>
-                    <Route path="/docs">
-                        <Docs />
-                    </Route>
-                    <Route path="/about">
-                        <About />
-                    </Route>
-                    <Route path="/matcher">
-                        {this.state.resortObject ?
-                            <Matcher resort={this.state.resortObject}></Matcher> :
-                        <Redirect to={{ pathname: '/', state: { from: this.props.location } }} />}
-                    </Route>
-                </Switch>
-            </Router>
+                <Router>
+                    <Navbar className="navbar" bg="light" variant="light">
+                        <Navbar.Brand href="/">
+                            <div className="header">
+                                <h1>Georeferencing Tool</h1>
+                            </div>
+                        </Navbar.Brand>
+                        <Nav className="mr-auto">
+                            <Nav.Link href="/docs">Docs</Nav.Link>
+                            <Nav.Link href="/about">About</Nav.Link>
+                        </Nav>
+                    </Navbar>
+                    <Switch>
+                        <Route exact path="/">
+                            <MapForm
+                            resorts={images}
+                            onSelect={this.setResort}
+                            onUpload={this.uploadMap}/>
+                        </Route>
+                        <Route path="/docs">
+                            <Docs />
+                        </Route>
+                        <Route path="/about">
+                            <About />
+                        </Route>
+                        <Route path="/matcher">
+                        {(() => {
+                              if (!this.state.resortObject)
+                                 return <Redirect to={{ pathname: '/', state: { from: this.props.location } }} />
+                              else if (this.state.useGeoCoords)
+                                 return <Matcher resort={this.state.resortObject}/>
+                              else
+                                 return <MapCoordCollector resort={this.state.resortObject}/>
+                          })()}
+
+
+                            {/*this.state.resortObject ?
+
+                                <Matcher
+                                resort={this.state.resortObject}/> :
+                                <Redirect to={{ pathname: '/', state: { from: this.props.location } }} />*/}
+                        </Route>
+                    </Switch>
+                </Router>
             </div>
         );
     }

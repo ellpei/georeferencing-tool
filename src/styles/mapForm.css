@@ -3,11 +3,20 @@ select {
 }
 
 .selectcontainer {
-    min-width: 300px;
+    margin-top: 40px;
+    min-width: 600px;
     width: 20%;
-    display: flex;
-    justify-content: center;
-    align-items: center; /* Optional */
+    text-align: left;
+}
+
+.form-label {
+    font-weight: bold;
+    font-size: 1rem;
+}
+
+.form-title {
+    font-weight: bold;
+    font-size: 1.4rem;
 }
 
 .image-wrapper {

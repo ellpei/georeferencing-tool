@@ -3,22 +3,31 @@
 }
 
 @font-face {
-    font-family: 'lobster';
-    src: url('../Lobster-Regular.ttf');
+    font-family: 'sourcesanspro';
+    src: url('../assets/SourceSansPro-SemiBold.ttf');
 }
 
 .header {
-    font-family: 'lobster';
+    font-family: 'sourcesanspro';
     color: black;
 }
 
+.navbar {
+    font-family: 'sourcesanspro';
+    font-size: 1.4rem;
+}
+
 .vertical-center {
-    min-height: 100%;  
-    min-height: 50vh; 
+    min-height: 100%;
+    min-height: 50vh;
     display: flex;
     align-items: center;
 }
 
 .container {
     max-width: 100% !important;
+}
+
+.page-content {
+    margin: 20px; 
 }

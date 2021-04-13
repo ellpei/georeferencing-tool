@@ -8,7 +8,8 @@ class MapForm extends React.Component {
         super(props);
         this.state = {
             val: this.props.resorts[0].id,
-            uploadedMap: null
+            uploadedMap: null,
+            useGeoCoords: true,
         }
     }
 
@@ -17,10 +18,11 @@ class MapForm extends React.Component {
     }
 
     handleStart = () => {
-        if(this.state.uploadedMap == null) {
-            this.props.onSelect(this.state.val)
+        let { uploadedMap, val, useGeoCoords } = this.state;
+        if(uploadedMap == null) {
+            this.props.onSelect(val, useGeoCoords);
         } else {
-            this.props.onUpload(this.state.uploadedMap)
+            this.props.onUpload(uploadedMap, useGeoCoords);
         }
     }
 
@@ -32,11 +34,37 @@ class MapForm extends React.Component {
     }
 
     render() {
+        var toggleCheckBox = () =>  this.setState({useGeoCoords: !this.state.useGeoCoords});
         return (
             <div id="mapform" >
                 <div className="vertical-center">
                     <Container className="selectcontainer">
                         <Form>
+                            <Form.Label className="form-title">Welcome!</Form.Label>
+                            <Form.Group controlId="mode">
+                                <Form.Label>Select coordinate collection mode</Form.Label><br/>
+                                <Form.Check
+                                custom
+                                inline
+                                type='radio'
+                                id={0}
+                                label='Geographic and map coordinates'
+                                checked={this.state.useGeoCoords}
+                                onChange={toggleCheckBox}
+                                />
+
+                                <Form.Check
+                                custom
+                                inline
+                                type='radio'
+                                id={1}
+                                label='Only map coordinates'
+                                checked={!this.state.useGeoCoords}
+                                onChange={toggleCheckBox}
+                                />
+                            </Form.Group>
+
+
                             <Form.Group controlId="exampleForm.ControlSelect1">
                                 <Form.Label>Select or upload ski map</Form.Label>
                                 <Form.Control as="select"
@@ -55,8 +83,8 @@ class MapForm extends React.Component {
                                         <img src={this.state.uploadedMap} alt="preview"/>
                                         <br/><br/>
                                     </div> : null }
+                                </Form.Group>
                                 <Link to="/matcher" onClick={this.handleStart} className="btn btn-primary">Start!</Link>
-                            </Form.Group>
                         </Form>
                     </Container>
                 </div>

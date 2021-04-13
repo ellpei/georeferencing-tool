@@ -1,10 +1,8 @@
-import './styles/fileForm.css';
+import '../styles/fileForm.css';
 import React from 'react';
 import {Row, Col, Form, Button} from 'react-bootstrap';
 import Container from 'react-bootstrap/Container';
-/**
- * Cred: https://jsfiddle.net/larrykluger/eo4dzptr/
- */
+
 class FileForm extends React.Component {
 
     constructor(props) {
@@ -17,7 +15,6 @@ class FileForm extends React.Component {
         this.fileNames = {
             json: String(filename) + ".json",
             csv: String(filename) + ".csv",
-            text: String(filename) + ".txt"
         }
 
         this.state = {
@@ -37,22 +34,12 @@ class FileForm extends React.Component {
         let output;
         let data = this.props.points;
         if (this.state.fileType === "json") {
-            //output = JSON.stringify({pistePoints: data}, null, 4);
-            output = JSON.stringify({triangles: this.props.triangles}, null, 4);
+            output = JSON.stringify({points: data}, null, 4);
         } else if (this.state.fileType === "csv") {
             let contents = [];
-            contents.push (["x", "y", "long", "lat", "parent", "parentType", "note"]);
-            data.map(point => contents.push([point.x, point.y, point.lng, point.lat, point.parent, point.parentType, point.note]));
+            contents.push (["id", "name", "shortName", "areaId", "x", "y"]);
+            data.map(point => contents.push([point.id, point.name, point.shortName, point.areaId, point.x, point.y]));
             output = this.makeCSV(contents);
-        } else if (this.state.fileType === "text") {
-            output = '';
-            data.map(point => {
-                output += "x:" + point.x + ",y:" + point.y;
-                output += ",long:" + point.long + ",lat:" + point.lat;
-                output += ",parent:[" + point.parent + "],parentType:"+point.parentType;
-                output += ",note:" + point.note + "\n";
-                return output;
-            });
         }
         const blob = new Blob([output]);
         const fileDownloadUrl = URL.createObjectURL(blob);
@@ -96,10 +83,8 @@ class FileForm extends React.Component {
             const fileContents = e.target.result;
             try {
                 let json = JSON.parse(fileContents);
-                if(json.hasOwnProperty('pistePoints')) {
-                    this.props.loadPointData(json['pistePoints']);
-                } else if(json.hasOwnProperty('triangles')) {
-                    this.props.loadTriangleData(json['triangles']);
+                if(json.hasOwnProperty('lifts')) {
+                    this.props.loadPointData(json['lifts']);
                 }
             } catch(e) {
                 alert(e);
@@ -132,23 +117,11 @@ class FileForm extends React.Component {
                 <Container>
                     <Row className="justify-content-md-center">
                         <Col md="auto">
-                        <Button className="" variant='primary' onClick={this.downloadTestReport}>
-                            Generate Test Report
-                        </Button>
-                        <a className="hidden"
-                            download={'testReport.json'}
-                            href={this.state.fileDownloadUrl}
-                            ref={e=>this.doTestReportDownload = e}>download it</a>
-                        </Col>
-                    </Row>
-                    <Row className="justify-content-md-center">
-                        <Col md="auto">
                             <Form.Control as="select" name="fileType" className="fileForm-child"
                                 onChange={this.changeFileType}
                                 value={this.state.fileType}>
                                 <option value="csv">CSV</option>
                                 <option value="json">JSON</option>
-                                <option value="text">Text</option>
                             </Form.Control>
                         </Col>
                         <Col md="auto">

@@ -130,7 +130,6 @@ export default class ReactImageDot extends React.Component {
 
     resetDots = () => {
         this.props.resetDots();
-
         this.setState({currentDot: this.state.lastCoords});
     }
 
