@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Canvas from './Canvas';
-import Dot from './Dot';
-import GeoCoordSelector from './geoCoordSelector.js';
-import Delaunay from '../delaunay/index.js';
+import Dot from '../image-dots/Dot';
+import InputModal from './InputModal.js';
+import Delaunay from './delaunay/index.js';
 
 const propTypes = {
   deleteDot: PropTypes.func.isRequired,
@@ -23,7 +23,7 @@ const defaultProps = {
   backgroundSize: 'cover',
 };
 
-export default class ReactImageDot extends React.Component {
+export default class ImageCoordinateCollector extends React.Component {
     constructor(props) {
         super(props);
         let lastCoords = this.props.coords !== undefined ? this.props.coords : {lat: 63.42833519737357, lng: 13.078345603820786};
@@ -208,7 +208,7 @@ export default class ReactImageDot extends React.Component {
                 key={-1}
                 />}
             </div>
-            <GeoCoordSelector
+            <InputModal
             show={showModal}
             dimensions={dim}
             posX={this.realToRenderedCoord(currentDot.x, dim.renderWidth, dim.realWidth)}
@@ -232,5 +232,5 @@ export default class ReactImageDot extends React.Component {
     }
 }
 
-ReactImageDot.propTypes = propTypes;
-ReactImageDot.defaultProps = defaultProps;
+ImageCoordinateCollector.propTypes = propTypes;
+ImageCoordinateCollector.defaultProps = defaultProps;

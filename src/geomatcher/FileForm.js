@@ -1,10 +1,8 @@
-import './styles/fileForm.css';
+import '../styles/fileForm.css';
 import React from 'react';
 import {Row, Col, Form, Button} from 'react-bootstrap';
 import Container from 'react-bootstrap/Container';
-/**
- * Cred: https://jsfiddle.net/larrykluger/eo4dzptr/
- */
+
 class FileForm extends React.Component {
 
     constructor(props) {

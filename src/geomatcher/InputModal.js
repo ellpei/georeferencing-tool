@@ -1,12 +1,12 @@
 import '../styles/geoCoordSelector.css';
 import React from 'react';
-import Backdrop from './backdrop.js';
+import Backdrop from '../image-dots/backdrop.js';
 import {Button, Form, Row, Col} from 'react-bootstrap';
 import Card from 'react-bootstrap/Card';
 import Creatable from 'react-select/creatable';
 import GoogleMap from './googleMap.js';
 
-class GeoCoordSelector extends React.Component {
+class InputModal extends React.Component {
 
     constructor(props) {
         super(props);
@@ -129,4 +129,4 @@ class GeoCoordSelector extends React.Component {
     }
 }
 
-export default GeoCoordSelector;
+export default InputModal;

@@ -2,7 +2,7 @@ import './styles/App.css';
 import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import MapForm from './mapForm.js';
-import Matcher from './matcher.js';
+import CoordinateMatcher from './geomatcher/CoordinateMatcher.js';
 import MapCoordCollector from './mapcoords-only/MapCoordCollector.js';
 import images from './images';
 import Docs from './docs.js';
@@ -71,7 +71,7 @@ class App extends React.Component {
                               if (!this.state.resortObject)
                                  return <Redirect to={{ pathname: '/', state: { from: this.props.location } }} />
                               else if (this.state.useGeoCoords)
-                                 return <Matcher resort={this.state.resortObject}/>
+                                 return <CoordinateMatcher resort={this.state.resortObject}/>
                               else
                                  return <MapCoordCollector resort={this.state.resortObject}/>
                           })()}

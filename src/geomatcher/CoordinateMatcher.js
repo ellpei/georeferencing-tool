@@ -1,14 +1,14 @@
-import './styles/image-dots.css';
-import './styles/geoCoordSelector.css';
-import anchorPoints from './assets/are_anchorpoints.js';
+import '../styles/image-dots.css';
+import '../styles/geoCoordSelector.css';
+import anchorPoints from './are_anchorpoints.js';
 import React from 'react';
 import {Button} from 'react-bootstrap';
-import FileForm from './fileForm.js';
-import ReactImageDot from './image-dots/ReactImageDot';
-import DotsInfo from './image-dots/DotsInfo';
+import FileForm from './FileForm.js';
+import ImageCoordinateCollector from './ImageCoordinateCollector.js';
+import DotsInfo from './DotsInfo.js';
 import Delaunay from './delaunay/index.js';
 
-class Matcher extends React.Component {
+class CoordinateMatcher extends React.Component {
 
     constructor(props) {
         super(props);
@@ -227,7 +227,7 @@ class Matcher extends React.Component {
 
         return (
             <div id="matcher">
-                <ReactImageDot
+                <ImageCoordinateCollector
                 backgroundImageUrl={src}
                 onLoadMap={this.onLoadPisteMap}
                 dots={dots}
@@ -258,4 +258,4 @@ class Matcher extends React.Component {
     }
 }
 
-export default Matcher;
+export default CoordinateMatcher;
