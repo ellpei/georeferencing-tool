@@ -1,6 +1,8 @@
 import '../styles/image-dots.css';
 import '../styles/geoCoordSelector.css';
-import anchorPoints from './are_anchorpoints.js';
+import anchorPoints from './experiment/are_anchorpoints.js';
+import testTriangles from './experiment/are_testtriangles.js';
+import testpoints from './experiment/worldcupbacken.js';
 import React from 'react';
 import {Button} from 'react-bootstrap';
 import FileForm from './FileForm.js';
@@ -25,6 +27,32 @@ class CoordinateMatcher extends React.Component {
             parentTypes: ['Piste', 'Lift', 'Terrain', 'Restaurant', 'Other'],
             windowWidth: window.innerWidth*0.98,
         }
+    }
+
+    transformTestPoints = () => {
+        let triangles = [];
+        let trianglePoints = [];
+        // TODO: test different triangle set sizes
+        let size = "5";
+        let triangleData = testTriangles[size].triangles;
+        console.log("transforming run points for triangle set size " + size);
+        for(const triangle of triangleData) {
+            for(const point of triangle) {
+                let pointObj = new Delaunay.Point(point);
+                if(!this.includesPoint(trianglePoints, pointObj)) {
+                    trianglePoints = [...trianglePoints, pointObj];
+                }
+            }
+        }
+        triangles = Delaunay.triangulate(trianglePoints);
+        let transformedCoords = [];
+        for(const p of testpoints) {
+            let point = {lat: p.coordinates[1], lng: p.coordinates[0]};
+            let enclosingTriangle = this.findEnclosingTriangle(point, triangles);
+            let {x, y} = enclosingTriangle.transformGeoCoords(point);
+            transformedCoords.push({x: Math.round(x), y: Math.round(y)});
+        }
+        this.setState({dots: transformedCoords});
     }
     // Translate from rendered coordinates to real piste map coordinates
     renderedToRealCoord(coord, renderedLength, realLength) {
@@ -249,7 +277,8 @@ class CoordinateMatcher extends React.Component {
                         loadPointData={this.loadPointData}
                         loadTriangleData={this.loadTriangleData}
                         currentError={currentError}
-                        generateTestReport={this.generateTestReport}>
+                        generateTestReport={this.generateTestReport}
+                        plotTestData={this.transformTestPoints}>
                     </FileForm>
                     <DotsInfo dots={this.state.dots} deleteDot={this.deleteDot}></DotsInfo>
                     <Button variant='success' onClick={this.resetDots}>Reset</Button>

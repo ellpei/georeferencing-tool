@@ -138,6 +138,11 @@ class FileForm extends React.Component {
                             href={this.state.fileDownloadUrl}
                             ref={e=>this.doTestReportDownload = e}>download it</a>
                         </Col>
+                        <Col md="auto">
+                        <Button className="" variant='primary' onClick={this.props.plotTestData}>
+                            Plot test data
+                        </Button>
+                        </Col>
                     </Row>
                     <Row className="justify-content-md-center">
                         <Col md="auto">
