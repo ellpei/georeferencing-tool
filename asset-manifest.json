@@ -1,27 +1,27 @@
 {
   "files": {
-    "main.css": "./static/css/main.9b6773bf.chunk.css",
-    "main.js": "./static/js/main.a9e2d3e5.chunk.js",
-    "main.js.map": "./static/js/main.a9e2d3e5.chunk.js.map",
-    "runtime-main.js": "./static/js/runtime-main.a826bab1.js",
-    "runtime-main.js.map": "./static/js/runtime-main.a826bab1.js.map",
-    "static/css/2.150d169a.chunk.css": "./static/css/2.150d169a.chunk.css",
-    "static/js/2.80a4427a.chunk.js": "./static/js/2.80a4427a.chunk.js",
-    "static/js/2.80a4427a.chunk.js.map": "./static/js/2.80a4427a.chunk.js.map",
-    "static/js/3.fe59b515.chunk.js": "./static/js/3.fe59b515.chunk.js",
-    "static/js/3.fe59b515.chunk.js.map": "./static/js/3.fe59b515.chunk.js.map",
-    "index.html": "./index.html",
-    "static/css/2.150d169a.chunk.css.map": "./static/css/2.150d169a.chunk.css.map",
-    "static/css/main.9b6773bf.chunk.css.map": "./static/css/main.9b6773bf.chunk.css.map",
-    "static/js/2.80a4427a.chunk.js.LICENSE.txt": "./static/js/2.80a4427a.chunk.js.LICENSE.txt",
-    "static/js/main.a9e2d3e5.chunk.js.LICENSE.txt": "./static/js/main.a9e2d3e5.chunk.js.LICENSE.txt",
-    "static/media/App.css": "./static/media/SourceSansPro-SemiBold.43cc81b4.ttf"
+    "main.css": "/georeferencing-tool/static/css/main.77a0e58d.chunk.css",
+    "main.js": "/georeferencing-tool/static/js/main.db301c2a.chunk.js",
+    "main.js.map": "/georeferencing-tool/static/js/main.db301c2a.chunk.js.map",
+    "runtime-main.js": "/georeferencing-tool/static/js/runtime-main.550ca376.js",
+    "runtime-main.js.map": "/georeferencing-tool/static/js/runtime-main.550ca376.js.map",
+    "static/css/2.150d169a.chunk.css": "/georeferencing-tool/static/css/2.150d169a.chunk.css",
+    "static/js/2.80a4427a.chunk.js": "/georeferencing-tool/static/js/2.80a4427a.chunk.js",
+    "static/js/2.80a4427a.chunk.js.map": "/georeferencing-tool/static/js/2.80a4427a.chunk.js.map",
+    "static/js/3.fe59b515.chunk.js": "/georeferencing-tool/static/js/3.fe59b515.chunk.js",
+    "static/js/3.fe59b515.chunk.js.map": "/georeferencing-tool/static/js/3.fe59b515.chunk.js.map",
+    "index.html": "/georeferencing-tool/index.html",
+    "static/css/2.150d169a.chunk.css.map": "/georeferencing-tool/static/css/2.150d169a.chunk.css.map",
+    "static/css/main.77a0e58d.chunk.css.map": "/georeferencing-tool/static/css/main.77a0e58d.chunk.css.map",
+    "static/js/2.80a4427a.chunk.js.LICENSE.txt": "/georeferencing-tool/static/js/2.80a4427a.chunk.js.LICENSE.txt",
+    "static/js/main.db301c2a.chunk.js.LICENSE.txt": "/georeferencing-tool/static/js/main.db301c2a.chunk.js.LICENSE.txt",
+    "static/media/App.css": "/georeferencing-tool/static/media/SourceSansPro-SemiBold.43cc81b4.ttf"
   },
   "entrypoints": [
-    "static/js/runtime-main.a826bab1.js",
+    "static/js/runtime-main.550ca376.js",
     "static/css/2.150d169a.chunk.css",
     "static/js/2.80a4427a.chunk.js",
-    "static/css/main.9b6773bf.chunk.css",
-    "static/js/main.a9e2d3e5.chunk.js"
+    "static/css/main.77a0e58d.chunk.css",
+    "static/js/main.db301c2a.chunk.js"
   ]
 }
