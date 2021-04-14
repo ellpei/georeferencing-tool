@@ -8,13 +8,22 @@ class InputModal extends React.Component {
 
     constructor(props) {
         super(props);
+
         this.state = {
-            pisteInputValue: "",
+            id: this.props.currentDot.id,
+            name: this.props.currentDot.name,
+            shortName: this.props.currentDot.shortName,
+            areaId: this.props.currentDot.areaId
         }
     }
 
-    handleClose = () => {
-        this.setState({show: false});
+    clearFields = () => {
+        this.setState({
+            id: '',
+            name: '',
+            shortName: '',
+            areaId: ''
+        });
     }
 
     onKeyPress = (e) => {
@@ -23,48 +32,103 @@ class InputModal extends React.Component {
         }
     }
 
+    handleInputChange = (e) => {
+        const target = e.target;
+        const value = target.value;
+        const name = target.name;
+
+        this.setState({
+          [name]: value
+        });
+    }
+
     render() {
-        const {show, handleClose} = this.props;
+        const {handleClose} = this.props;
         const wW = window.innerWidth;
         var left = this.props.posX > wW/2 ? 0 : Math.round(wW*0.525);
         return (
-            <div id="geoCoordSelector" className={show ? "" : "hidden"}>
+            <div id="geoCoordSelector">
 
                     <div className="coord-selector">
-                    <Backdrop show={show} clicked={handleClose} />
+                    <Backdrop show={true} clicked={handleClose} />
                     <Card className="modal-body"
                     style={{
                         top: 10,
                         left: left}}>
                         <Card.Body>
                             <Card.Title>Edit point data</Card.Title>
-                            <Card.Text>
-                            </Card.Text>
                             <Form>
                                 <Form.Group as={Row}>
-                                    <Form.Label column sm="3">x:</Form.Label>
-                                    <Col sm="3">
+                                    <Form.Label column>x</Form.Label>
+                                    <Col sm={4}>
                                         <Form.Control type="number" defaultValue={this.props.currentDot.x}
                                         onChange={(e) => {this.props.updateCurrentDot({x: e.target.value})}}/>
                                     </Col>
-                                    <Form.Label column sm="3">y:</Form.Label>
-                                    <Col sm="3">
+                                    <Form.Label column>y</Form.Label>
+                                    <Col sm={4}>
                                         <Form.Control type="number" defaultValue={this.props.currentDot.y}
                                         onChange={(e) => {this.props.updateCurrentDot({y: e.target.value})}}/>
                                     </Col>
                                 </Form.Group>
 
-                                <Form.Control type="text"
-                                defaultValue={this.props.currentDot.note}
-                                placeholder="Notes..."
-                                onChange={(e) => this.props.updateCurrentDot({note: e.target.value})}
-                                onKeyPress={this.onKeyPress}/>
+                                <Form.Group as={Row}>
+                                    <Form.Label column >
+                                      id
+                                    </Form.Label>
+                                    <Col sm={8}>
+                                      <Form.Control type="text"
+                                      placeholder="Enter id..."
+                                      name="id"
+                                      defaultValue={this.state.id}
+                                      onChange={this.handleInputChange}/>
+                                    </Col>
+                                </Form.Group>
+
+                                <Form.Group as={Row}>
+                                    <Form.Label column >
+                                      name
+                                    </Form.Label>
+                                    <Col sm={8}>
+                                      <Form.Control type="text"
+                                      placeholder="Enter name..."
+                                      name="name"
+                                      defaultValue={this.state.name}
+                                      onChange={this.handleInputChange}/>
+                                    </Col>
+                                </Form.Group>
+
+                                <Form.Group as={Row}>
+                                    <Form.Label column>
+                                      shortName
+                                    </Form.Label>
+                                    <Col sm={8}>
+                                      <Form.Control type="text"
+                                      placeholder="Enter shortName..."
+                                      name="shortName"
+                                      defaultValue={this.state.shortName}
+                                      onChange={this.handleInputChange}/>
+                                    </Col>
+                                </Form.Group>
+
+                                <Form.Group as={Row}>
+                                    <Form.Label column >
+                                      areaId
+                                    </Form.Label>
+                                    <Col sm={8}>
+                                      <Form.Control type="text"
+                                      placeholder="Enter areaId..."
+                                      name="areaId"
+                                      defaultValue={this.state.areaId}
+                                      onChange={this.handleInputChange}
+                                      onKeyPress={this.onKeyPress} />
+                                    </Col>
+                                </Form.Group>
                             </Form>
                         </Card.Body>
                         <Card.Footer>
                         <Button variant="secondary" onClick={handleClose}>Delete</Button>
                             <Button variant="secondary" onClick={handleClose}>Close</Button>
-                            <Button variant="primary" onClick={this.props.handleSave}>Save</Button>
+                            <Button variant="primary" onClick={() => this.props.handleSave(this.state)}>Save</Button>
                         </Card.Footer>
                     </Card>
                     </div>

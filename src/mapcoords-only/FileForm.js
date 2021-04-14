@@ -34,7 +34,14 @@ class FileForm extends React.Component {
         let output;
         let data = this.props.points;
         if (this.state.fileType === "json") {
-            output = JSON.stringify({points: data}, null, 4);
+            let points = data.map(point => ({
+                id: point.id,
+                name: point.name,
+                shortName: point.shortName,
+                areaId: point.areaId,
+                pisteMapCoordinates: {x: point.x, y: point.y}
+            }));
+            output = JSON.stringify({points: points}, null, 4);
         } else if (this.state.fileType === "csv") {
             let contents = [];
             contents.push (["id", "name", "shortName", "areaId", "x", "y"]);
@@ -85,6 +92,12 @@ class FileForm extends React.Component {
                 let json = JSON.parse(fileContents);
                 if(json.hasOwnProperty('lifts')) {
                     this.props.loadPointData(json['lifts']);
+                } else if(json.hasOwnProperty('slopes')) {
+                    this.props.loadPointData(json['slopes']);
+                } else if(json.hasOwnProperty('restaurants')) {
+                    this.props.loadPointData(json['restaurants']);
+                } else {
+                    alert('Unable to load JSON data, missing key value lifts, slopes or restaurants'); 
                 }
             } catch(e) {
                 alert(e);

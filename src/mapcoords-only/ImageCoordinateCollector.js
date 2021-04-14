@@ -47,17 +47,19 @@ export default class ImageCoordinateCollector extends React.Component {
         let {dimensions, currentDot} = this.state;
         let x = Math.round(this.renderedToRealCoord(e.clientX - bounds.left, dimensions.renderWidth, dimensions.realWidth));
         let y = Math.round(this.renderedToRealCoord(e.clientY - bounds.top, dimensions.renderHeight, dimensions.realHeight))
+        if(Object.keys(currentDot).length === 0) {
+            let dot = {
+                x: x,
+                y: y,
+            };
 
-        let dot = {
-            "x": x,
-            "y": y,
-        };
+            this.setState({
+                grabbing: false,
+                showModal: true,
+                currentDot: dot,
+            });
+        }
 
-        this.setState({
-            grabbing: false,
-            showModal: true,
-            currentDot: {...currentDot, ...dot},
-        });
     }
 
     updateCurrentDot = (dot) => {
@@ -67,10 +69,11 @@ export default class ImageCoordinateCollector extends React.Component {
     }
 
     moveDot = (index) => {
-        console.log("move dot");
+        let dot = this.props.dots[index];
         this.setState({
             grabbing: true,
-            currentDot: this.props.dots[index],
+            currentDot: dot,
+            showModal: true,
         });
         this.props.deleteDot(index);
     }
@@ -93,16 +96,21 @@ export default class ImageCoordinateCollector extends React.Component {
     }
 
     handleCloseModal = () => {
-        this.setState({showModal: false, currentDot: {}});
+        this.setState({grabbing: false, showModal: false, currentDot: {}});
     }
 
-    handleSave = () => {
-        this.props.saveDot(this.state.currentDot);
-        this.handleCloseModal();
+    handleSave = (data) => {
+        console.log(JSON.stringify(data));
+        let currentDot = this.state.currentDot;
+        this.setState({
+            currentDot: {...currentDot,...data},}, function() {
+                this.props.saveDot(this.state.currentDot);
+                this.handleCloseModal();
+            });
     }
 
     render() {
-        const {grabbing, showModal, currentDot} = this.state;
+        const {grabbing, currentDot} = this.state;
         const dim = this.state.dimensions;
         const {dots, backgroundImageUrl, dotRadius} = this.props;
         const grabClass = grabbing ? 'react-image-dot__grabbing' : '';
@@ -148,16 +156,17 @@ export default class ImageCoordinateCollector extends React.Component {
                     />}
             </div>
             number of points: {this.props.dots.length}
-            <InputModal
-            show={showModal}
-            dimensions={dim}
-            posX={this.realToRenderedCoord(currentDot.x, dim.renderWidth, dim.realWidth)}
-            handleClose={this.handleCloseModal}
-            handleSave={this.handleSave}
-            updateCurrentDot={this.updateCurrentDot}
-            currentDot={this.state.currentDot}
-            dots={this.props.dots}
-            />
+            {
+                this.state.showModal ? <InputModal
+                dimensions={dim}
+                posX={this.realToRenderedCoord(currentDot.x, dim.renderWidth, dim.realWidth)}
+                handleClose={this.handleCloseModal}
+                handleSave={this.handleSave}
+                updateCurrentDot={this.updateCurrentDot}
+                currentDot={this.state.currentDot}
+                /> : null
+            }
+
             {this.props.resetDots &&
             <button onClick={this.resetDots}>Reset</button>}
         </div>

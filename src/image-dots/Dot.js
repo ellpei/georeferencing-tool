@@ -5,8 +5,9 @@ const defaultProps = {
 };
 
 export default class Dot extends React.Component {
-  onMouseDown = () => {
-    this.props.moveDot(this.props.i);
+  onMouseDown = (e) => {
+      e.stopPropagation();
+      this.props.moveDot(this.props.i);
   }
 
   render() {

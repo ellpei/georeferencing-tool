@@ -3,7 +3,7 @@ import React from 'react';
 import {Button} from 'react-bootstrap';
 import FileForm from './FileForm.js';
 import ImageCoordinateCollector from './ImageCoordinateCollector.js';
-import DotsInfo from '../image-dots/DotsInfo';
+import DotsInfo from './DotsInfo.js';
 
 class MapCoordCollector extends React.Component {
 
@@ -13,8 +13,6 @@ class MapCoordCollector extends React.Component {
         this.state = {
             title: this.props.resort.title,
             src: this.props.resort.src,
-            x: 0,
-            y: 0,
             dots: this.initialDots,
             windowWidth: window.innerWidth*0.98,
         }
@@ -53,12 +51,6 @@ class MapCoordCollector extends React.Component {
         });
     }
 
-    addParent = (parent) => {
-        if(!this.state.parents.includes(parent)) {
-            this.setState({parents: [...this.state.parents, parent]});
-        }
-    }
-
     handleResize = () => {
         this.setState({ windowWidth: window.innerWidth*0.98 });
     }
@@ -72,8 +64,17 @@ class MapCoordCollector extends React.Component {
     }
 
     loadPointData = (data) => {
-        this.initialDots = data;
-        this.setState({dots: data});
+        let dots = data.map(point =>
+            ({  id: point.id,
+                name: point.name,
+                shortName: point.shortName,
+                areaId: point.areaId,
+                x: point.pisteMapCoordinates ? point.pisteMapCoordinates.x : 0,
+                y: point.pisteMapCoordinates ? point.pisteMapCoordinates.y : 0
+            })
+        );
+        this.initialDots = dots;
+        this.setState({dots: dots});
     }
 
     render() {

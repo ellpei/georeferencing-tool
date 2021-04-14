@@ -3,6 +3,10 @@
     display: none;
 }
 
+.form-label {
+    text-align: left;
+}
+
 .modal-body {
     position: fixed;
     z-index: 500;
