@@ -33,7 +33,7 @@ class CoordinateMatcher extends React.Component {
         let triangles = [];
         let trianglePoints = [];
         // TODO: test different triangle set sizes
-        let size = "5";
+        let size = "200";
         let triangleData = testTriangles[size].triangles;
         console.log("transforming run points for triangle set size " + size);
         for(const triangle of triangleData) {
@@ -48,8 +48,8 @@ class CoordinateMatcher extends React.Component {
         let transformedCoords = [];
         for(const p of testpoints) {
             let point = {lat: p.coordinates[1], lng: p.coordinates[0]};
-            let enclosingTriangle = this.findEnclosingTriangle(point, triangles);
-            let {x, y} = enclosingTriangle.transformGeoCoords(point);
+            let nearestTriangle = this.findNearestTriangle(point, triangles);
+            let {x, y} = nearestTriangle.transformGeoCoords(point);
             transformedCoords.push({x: Math.round(x), y: Math.round(y)});
         }
         this.setState({dots: transformedCoords});
@@ -63,7 +63,7 @@ class CoordinateMatcher extends React.Component {
         return (coord/realLength)*renderedLength;
     }
 
-    findEnclosingTriangle = (point, triangles) => {
+    findNearestTriangle = (point, triangles) => {
         var nearestTriangle;
         let minDistance = Infinity;
 
@@ -127,9 +127,9 @@ class CoordinateMatcher extends React.Component {
         var numClassified = 0;
         let error = 0;
         for(const point of referencePoints) {
-            let enclosingTriangle = this.findEnclosingTriangle(point, triangles);
-            if(enclosingTriangle) {
-                let mapCoords = enclosingTriangle.transformGeoCoords(point);
+            let nearestTriangle = this.findNearestTriangle(point, triangles);
+            if(nearestTriangle) {
+                let mapCoords = nearestTriangle.transformGeoCoords(point);
                 let distance = point.distance(new Delaunay.Point(mapCoords));
                 error += distance;
                 numClassified++;
