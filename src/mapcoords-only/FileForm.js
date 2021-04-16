@@ -1,6 +1,6 @@
 import '../styles/fileForm.css';
 import React from 'react';
-import {Row, Col, Form, Button} from 'react-bootstrap';
+import {Row, Col, Form, Button, ButtonToolbar, ButtonGroup} from 'react-bootstrap';
 import Container from 'react-bootstrap/Container';
 
 class FileForm extends React.Component {
@@ -9,13 +9,14 @@ class FileForm extends React.Component {
         super(props);
         const defaultFileType = "json";
         let imgSrc = this.props.imgSrc;
-        let filename = imgSrc.substr(imgSrc.lastIndexOf('/')+1, imgSrc.length);
-        filename = filename.substr(0, filename.lastIndexOf('.'));
+        let filename  = this.props.title;
 
         this.fileNames = {
             json: String(filename) + ".json",
             csv: String(filename) + ".csv",
         }
+        console.log("imgsrc" + this.props.imgSrc);
+        console.log(this.fileNames.json);
 
         this.state = {
             fileType: defaultFileType,
@@ -41,6 +42,7 @@ class FileForm extends React.Component {
                 areaId: point.areaId,
                 pisteMapCoordinates: {x: point.x, y: point.y}
             }));
+
             output = JSON.stringify({points: points}, null, 4);
         } else if (this.state.fileType === "csv") {
             let contents = [];
@@ -48,6 +50,7 @@ class FileForm extends React.Component {
             data.map(point => contents.push([point.id, point.name, point.shortName, point.areaId, point.x, point.y]));
             output = this.makeCSV(contents);
         }
+        console.log("here: filetype="+this.state.fileType);
         const blob = new Blob([output]);
         const fileDownloadUrl = URL.createObjectURL(blob);
         this.setState ({fileDownloadUrl: fileDownloadUrl},
@@ -97,7 +100,7 @@ class FileForm extends React.Component {
                 } else if(json.hasOwnProperty('restaurants')) {
                     this.props.loadPointData(json['restaurants']);
                 } else {
-                    alert('Unable to load JSON data, missing key value lifts, slopes or restaurants'); 
+                    alert('Unable to load JSON data, missing key value lifts, slopes or restaurants');
                 }
             } catch(e) {
                 alert(e);
@@ -108,52 +111,32 @@ class FileForm extends React.Component {
         reader.readAsText(fileObj);
     }
 
-    downloadTestReport = (event) => {
-        console.log("generating test report");
-        event.preventDefault();
-        let results = this.props.generateTestReport();
-        let output = JSON.stringify({testReport: results}, null, 4);
-
-        const blob = new Blob([output]);
-        const fileDownloadUrl = URL.createObjectURL(blob);
-        this.setState ({fileDownloadUrl: URL.createObjectURL(blob)},
-          () => {
-            this.doTestReportDownload.click();
-            URL.revokeObjectURL(fileDownloadUrl);
-            this.setState({fileDownloadUrl: ""})
-        });
-    }
-
     render() {
         return (
             <div id="fileForm">
                 <Container>
                     <Row className="justify-content-md-center">
-                        <Col md="auto">
-                            <Form.Control as="select" name="fileType" className="fileForm-child"
-                                onChange={this.changeFileType}
-                                value={this.state.fileType}>
-                                <option value="csv">CSV</option>
-                                <option value="json">JSON</option>
-                            </Form.Control>
-                        </Col>
-                        <Col md="auto">
-                            <Button onClick={this.download} className="fileForm-child">
-                                Download
-                            </Button>
-                            <a className="hidden"
-                                download={this.fileNames[this.state.fileType]}
-                                href={this.state.fileDownloadUrl}
-                                ref={e=>this.dofileDownload = e}>download it</a>
-                        </Col>
-                        <Col md="auto">
-                            <Button onClick={this.upload} className="fileForm-child">Upload</Button>
-                            <input type="file" className="hidden"
-                                multiple={false}
-                                accept=".json,application/json"
-                                onChange={evt => this.openFile(evt)}
-                                ref={e=>this.dofileUpload = e}/>
-                        </Col>
+                        <Button onClick={this.upload} className="fileForm-child">Upload</Button>
+                        <input type="file" className="hidden"
+                            multiple={false}
+                            accept=".json,application/json"
+                            onChange={evt => this.openFile(evt)}
+                            ref={e=>this.dofileUpload = e}/>
+
+                        <Form.Control as="select" name="fileType" className="fileForm-child"
+                            onChange={this.changeFileType}
+                            value={this.state.fileType}>
+                            <option value="csv">CSV</option>
+                            <option value="json">JSON</option>
+                        </Form.Control>
+
+                        <Button onClick={this.download} className="fileForm-child">
+                            Download
+                        </Button>
+                        <a className="hidden"
+                            download={this.fileNames[this.state.fileType]}
+                            href={this.state.fileDownloadUrl}
+                            ref={e=>this.dofileDownload = e}>download it</a>
                     </Row>
                 </Container>
 

@@ -9,12 +9,23 @@ class MapForm extends React.Component {
         this.state = {
             val: this.props.resorts[0].id,
             uploadedMap: null,
+            uploadedMapName: '',
             useGeoCoords: true,
         }
     }
 
     handleDropdownChange = (e) => {
         this.setState({val: e.target.value});
+    }
+
+    handleFileChange = (e) => {
+        if(e.target.files[0] == null) return;
+        this.setState({
+            uploadedMap: {
+                url: URL.createObjectURL(e.target.files[0]),
+                name: e.target.files[0].name
+            }
+        });
     }
 
     handleStart = () => {
@@ -24,13 +35,6 @@ class MapForm extends React.Component {
         } else {
             this.props.onUpload(uploadedMap, useGeoCoords);
         }
-    }
-
-    handleFileChange = (e) => {
-        if(e.target.files[0] == null) return
-        this.setState({
-            uploadedMap: URL.createObjectURL(e.target.files[0])
-        })
     }
 
     render() {
@@ -80,7 +84,7 @@ class MapForm extends React.Component {
                                 <br/>
                                 {this.state.uploadedMap ?
                                     <div className="image-wrapper">
-                                        <img src={this.state.uploadedMap} alt="preview"/>
+                                        <img src={this.state.uploadedMap.url} alt="preview"/>
                                         <br/><br/>
                                     </div> : null }
                                 </Form.Group>

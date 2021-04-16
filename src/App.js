@@ -32,8 +32,10 @@ class App extends React.Component {
     }
 
     uploadMap = (file, useGeoCoords) => {
+        let filename = file.name;
+        let title = filename.substr(0, filename.lastIndexOf('.'));
         this.setState({
-            resortObject: { src: file, title: 'MyMap'},
+            resortObject: { src: file.url, title: title},
             useGeoCoords: useGeoCoords,
         });
     }

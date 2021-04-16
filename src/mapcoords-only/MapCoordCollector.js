@@ -95,6 +95,7 @@ class MapCoordCollector extends React.Component {
                 <div className="bottom-toolbox">
                     <FileForm
                         imgSrc={this.state.src}
+                        title={this.state.title}
                         points={this.state.dots}
                         loadPointData={this.loadPointData}/>
                     <DotsInfo dots={this.state.dots} deleteDot={this.deleteDot}></DotsInfo>
