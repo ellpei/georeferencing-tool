@@ -99,6 +99,8 @@ class FileForm extends React.Component {
                     this.props.loadPointData(json['slopes']);
                 } else if(json.hasOwnProperty('restaurants')) {
                     this.props.loadPointData(json['restaurants']);
+                } else if(json.hasOwnProperty('points')) {
+                    this.props.loadPointData(json['points']);
                 } else {
                     alert('Unable to load JSON data, missing key value lifts, slopes or restaurants');
                 }
