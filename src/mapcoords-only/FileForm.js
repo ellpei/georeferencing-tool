@@ -1,6 +1,6 @@
 import '../styles/fileForm.css';
 import React from 'react';
-import {Row, Col, Form, Button, ButtonToolbar, ButtonGroup} from 'react-bootstrap';
+import {Row, Form, Button} from 'react-bootstrap';
 import Container from 'react-bootstrap/Container';
 
 class FileForm extends React.Component {
@@ -8,15 +8,12 @@ class FileForm extends React.Component {
     constructor(props) {
         super(props);
         const defaultFileType = "json";
-        let imgSrc = this.props.imgSrc;
         let filename  = this.props.title;
 
         this.fileNames = {
             json: String(filename) + ".json",
             csv: String(filename) + ".csv",
         }
-        console.log("imgsrc" + this.props.imgSrc);
-        console.log(this.fileNames.json);
 
         this.state = {
             fileType: defaultFileType,
@@ -50,7 +47,6 @@ class FileForm extends React.Component {
             data.map(point => contents.push([point.id, point.name, point.shortName, point.areaId, point.x, point.y]));
             output = this.makeCSV(contents);
         }
-        console.log("here: filetype="+this.state.fileType);
         const blob = new Blob([output]);
         const fileDownloadUrl = URL.createObjectURL(blob);
         this.setState ({fileDownloadUrl: fileDownloadUrl},

@@ -9,7 +9,7 @@ import Docs from './docs.js';
 import About from './about.js';
 import {Navbar, Nav} from 'react-bootstrap';
 import {
-    BrowserRouter as Router,
+    HashRouter as Router,
     Switch,
     Route,
     Redirect,
