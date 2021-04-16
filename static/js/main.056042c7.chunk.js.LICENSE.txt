@@ -1,0 +1,5 @@
+/**
+ * @file        Main export of the Delaunay Triangulation library
+ * @author      Jean-Vincent Roger <jv.roger@84paris.com>
+ * @license     {@link https://github.com/sokeroner/delaunay-triangulation/blob/master/LICENSE|MIT License}
+ */

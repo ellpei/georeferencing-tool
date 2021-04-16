@@ -1,26 +1,27 @@
 {
   "files": {
-    "main.css": "/georeferencing-tool/static/css/main.5e0e51eb.chunk.css",
-    "main.js": "/georeferencing-tool/static/js/main.aafdf13b.chunk.js",
-    "main.js.map": "/georeferencing-tool/static/js/main.aafdf13b.chunk.js.map",
-    "runtime-main.js": "/georeferencing-tool/static/js/runtime-main.e56b342c.js",
-    "runtime-main.js.map": "/georeferencing-tool/static/js/runtime-main.e56b342c.js.map",
+    "main.css": "/georeferencing-tool/static/css/main.77a0e58d.chunk.css",
+    "main.js": "/georeferencing-tool/static/js/main.056042c7.chunk.js",
+    "main.js.map": "/georeferencing-tool/static/js/main.056042c7.chunk.js.map",
+    "runtime-main.js": "/georeferencing-tool/static/js/runtime-main.550ca376.js",
+    "runtime-main.js.map": "/georeferencing-tool/static/js/runtime-main.550ca376.js.map",
     "static/css/2.150d169a.chunk.css": "/georeferencing-tool/static/css/2.150d169a.chunk.css",
-    "static/js/2.330beaa5.chunk.js": "/georeferencing-tool/static/js/2.330beaa5.chunk.js",
-    "static/js/2.330beaa5.chunk.js.map": "/georeferencing-tool/static/js/2.330beaa5.chunk.js.map",
-    "static/js/3.ec2f648e.chunk.js": "/georeferencing-tool/static/js/3.ec2f648e.chunk.js",
-    "static/js/3.ec2f648e.chunk.js.map": "/georeferencing-tool/static/js/3.ec2f648e.chunk.js.map",
+    "static/js/2.44933224.chunk.js": "/georeferencing-tool/static/js/2.44933224.chunk.js",
+    "static/js/2.44933224.chunk.js.map": "/georeferencing-tool/static/js/2.44933224.chunk.js.map",
+    "static/js/3.fe59b515.chunk.js": "/georeferencing-tool/static/js/3.fe59b515.chunk.js",
+    "static/js/3.fe59b515.chunk.js.map": "/georeferencing-tool/static/js/3.fe59b515.chunk.js.map",
     "index.html": "/georeferencing-tool/index.html",
     "static/css/2.150d169a.chunk.css.map": "/georeferencing-tool/static/css/2.150d169a.chunk.css.map",
-    "static/css/main.5e0e51eb.chunk.css.map": "/georeferencing-tool/static/css/main.5e0e51eb.chunk.css.map",
-    "static/js/2.330beaa5.chunk.js.LICENSE.txt": "/georeferencing-tool/static/js/2.330beaa5.chunk.js.LICENSE.txt",
+    "static/css/main.77a0e58d.chunk.css.map": "/georeferencing-tool/static/css/main.77a0e58d.chunk.css.map",
+    "static/js/2.44933224.chunk.js.LICENSE.txt": "/georeferencing-tool/static/js/2.44933224.chunk.js.LICENSE.txt",
+    "static/js/main.056042c7.chunk.js.LICENSE.txt": "/georeferencing-tool/static/js/main.056042c7.chunk.js.LICENSE.txt",
     "static/media/App.css": "/georeferencing-tool/static/media/SourceSansPro-SemiBold.43cc81b4.ttf"
   },
   "entrypoints": [
-    "static/js/runtime-main.e56b342c.js",
+    "static/js/runtime-main.550ca376.js",
     "static/css/2.150d169a.chunk.css",
-    "static/js/2.330beaa5.chunk.js",
-    "static/css/main.5e0e51eb.chunk.css",
-    "static/js/main.aafdf13b.chunk.js"
+    "static/js/2.44933224.chunk.js",
+    "static/css/main.77a0e58d.chunk.css",
+    "static/js/main.056042c7.chunk.js"
   ]
 }
