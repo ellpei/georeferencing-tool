@@ -134,8 +134,8 @@ export default class ImageCoordinateCollector extends React.Component {
                     dotY={Math.round(this.realToRenderedCoord(dot.y, dim.renderHeight, dim.realHeight))}
                     i={i}
                     styles={{
-                        boxShadow: '0px 0px 0px 2px purple',
-                        backgroundColor: 'purple',
+                        boxShadow: '0px 0px 0px 2px blue',
+                        backgroundColor: 'blue',
                     }}
                     moveDot={this.moveDot}
                     dotRadius={dotRadius}

@@ -162,7 +162,7 @@ export default class ImageCoordinateCollector extends React.Component {
         const grabClass = grabbing ? 'react-image-dot__grabbing' : '';
 
         return (
-        <div id="react-image-dot">
+        <div id="react-image-dot-container">
 
             <div className={`react-image-dot__wrapper ${grabClass} no-select`}
             onMouseUp={this.onMouseUp}

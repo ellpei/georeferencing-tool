@@ -10,6 +10,7 @@ import About from './about.js';
 import {Navbar, Nav} from 'react-bootstrap';
 import {
     HashRouter as Router,
+    Link,
     Switch,
     Route,
     Redirect,
@@ -43,16 +44,16 @@ class App extends React.Component {
     render() {
         return (
             <div className="App">
-                <Router>
+                <Router basename="/">
                     <Navbar className="navbar" bg="light" variant="light">
-                        <Navbar.Brand href="/">
+                        <Link className="navbar-brand" to="/">
                             <div className="header">
                                 <h1>Georeferencing Tool</h1>
                             </div>
-                        </Navbar.Brand>
+                        </Link>
                         <Nav className="mr-auto">
-                            <Nav.Link href="/docs">Docs</Nav.Link>
-                            <Nav.Link href="/about">About</Nav.Link>
+                            <Link className="nav-link" to="/docs">Docs</Link>
+                            <Link className="nav-link" to="/about">About</Link>
                         </Nav>
                     </Navbar>
                     <Switch>
@@ -77,13 +78,6 @@ class App extends React.Component {
                               else
                                  return <MapCoordCollector resort={this.state.resortObject}/>
                           })()}
-
-
-                            {/*this.state.resortObject ?
-
-                                <Matcher
-                                resort={this.state.resortObject}/> :
-                                <Redirect to={{ pathname: '/', state: { from: this.props.location } }} />*/}
                         </Route>
                     </Switch>
                 </Router>

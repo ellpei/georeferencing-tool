@@ -1,6 +1,6 @@
 {
   "name": "georeferencing-tool",
-  "homepage": "https://ellpei.github.io/georeferencing-tool/",
+  "homepage": ".",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
