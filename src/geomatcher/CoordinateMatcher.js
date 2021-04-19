@@ -1,8 +1,8 @@
 import '../styles/image-dots.css';
 import '../styles/geoCoordSelector.css';
-import anchorPoints from './experiment/are_anchorpoints.js';
+import areReferencePoints from './experiment/are_referencepoints.js';
 import testTriangles from './experiment/are_testtriangles.js';
-import testpoints from './experiment/worldcupbacken.js';
+import testGPSpoints from './experiment/worldcupbacken.js';
 import React from 'react';
 import {Button} from 'react-bootstrap';
 import FileForm from './FileForm.js';
@@ -20,19 +20,21 @@ class CoordinateMatcher extends React.Component {
             src: this.props.resort.src,
             x: 0,
             y: 0,
-            referencePoints: anchorPoints.map(x => new Delaunay.Point(x)),
+            referencePoints: areReferencePoints.map(x => new Delaunay.Point(x)),
             dots: this.initialDots,
             triangles: [],
+            testDots: [],
             parents: [],
             parentTypes: ['Piste', 'Lift', 'Terrain', 'Restaurant', 'Other'],
             windowWidth: window.innerWidth*0.98,
         }
+        console.log("Number of referencePoints: " + areReferencePoints.length);
     }
 
     transformTestPoints = () => {
+        /*
         let triangles = [];
         let trianglePoints = [];
-        // TODO: test different triangle set sizes
         let size = "200";
         let triangleData = testTriangles[size].triangles;
         console.log("transforming run points for triangle set size " + size);
@@ -45,14 +47,19 @@ class CoordinateMatcher extends React.Component {
             }
         }
         triangles = Delaunay.triangulate(trianglePoints);
+        */
+        let triangles = this.state.triangles;
+        if(triangles.length === 0) {
+            return;
+        }
         let transformedCoords = [];
-        for(const p of testpoints) {
+        for(const p of testGPSpoints) {
             let point = {lat: p.coordinates[1], lng: p.coordinates[0]};
             let nearestTriangle = this.findNearestTriangle(point, triangles);
             let {x, y} = nearestTriangle.transformGeoCoords(point);
             transformedCoords.push({x: Math.round(x), y: Math.round(y)});
         }
-        this.setState({dots: transformedCoords});
+        this.setState({testDots: transformedCoords});
     }
     // Translate from rendered coordinates to real piste map coordinates
     renderedToRealCoord(coord, renderedLength, realLength) {
@@ -251,7 +258,7 @@ class CoordinateMatcher extends React.Component {
     }
 
     render() {
-        const { dots, parents, parentTypes, src, currentError} = this.state;
+        const { dots, triangles, testDots, parents, parentTypes, src, currentError} = this.state;
 
         return (
             <div id="matcher">
@@ -259,7 +266,8 @@ class CoordinateMatcher extends React.Component {
                 backgroundImageUrl={src}
                 onLoadMap={this.onLoadPisteMap}
                 dots={dots}
-                triangles={this.state.triangles}
+                triangles={triangles}
+                testDots={testDots}
                 parents={parents}
                 parentTypes={parentTypes}
                 deleteDot={this.deleteDot}

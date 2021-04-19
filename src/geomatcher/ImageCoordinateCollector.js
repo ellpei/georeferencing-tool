@@ -158,7 +158,7 @@ export default class ImageCoordinateCollector extends React.Component {
     render() {
         const {grabbing, showModal, currentDot} = this.state;
         const dim = this.state.dimensions;
-        const {dots, backgroundImageUrl, dotRadius, triangles} = this.props;
+        const {dots, testDots, backgroundImageUrl, dotRadius, triangles} = this.props;
         const grabClass = grabbing ? 'react-image-dot__grabbing' : '';
 
         return (
@@ -207,6 +207,22 @@ export default class ImageCoordinateCollector extends React.Component {
                 dotRadius={dotRadius}
                 key={-1}
                 />}
+
+            {testDots.map((dot, i) =>
+                    <Dot
+                    dotX={Math.round(this.realToRenderedCoord(dot.x, dim.renderWidth, dim.realWidth))}
+                    dotY={Math.round(this.realToRenderedCoord(dot.y, dim.renderHeight, dim.realHeight))}
+                    i={i}
+                    styles={{
+                        boxShadow: '0px 0px 0px 2px lime',
+                        backgroundColor: 'lime',
+                    }}
+                    moveDot={() => {}}
+                    dotRadius={dotRadius}
+                    key={i}
+                    />)}
+
+
             </div>
             <InputModal
             show={showModal}

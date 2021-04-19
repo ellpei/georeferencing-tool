@@ -139,7 +139,7 @@ class FileForm extends React.Component {
                             ref={e=>this.doTestReportDownload = e}>download it</a>
                         </Col>
                         <Col md="auto">
-                        <Button className="" variant='primary' onClick={this.props.plotTestData}>
+                        <Button className="" variant='primary' onClick={this.props.plotTestData} disabled={this.props.triangles.length === 0}>
                             Plot test data
                         </Button>
                         </Col>

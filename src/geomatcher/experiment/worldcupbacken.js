@@ -1,4 +1,4 @@
-const testpoints = [
+const testGPSpoints = [
     {"coordinates": [ 13.079463, 63.409133 ] },
     {"coordinates": [ 13.079472, 63.409131 ] },
     {"coordinates": [ 13.07948, 63.409116 ] },
@@ -143,4 +143,4 @@ const testpoints = [
     { "coordinates": [ 13.079484, 63.402554 ] }
 ];
 
-export default testpoints; 
+export default testGPSpoints;
