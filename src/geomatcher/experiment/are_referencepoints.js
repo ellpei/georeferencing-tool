@@ -1,4 +1,4 @@
-const anchorPoints = [
+const areReferencePoints = [
         {
             "x": 267,
             "y": 533,
@@ -4519,4 +4519,4 @@ const anchorPoints = [
             "lng": 13.094295946856391
         }
     ]
-export default anchorPoints; 
+export default areReferencePoints; 
