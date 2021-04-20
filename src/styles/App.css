@@ -29,5 +29,12 @@
 }
 
 .page-content {
-    margin: 20px; 
+    margin: 40px;
+    text-align: left;
+}
+
+.json-snippet {
+    background-color: #D8BFD8;
+    padding: 10px 40px 10px 40px;
+    border-radius: 2px;
 }

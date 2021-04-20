@@ -75,9 +75,6 @@ class CoordinateMatcher extends React.Component {
         let minDistance = Infinity;
 
         for(const triangle of triangles) {
-            if(triangle.enclosesGeoCoords(point)) {
-                return triangle;
-            }
             let distance = triangle.geoDistanceToPoint(point);
             if(distance < minDistance) {
                 minDistance = distance;
@@ -94,35 +91,25 @@ class CoordinateMatcher extends React.Component {
         // Calculate min RMSE for each subset of size n
         var n;
         for(n = N; n >= 3; n--) {
-            var minRMSE = Infinity;
-            var minTriangles = [];
-            var minNumClassified = 0;
-            var minIndexToBeRemoved = 0;
+            let minRMSE = Infinity, minTriangles = [], indexToRemove = 0;
             var i;
             for(i = 0; i < n; i++) {
                 let subset = testSet.slice();
                 subset.splice(i, 1);
                 let triangles = Delaunay.triangulate(subset);
-                let errorObj = this.calculateError(triangles);
-                if(errorObj == null) {
-                    continue;
-                }
-                let {error, numClassified} = errorObj;
-                let rmse = Math.sqrt(error*error/numClassified);
+                let rmse = this.calculateError(triangles);
                 if(rmse < minRMSE) {
-                    minIndexToBeRemoved = i;
+                    indexToRemove = i;
                     minRMSE = rmse;
-                    minNumClassified = numClassified;
                     minTriangles = triangles;
                 }
             }
             results.push({
-                n: n,
-                numClassified: minNumClassified,
+                n: n-1,
                 minRMSE: minRMSE,
                 minTriangles: minTriangles,
             });
-            testSet.splice(minIndexToBeRemoved, 1);
+            testSet.splice(indexToRemove, 1);
         }
         return results;
     }
@@ -142,7 +129,7 @@ class CoordinateMatcher extends React.Component {
                 numClassified++;
             }
         }
-        return {error: error, numClassified: numClassified};
+        return Math.sqrt(error**2 / numClassified);
     }
 
     addDot = (dot) => {
@@ -251,14 +238,12 @@ class CoordinateMatcher extends React.Component {
         }
         this.initialDots = points;
         this.setState({dots: points, parents: parents}, function() {
-            this.setState({triangles: Delaunay.triangulate(this.state.dots)}, function () {
-                this.setState({currentError: this.calculateError(this.state.triangles)})
-            })
+            this.setState({triangles: Delaunay.triangulate(this.state.dots)})
         });
     }
 
     render() {
-        const { dots, triangles, testDots, parents, parentTypes, src, currentError} = this.state;
+        const { dots, triangles, testDots, parents, parentTypes, src} = this.state;
 
         return (
             <div id="matcher">
@@ -284,7 +269,6 @@ class CoordinateMatcher extends React.Component {
                         triangles={this.state.triangles}
                         loadPointData={this.loadPointData}
                         loadTriangleData={this.loadTriangleData}
-                        currentError={currentError}
                         generateTestReport={this.generateTestReport}
                         plotTestData={this.transformTestPoints}>
                     </FileForm>
