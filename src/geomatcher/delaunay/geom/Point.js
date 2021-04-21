@@ -24,7 +24,7 @@ Point.prototype.constructor = Point;
 module.exports = Point;
 
 Point.prototype.distance = function(otherpoint) {
-	return Math.sqrt(((otherpoint.x - this.x)*(otherpoint.x - this.x)) + ((otherpoint.y - this.y)*(otherpoint.y - this.y)));
+	return Math.sqrt((otherpoint.x - this.x)**2 + (otherpoint.y - this.y)**2);
 };
 
 Point.prototype.equals = function(otherpoint) {

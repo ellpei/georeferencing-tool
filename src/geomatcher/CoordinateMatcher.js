@@ -129,7 +129,7 @@ class CoordinateMatcher extends React.Component {
                 numClassified++;
             }
         }
-        return Math.sqrt(error**2 / numClassified);
+        return error / Math.sqrt( numClassified);
     }
 
     addDot = (dot) => {
