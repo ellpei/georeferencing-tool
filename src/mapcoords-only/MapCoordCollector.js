@@ -108,6 +108,7 @@ class MapCoordCollector extends React.Component {
                 dotRadius={10}
                 />
                 <div className="bottom-toolbox">
+                {this.props.resort.title}
                     <FileForm
                         imgSrc={this.state.src}
                         title={this.state.title}

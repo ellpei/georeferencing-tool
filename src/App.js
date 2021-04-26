@@ -40,7 +40,7 @@ class App extends React.Component {
             useGeoCoords: useGeoCoords,
         });
     }
-
+    
     render() {
         return (
             <div className="App">
@@ -55,6 +55,11 @@ class App extends React.Component {
                             <Link className="nav-link" to="/docs">Docs</Link>
                             <Link className="nav-link" to="/about">About</Link>
                         </Nav>
+                        { this.state.resortObject ?
+                            <Navbar.Text>
+                                {this.state.resortObject.title}
+                            </Navbar.Text> : null }
+
                     </Navbar>
                     <Switch>
                         <Route exact path="/">
