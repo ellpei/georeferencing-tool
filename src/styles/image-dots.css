@@ -14,7 +14,7 @@
   cursor: -webkit-grab;
   cursor: -moz-grab;
   cursor: grab;
-  border-radius: 100%;
+  border-radius: 0% 100% 100% 100%;
   z-index: 2;
 }
 

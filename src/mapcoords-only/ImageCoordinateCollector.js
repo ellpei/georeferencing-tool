@@ -134,8 +134,8 @@ export default class ImageCoordinateCollector extends React.Component {
                     dotY={Math.round(this.realToRenderedCoord(dot.y, dim.renderHeight, dim.realHeight))}
                     i={i}
                     styles={{
-                        boxShadow: '0px 0px 0px 2px grey',
-                        backgroundColor: 'rgba(249, 0, 0, 0.8)',
+                        boxShadow: '0px 0px 0px 2px lime',
+                        backgroundColor: 'magenta',
                     }}
                     moveDot={this.moveDot}
                     dotRadius={dotRadius}
@@ -147,8 +147,8 @@ export default class ImageCoordinateCollector extends React.Component {
                     dotY={Math.round(this.realToRenderedCoord(currentDot.y, dim.renderHeight, dim.realHeight))}
                     i={0}
                     styles={{
-                        boxShadow: '0px 0px 0px 2px grey',
-                        backgroundColor: 'rgba(0, 249, 20, 0.8)',
+                        boxShadow: '0px 0px 0px 2px magenta',
+                        backgroundColor: 'lime',
                     }}
                     moveDot={() => console.log('try to move temp dot')}
                     dotRadius={dotRadius}

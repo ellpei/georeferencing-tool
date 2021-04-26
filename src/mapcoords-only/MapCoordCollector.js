@@ -4,6 +4,7 @@ import {Button} from 'react-bootstrap';
 import FileForm from './FileForm.js';
 import ImageCoordinateCollector from './ImageCoordinateCollector.js';
 import DotsInfo from './DotsInfo.js';
+import { Prompt } from 'react-router';
 
 class MapCoordCollector extends React.Component {
 
@@ -15,8 +16,18 @@ class MapCoordCollector extends React.Component {
             src: this.props.resort.src,
             dots: this.initialDots,
             windowWidth: window.innerWidth*0.98,
+            shouldBlockNavigation: false,
         }
     }
+
+    componentDidUpdate() {
+        if (this.state.shouldBlockNavigation) {
+            window.onbeforeunload = () => true
+        } else {
+            window.onbeforeunload = undefined
+        }
+    }
+
     // Translate from rendered coordinates to real piste map coordinates
     renderedToRealCoord(coord, renderedLength, realLength) {
         return (coord/renderedLength)*realLength;
@@ -30,6 +41,7 @@ class MapCoordCollector extends React.Component {
         let dots = this.state.dots;
         this.setState({
             dots: [...dots, dot],
+            shouldBlockNavigation: true,
         });
     }
 
@@ -82,15 +94,19 @@ class MapCoordCollector extends React.Component {
 
         return (
             <div id="matcher">
+
+                <Prompt
+                  when={this.state.shouldBlockNavigation}
+                  message='You have unsaved changes, are you sure you want to leave?'
+                />
                 <ImageCoordinateCollector
                 backgroundImageUrl={src}
                 onLoadMap={this.onLoadPisteMap}
-                parents={[]}
                 dots={dots}
                 deleteDot={this.deleteDot}
                 saveDot={this.saveDot}
                 addDot={this.addDot}
-                dotRadius={2}
+                dotRadius={10}
                 />
                 <div className="bottom-toolbox">
                     <FileForm

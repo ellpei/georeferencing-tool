@@ -9,6 +9,7 @@ import FileForm from './FileForm.js';
 import ImageCoordinateCollector from './ImageCoordinateCollector.js';
 import DotsInfo from './DotsInfo.js';
 import Delaunay from './delaunay/index.js';
+import { Prompt } from 'react-router';
 
 class CoordinateMatcher extends React.Component {
 
@@ -27,8 +28,17 @@ class CoordinateMatcher extends React.Component {
             parents: [],
             parentTypes: ['Piste', 'Lift', 'Terrain', 'Restaurant', 'Other'],
             windowWidth: window.innerWidth*0.98,
+            shouldBlockNavigation: false,
         }
         console.log("Number of referencePoints: " + areReferencePoints.length);
+    }
+
+    componentDidUpdate() {
+        if (this.state.shouldBlockNavigation) {
+            window.onbeforeunload = () => true
+        } else {
+            window.onbeforeunload = undefined
+        }
     }
 
     transformTestPoints = () => {
@@ -136,6 +146,7 @@ class CoordinateMatcher extends React.Component {
         let dots = this.state.dots;
         this.setState({
             dots: [...dots, new Delaunay.Point(dot)],
+            shouldBlockNavigation: true,
         }, function() {
             this.setState({
                 triangles: Delaunay.triangulate(this.state.dots)
@@ -247,6 +258,10 @@ class CoordinateMatcher extends React.Component {
 
         return (
             <div id="matcher">
+                <Prompt
+                  when={this.state.shouldBlockNavigation}
+                  message='You have unsaved changes, are you sure you want to leave?'
+                />
                 <ImageCoordinateCollector
                 backgroundImageUrl={src}
                 onLoadMap={this.onLoadPisteMap}
