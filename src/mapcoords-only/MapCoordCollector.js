@@ -1,6 +1,5 @@
 import '../styles/image-dots.css';
 import React from 'react';
-import {Button} from 'react-bootstrap';
 import FileForm from './FileForm.js';
 import ImageCoordinateCollector from './ImageCoordinateCollector.js';
 import DotsInfo from './DotsInfo.js';
@@ -114,8 +113,7 @@ class MapCoordCollector extends React.Component {
                         title={this.state.title}
                         points={this.state.dots}
                         loadPointData={this.loadPointData}/>
-                    <DotsInfo dots={this.state.dots} deleteDot={this.deleteDot}></DotsInfo>
-                    <Button variant='success' onClick={this.resetDots}>Reset</Button>
+                    <DotsInfo dots={this.state.dots} deleteDot={this.deleteDot} resetDots={this.resetDots}></DotsInfo>
                 </div>
             </div>);
     }

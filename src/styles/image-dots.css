@@ -40,4 +40,10 @@
 
 .bottom-toolbox {
     position: relative;
+    width: 100%;
+}
+
+.dotsinfotable {
+    text-align: left;
+    max-width: 600px !important;
 }

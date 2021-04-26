@@ -4,7 +4,6 @@ import areReferencePoints from './experiment/are_referencepoints.js';
 import testTriangles from './experiment/are_testtriangles.js';
 import testGPSpoints from './experiment/worldcupbacken.js';
 import React from 'react';
-import {Button} from 'react-bootstrap';
 import FileForm from './FileForm.js';
 import ImageCoordinateCollector from './ImageCoordinateCollector.js';
 import DotsInfo from './DotsInfo.js';
@@ -287,8 +286,10 @@ class CoordinateMatcher extends React.Component {
                         generateTestReport={this.generateTestReport}
                         plotTestData={this.transformTestPoints}>
                     </FileForm>
-                    <DotsInfo dots={this.state.dots} deleteDot={this.deleteDot}></DotsInfo>
-                    <Button variant='success' onClick={this.resetDots}>Reset</Button>
+                    <DotsInfo
+                        dots={this.state.dots}
+                        deleteDot={this.deleteDot}
+                        resetDots={this.resetDots}/>
                 </div>
             </div>);
     }
