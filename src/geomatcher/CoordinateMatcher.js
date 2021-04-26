@@ -260,7 +260,7 @@ class CoordinateMatcher extends React.Component {
                 addDot={this.addDot}
                 addParent={this.addParent}
                 addParentType={this.addParentType}
-                dotRadius={1}
+                dotRadius={2}
                 /><br/>
                 <div className="bottom-toolbox">
                     <FileForm

@@ -90,7 +90,7 @@ class MapCoordCollector extends React.Component {
                 deleteDot={this.deleteDot}
                 saveDot={this.saveDot}
                 addDot={this.addDot}
-                dotRadius={1}
+                dotRadius={2}
                 />
                 <div className="bottom-toolbox">
                     <FileForm
