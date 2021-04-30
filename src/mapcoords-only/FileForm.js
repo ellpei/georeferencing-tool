@@ -40,7 +40,7 @@ class FileForm extends React.Component {
                 pisteMapCoordinates: {x: point.x, y: point.y}
             }));
 
-            output = JSON.stringify({points: points}, null, 4);
+            output = JSON.stringify(points, null, 4);
         } else if (this.state.fileType === "csv") {
             let contents = [];
             contents.push (["id", "name", "shortName", "areaId", "x", "y"]);
@@ -89,17 +89,22 @@ class FileForm extends React.Component {
             const fileContents = e.target.result;
             try {
                 let json = JSON.parse(fileContents);
-                if(json.hasOwnProperty('lifts')) {
-                    this.props.loadPointData(json['lifts']);
-                } else if(json.hasOwnProperty('slopes')) {
-                    this.props.loadPointData(json['slopes']);
-                } else if(json.hasOwnProperty('restaurants')) {
-                    this.props.loadPointData(json['restaurants']);
-                } else if(json.hasOwnProperty('points')) {
-                    this.props.loadPointData(json['points']);
+                if(Array.isArray(json)) {
+                    this.props.loadPointData(json);
                 } else {
-                    alert('Unable to load JSON data, missing key value lifts, slopes or restaurants');
+                    if(json.hasOwnProperty('lifts')) {
+                        this.props.loadPointData(json['lifts']);
+                    } else if(json.hasOwnProperty('slopes')) {
+                        this.props.loadPointData(json['slopes']);
+                    } else if(json.hasOwnProperty('restaurants')) {
+                        this.props.loadPointData(json['restaurants']);
+                    } else if(json.hasOwnProperty('points')) {
+                        this.props.loadPointData(json['points']);
+                    } else {
+                        alert('Malformed JSON data, please see Docs');
+                    }
                 }
+
             } catch(e) {
                 alert(e);
             }

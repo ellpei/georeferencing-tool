@@ -94,7 +94,7 @@ function Docs(props) {
                     <h2>Mode 2: Only Piste Map Coordinates</h2>
                     <p>
                         In the second mode, you can create, upload, and download piste map coordinate data as lists of points.
-                        When uploading a JSON file, the tool will look load all the items in a list with one of the following names:
+                        When uploading a JSON file, the tool will load all the items in an array, or an object with one of the following names containing an array:
                         <ul>
                             <li>"points" (seen in example below)</li>
                             <li>"restaurants"</li>
@@ -103,32 +103,72 @@ function Docs(props) {
                         </ul>
                         Note: The tool will load all the points in the uploaded file regardless of the destination id of each point. Therefore, it is better to sort the points into files specific to each resort.
                     </p>
-                    <b>Point structure:</b>
-                    <div className="json-snippet">
-                        <pre>{JSON.stringify({
-                            "points": [
-                                {
-                                    "id": "193",
-                                    "name": "Adam",
-                                    "shortName": "1",
-                                    "areaId": "lindvallen",
-                                    "pisteMapCoordinates": {
-                                        "x": 145,
-                                        "y": 537
-                                    }
-                                },
-                                {
-                                    "id": "194",
-                                    "name": "Pernilla",
-                                    "shortName": "2",
-                                    "areaId": "lindvallen",
-                                    "pisteMapCoordinates": {
-                                        "x": 281,
-                                        "y": 535
-                                    }
-                                },
-                            ]}, null, 2)}</pre>
-                    </div>
+                    <Container>
+                      <Row>
+                        <Col>
+                            <Row>
+                                <b>Flat list structure:</b>
+                            </Row>
+                            <Row>
+                            <div className="json-snippet">
+                                <pre>{JSON.stringify(
+                                    [
+                                        {
+                                            "id": "193",
+                                            "name": "Adam",
+                                            "shortName": "1",
+                                            "areaId": "lindvallen",
+                                            "pisteMapCoordinates": {
+                                                "x": 145,
+                                                "y": 537
+                                            }
+                                        },
+                                        {
+                                            "id": "194",
+                                            "name": "Pernilla",
+                                            "shortName": "2",
+                                            "areaId": "lindvallen",
+                                            "pisteMapCoordinates": {
+                                                "x": 281,
+                                                "y": 535
+                                            }
+                                        },
+                                    ], null, 2)}</pre>
+                            </div>
+                            </Row>
+                        </Col>
+                        <Col>
+                            <Row><b>Object containing an array</b></Row>
+                            <Row>
+                            <div className="json-snippet">
+                                <pre>{JSON.stringify({
+                                    "points": [
+                                        {
+                                            "id": "193",
+                                            "name": "Adam",
+                                            "shortName": "1",
+                                            "areaId": "lindvallen",
+                                            "pisteMapCoordinates": {
+                                                "x": 145,
+                                                "y": 537
+                                            }
+                                        },
+                                        {
+                                            "id": "194",
+                                            "name": "Pernilla",
+                                            "shortName": "2",
+                                            "areaId": "lindvallen",
+                                            "pisteMapCoordinates": {
+                                                "x": 281,
+                                                "y": 535
+                                            }
+                                        },
+                                    ]}, null, 2)}</pre>
+                            </div>
+                            </Row>
+                        </Col>
+                      </Row>
+                    </Container>
                 </div>
             </div>
     );
