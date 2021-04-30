@@ -80,7 +80,8 @@ class InputModal extends React.Component {
                                       placeholder="Enter id..."
                                       name="id"
                                       defaultValue={this.state.id}
-                                      onChange={this.handleInputChange}/>
+                                      onChange={this.handleInputChange}
+                                      autoFocus/>
                                     </Col>
                                 </Form.Group>
 

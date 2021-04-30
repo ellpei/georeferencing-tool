@@ -100,7 +100,6 @@ export default class ImageCoordinateCollector extends React.Component {
     }
 
     handleSave = (data) => {
-        console.log(JSON.stringify(data));
         let currentDot = this.state.currentDot;
         this.setState({
             currentDot: {...currentDot,...data},}, function() {
