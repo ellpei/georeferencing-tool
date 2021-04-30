@@ -50,7 +50,7 @@ class InputModal extends React.Component {
             <div id="geoCoordSelector">
 
                     <div className="coord-selector">
-                    <Backdrop show={true} clicked={handleClose} />
+                    <Backdrop show={true} clicked={() => this.props.handleSave(this.state)} />
                     <Card className="modal-body"
                     style={{
                         top: 10,
@@ -127,7 +127,7 @@ class InputModal extends React.Component {
                         </Card.Body>
                         <Card.Footer>
                         <Button variant="secondary" onClick={handleClose}>Delete</Button>
-                            <Button variant="secondary" onClick={handleClose}>Close</Button>
+                            <Button variant="secondary" onClick={() => this.props.handleSave(this.state)}>Close</Button>
                             <Button variant="primary" onClick={() => this.props.handleSave(this.state)}>Save</Button>
                         </Card.Footer>
                     </Card>
