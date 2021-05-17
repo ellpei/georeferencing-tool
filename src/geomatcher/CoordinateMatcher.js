@@ -1,6 +1,7 @@
 import '../styles/image-dots.css';
 import '../styles/geoCoordSelector.css';
 import areReferencePoints from './experiment/are_referencepoints.js';
+import areLandmarks from './experiment/are_landmarks.js';
 import testTriangles from './experiment/are_testtriangles.js';
 import testGPSpoints from './experiment/worldcupbacken.js';
 import React from 'react';
@@ -24,6 +25,7 @@ class CoordinateMatcher extends React.Component {
             dots: this.initialDots,
             triangles: [],
             testDots: [],
+            landmarkTestData: [],
             parents: [],
             parentTypes: ['Piste', 'Lift', 'Terrain', 'Restaurant', 'Other'],
             windowWidth: window.innerWidth*0.98,
@@ -91,6 +93,29 @@ class CoordinateMatcher extends React.Component {
             }
         }
         return nearestTriangle;
+    }
+
+    doLandmarkTest = () => {
+        let landmarkData = [];
+        if(this.state.triangles.length === 0) {
+            return;
+        }
+        for(const p of areLandmarks) {
+            let nearestTriangle = this.findNearestTriangle(p, this.state.triangles);
+            let {x, y} = nearestTriangle.transformGeoCoords(p);
+            x = Math.round(x);
+            y = Math.round(y);
+            let d = Math.sqrt((x - p.x)**2 + (y - p.y)**2);
+            landmarkData.push({
+                x_prim: Math.round(x),
+                y_prim: Math.round(y),
+                x: p.x,
+                y: p.y,
+                distance: d
+            });
+        }
+        this.setState({landmarkTestData: landmarkData});
+        return landmarkData;
     }
 
     generateTestReport = () => {
@@ -253,7 +278,7 @@ class CoordinateMatcher extends React.Component {
     }
 
     render() {
-        const { dots, triangles, testDots, parents, parentTypes, src} = this.state;
+        const { dots, triangles, testDots, landmarkTestData, parents, parentTypes, src} = this.state;
 
         return (
             <div id="matcher">
@@ -267,6 +292,7 @@ class CoordinateMatcher extends React.Component {
                 dots={dots}
                 triangles={triangles}
                 testDots={testDots}
+                landmarkTestData={landmarkTestData}
                 parents={parents}
                 parentTypes={parentTypes}
                 deleteDot={this.deleteDot}
@@ -283,6 +309,7 @@ class CoordinateMatcher extends React.Component {
                         triangles={this.state.triangles}
                         loadPointData={this.loadPointData}
                         loadTriangleData={this.loadTriangleData}
+                        doLandmarkTest={this.doLandmarkTest}
                         generateTestReport={this.generateTestReport}
                         plotTestData={this.transformTestPoints}>
                     </FileForm>

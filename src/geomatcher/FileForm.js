@@ -35,8 +35,8 @@ class FileForm extends React.Component {
         let output;
         let data = this.props.points;
         if (this.state.fileType === "json") {
-            //output = JSON.stringify({pistePoints: data}, null, 4);
-            output = JSON.stringify({triangles: this.props.triangles}, null, 4);
+            output = JSON.stringify(data, null, 4);
+            //output = JSON.stringify({triangles: this.props.triangles}, null, 4);
         } else if (this.state.fileType === "csv") {
             let contents = [];
             contents.push (["x", "y", "long", "lat", "parent", "parentType", "note"]);
@@ -124,6 +124,25 @@ class FileForm extends React.Component {
         });
     }
 
+    downloadLandmarkTestReport = (event) => {
+        event.preventDefault();
+        let results = this.props.doLandmarkTest();
+        //let output = JSON.stringify(results, null, 4);
+        let contents = [];
+        contents.push (["x", "y", "x_prim (transformed)", "y_prim (transformed)", "distance (px)"]);
+        results.map(point => contents.push([point.x, point.y, point.x_prim, point.y_prim, point.distance]));
+        let output = this.makeCSV(contents);
+
+        const blob = new Blob([output]);
+        const fileDownloadUrl = URL.createObjectURL(blob);
+        this.setState ({fileDownloadUrl: URL.createObjectURL(blob)},
+          () => {
+            this.doLandmarkTestReportDownload.click();
+            URL.revokeObjectURL(fileDownloadUrl);
+            this.setState({fileDownloadUrl: ""})
+        });
+    }
+
     render() {
         return (
             <div id="fileForm">
@@ -131,12 +150,19 @@ class FileForm extends React.Component {
                     <Row className="justify-content-md-center">
                         <Col md="auto">
                         <Button className="" variant='primary' onClick={this.downloadTestReport}>
-                            Generate Test Report
+                            RMSE Test
                         </Button>
                         <a className="hidden"
                             download={'testReport.json'}
                             href={this.state.fileDownloadUrl}
                             ref={e=>this.doTestReportDownload = e}>download it</a>
+                        <Button className="" variant='primary' onClick={this.downloadLandmarkTestReport}>
+                            Landmark Test
+                        </Button>
+                        <a className="hidden"
+                            download={'landmarkTest.csv'}
+                            href={this.state.fileDownloadUrl}
+                            ref={e=>this.doLandmarkTestReportDownload = e}>download it</a>
                         </Col>
                         <Col md="auto">
                         <Button className="" variant='primary' onClick={this.props.plotTestData} disabled={this.props.triangles.length === 0}>

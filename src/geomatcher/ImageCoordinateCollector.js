@@ -158,7 +158,7 @@ export default class ImageCoordinateCollector extends React.Component {
     render() {
         const {grabbing, showModal, currentDot} = this.state;
         const dim = this.state.dimensions;
-        const {dots, testDots, backgroundImageUrl, dotRadius, triangles} = this.props;
+        const {dots, testDots, landmarkTestData, backgroundImageUrl, dotRadius, triangles} = this.props;
         const grabClass = grabbing ? 'react-image-dot__grabbing' : '';
 
         return (
@@ -173,7 +173,8 @@ export default class ImageCoordinateCollector extends React.Component {
             id="canvas"
             width={dim.realWidth}
             height={dim.realHeight}
-            triangles={triangles}>
+            triangles={triangles}
+            landmarkTestData={landmarkTestData}>
             </Canvas>
 
             <img
@@ -181,7 +182,7 @@ export default class ImageCoordinateCollector extends React.Component {
             src={backgroundImageUrl} alt="Piste map"
             width={dim.realWidth} onLoad={this.onLoadPisteMap} />
 
-            {dots.map((dot, i) =>
+            {/* dots.map((dot, i) =>
                 <Dot
                 dotX={Math.round(this.realToRenderedCoord(dot.x, dim.renderWidth, dim.realWidth))}
                 dotY={Math.round(this.realToRenderedCoord(dot.y, dim.renderHeight, dim.realHeight))}
@@ -189,24 +190,26 @@ export default class ImageCoordinateCollector extends React.Component {
                 styles={{
                     boxShadow: '0px 0px 0px 2px lime',
                     backgroundColor: 'magenta',
+                    borderRadius: "0% 100% 100% 100%",
                 }}
                 moveDot={this.moveDot}
                 dotRadius={dotRadius}
                 key={i}
-                />)}
+                />) */}
 
-            {Object.keys(currentDot).length === 0 ? null: <Dot
+            { /* Object.keys(currentDot).length === 0 ? null: <Dot
                 dotX={Math.round(this.realToRenderedCoord(currentDot.x, dim.renderWidth, dim.realWidth))}
                 dotY={Math.round(this.realToRenderedCoord(currentDot.y, dim.renderHeight, dim.realHeight))}
                 i={0}
                 styles={{
                     boxShadow: '0px 0px 0px 2px magenta',
                     backgroundColor: 'lime',
+                    borderRadius: "0% 100% 100% 100%",
                 }}
                 moveDot={() => console.log('try to move temp dot')}
                 dotRadius={dotRadius}
                 key={-1}
-                />}
+                /> */}
 
             {testDots.map((dot, i) =>
                     <Dot
@@ -216,12 +219,12 @@ export default class ImageCoordinateCollector extends React.Component {
                     styles={{
                         boxShadow: '0px 0px 0px 2px lime',
                         backgroundColor: 'lime',
+                        borderRadius: "100%",
                     }}
                     moveDot={() => {}}
                     dotRadius={dotRadius}
                     key={i}
                     />)}
-
 
             </div>
             <InputModal
