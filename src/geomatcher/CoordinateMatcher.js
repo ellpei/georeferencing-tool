@@ -96,12 +96,26 @@ class CoordinateMatcher extends React.Component {
     }
 
     doLandmarkTest = () => {
-        let landmarkData = [];
-        if(this.state.triangles.length === 0) {
-            return;
+        let triangles = [];
+        let trianglePoints = [];
+        let size = "50";
+        let triangleData = testTriangles[size].triangles;
+        console.log("transforming run points for triangle set size " + size);
+        for(const triangle of triangleData) {
+            for(const point of triangle) {
+                let pointObj = new Delaunay.Point(point);
+                if(!this.includesPoint(trianglePoints, pointObj)) {
+                    trianglePoints = [...trianglePoints, pointObj];
+                }
+            }
         }
-        for(const p of areLandmarks) {
-            let nearestTriangle = this.findNearestTriangle(p, this.state.triangles);
+        triangles = Delaunay.triangulate(trianglePoints);
+        this.setState({triangles: triangles, dots: trianglePoints})
+        let landmarkData = [];
+
+        //use landmark points or reference points??
+        for(const p of areReferencePoints) {
+            let nearestTriangle = this.findNearestTriangle(p, triangles);
             let {x, y} = nearestTriangle.transformGeoCoords(p);
             x = Math.round(x);
             y = Math.round(y);

@@ -128,6 +128,10 @@ class FileForm extends React.Component {
         event.preventDefault();
         let results = this.props.doLandmarkTest();
         //let output = JSON.stringify(results, null, 4);
+        if(!results) {
+            console.log("Something went wrong");
+            return;
+        }
         let contents = [];
         contents.push (["x", "y", "x_prim (transformed)", "y_prim (transformed)", "distance (px)"]);
         results.map(point => contents.push([point.x, point.y, point.x_prim, point.y_prim, point.distance]));
