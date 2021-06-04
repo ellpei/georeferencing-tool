@@ -26,7 +26,7 @@ class Canvas extends React.Component {
         let canvas = this.refs.canvas;
         const ctx = canvas.getContext('2d');
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctx.strokeStyle = "white";
+        ctx.strokeStyle = "red";
         var triangles = this.props.triangles;
         var i, t;
 	  	for (i = 0; i < triangles.length; i++) {

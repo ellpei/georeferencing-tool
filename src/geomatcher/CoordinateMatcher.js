@@ -43,7 +43,7 @@ class CoordinateMatcher extends React.Component {
     }
 
     transformTestPoints = () => {
-        /*
+        /* Code for using the stored Åre data
         let triangles = [];
         let trianglePoints = [];
         let size = "200";
@@ -96,9 +96,10 @@ class CoordinateMatcher extends React.Component {
     }
 
     doLandmarkTest = () => {
+        /* Code for using the Åre data  
         let triangles = [];
         let trianglePoints = [];
-        let size = "50";
+        let size = "150";
         let triangleData = testTriangles[size].triangles;
         console.log("transforming run points for triangle set size " + size);
         for(const triangle of triangleData) {
@@ -110,7 +111,9 @@ class CoordinateMatcher extends React.Component {
             }
         }
         triangles = Delaunay.triangulate(trianglePoints);
-        this.setState({triangles: triangles, dots: trianglePoints})
+
+        this.setState({triangles: triangles, dots: trianglePoints})*/
+        let triangles = this.state.triangles;
         let landmarkData = [];
 
         //use landmark points or reference points??

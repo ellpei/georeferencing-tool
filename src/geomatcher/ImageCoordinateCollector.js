@@ -182,7 +182,7 @@ export default class ImageCoordinateCollector extends React.Component {
             src={backgroundImageUrl} alt="Piste map"
             width={dim.realWidth} onLoad={this.onLoadPisteMap} />
 
-            {/* dots.map((dot, i) =>
+             {dots.map((dot, i) =>
                 <Dot
                 dotX={Math.round(this.realToRenderedCoord(dot.x, dim.renderWidth, dim.realWidth))}
                 dotY={Math.round(this.realToRenderedCoord(dot.y, dim.renderHeight, dim.realHeight))}
@@ -195,9 +195,10 @@ export default class ImageCoordinateCollector extends React.Component {
                 moveDot={this.moveDot}
                 dotRadius={dotRadius}
                 key={i}
-                />) */}
+                />)
+            }
 
-            { /* Object.keys(currentDot).length === 0 ? null: <Dot
+            { Object.keys(currentDot).length === 0 ? null: <Dot
                 dotX={Math.round(this.realToRenderedCoord(currentDot.x, dim.renderWidth, dim.realWidth))}
                 dotY={Math.round(this.realToRenderedCoord(currentDot.y, dim.renderHeight, dim.realHeight))}
                 i={0}
@@ -209,9 +210,9 @@ export default class ImageCoordinateCollector extends React.Component {
                 moveDot={() => console.log('try to move temp dot')}
                 dotRadius={dotRadius}
                 key={-1}
-                /> */}
+                /> }
 
-            {testDots.map((dot, i) =>
+            { testDots.map((dot, i) =>
                     <Dot
                     dotX={Math.round(this.realToRenderedCoord(dot.x, dim.renderWidth, dim.realWidth))}
                     dotY={Math.round(this.realToRenderedCoord(dot.y, dim.renderHeight, dim.realHeight))}
